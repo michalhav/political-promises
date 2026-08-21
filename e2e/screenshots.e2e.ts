@@ -77,6 +77,13 @@ test.describe("redakce", () => {
     await shoot(page, "13-novy-kandidat", "/admin/promises/new");
     await shoot(page, "14-sliby", "/admin/promises");
     await shoot(page, "16-kandidatky", "/admin/lists");
+
+    // Detail zdroje nese fronty návrhů od stroje; jde na něj přes seznam,
+    // protože identifikátor dokumentu dopředu neznáme.
+    await page.goto("/admin/sources");
+    await page.locator("table a").first().click();
+    await page.waitForLoadState("networkidle");
+    await page.screenshot({ path: `${DIR}/17-zdroj-navrhy.png`, fullPage: true });
     await shoot(page, "15-detail-slibu", `/admin/promises/${PUBLISHED_SLUG}`);
   });
 });

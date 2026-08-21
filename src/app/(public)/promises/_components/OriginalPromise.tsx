@@ -1,6 +1,7 @@
 import { DemoBadge } from "@/app/_components/DemoBadge";
 import type { Citation } from "@/modules/promises/queries";
 import { formatDate } from "@/shared/format";
+import { toReadableQuote } from "@/modules/ingestion/normalize";
 
 /**
  * Původní znění slibu.
@@ -28,7 +29,7 @@ export function OriginalPromise({
   return (
     <div className="space-y-5">
       <blockquote className="source-quote prose-measure text-xl leading-relaxed">
-        {originalText}
+        {toReadableQuote(originalText)}
       </blockquote>
 
       {source ? <SourceLine citation={source} /> : null}

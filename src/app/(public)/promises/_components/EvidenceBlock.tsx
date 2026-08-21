@@ -2,6 +2,7 @@ import { DemoBadge } from "@/app/_components/DemoBadge";
 import type { EvidenceView } from "@/modules/promises/queries";
 import { evidenceRoleLabel, SOURCE_TYPE_LABELS } from "@/modules/sources/labels";
 import { formatDate, formatTimestamp } from "@/shared/format";
+import { toReadableQuote } from "@/modules/ingestion/normalize";
 
 /**
  * Důkazní blok — podpisový komponent produktu.
@@ -59,7 +60,9 @@ export function EvidenceBlock({ evidence }: { evidence: EvidenceView }) {
         </p>
       </div>
 
-      <blockquote className="source-quote text-[0.95rem]">{evidence.excerpt}</blockquote>
+      <blockquote className="source-quote text-[0.95rem]">
+        {toReadableQuote(evidence.excerpt)}
+      </blockquote>
 
       {evidence.note ? (
         <div className="space-y-1">

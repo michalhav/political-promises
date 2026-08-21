@@ -51,6 +51,13 @@ export default function MethodologyPage() {
           Doslovné znění se po zveřejnění už nikdy nemění. Když je věta z programu nejasná, redakce
           k ní připíše přepis do ověřitelné podoby — ten původní znění nenahrazuje, jen ho doplňuje.
         </p>
+        <p>
+          Citace ukládáme přesně tak, jak stojí v dokumentu — včetně toho, jak text rozdělilo
+          stránkování PDF. Při zobrazení spojujeme slova rozdělená na konci řádku a sjednocujeme
+          mezery, protože dělení slova není nic, co by politik řekl; je to artefakt sazby. Mění se
+          tím jen zobrazení, nikdy uložený text: co je v citaci k přečtení, jde znak po znaku najít
+          ve zdrojovém dokumentu.
+        </p>
       </Section>
 
       <Section id="hodnotitelnost" title="Jak počítáme hodnotitelnost">

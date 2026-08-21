@@ -6,6 +6,7 @@ import { ASSESSABILITY_LABELS, type AssessabilityLevel } from "@/modules/assessm
 import { TOPIC_LABELS } from "@/modules/promises/labels";
 import type { PromiseListItem } from "@/modules/promises/queries";
 import { formatDate } from "@/shared/format";
+import { toReadableQuote } from "@/modules/ingestion/normalize";
 
 /**
  * Karta slibu.
@@ -56,7 +57,7 @@ export function PromiseCard({ promise }: { promise: PromiseListItem }) {
       </h3>
 
       <blockquote className="text-muted line-clamp-2 text-sm italic">
-        „{promise.originalText}“
+        „{toReadableQuote(promise.originalText)}“
       </blockquote>
 
       <div className="mt-auto space-y-2 pt-1">

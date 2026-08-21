@@ -15,6 +15,7 @@ import {
   type ComparisonItem,
 } from "@/modules/coalition/queries";
 import { TOPIC_LABELS } from "@/modules/promises/labels";
+import { toReadableQuote } from "@/modules/ingestion/normalize";
 
 export const metadata: Metadata = {
   title: "Program vs. koaliční smlouva",
@@ -143,7 +144,7 @@ function ComparisonCard({ item }: { item: ComparisonItem }) {
         <div className="space-y-1">
           <h4 className="text-muted text-xs tracking-wide uppercase">Volební program</h4>
           <blockquote className="border-border border-l-2 pl-3 text-sm italic">
-            „{item.originalText}“
+            „{toReadableQuote(item.originalText)}“
           </blockquote>
         </div>
         <div className="space-y-1">

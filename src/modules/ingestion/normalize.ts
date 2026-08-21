@@ -219,6 +219,26 @@ export function normalizeText(canonical: string, options: NormalizeOptions = {})
  * Konec se počítá z posledního znaku rozsahu, ne z prvního za ním — ten už může
  * patřit jinam nebo neexistovat.
  */
+/**
+ * Citace pro čtenáře.
+ *
+ * V databázi zůstává doslovné znění včetně toho, jak ho rozsekalo PDF:
+ * „cyklo-
+stezek", dvojité mezery po zalomení, měkké spojovníky. Bez toho by
+ * citace přestala být citací — nešlo by ji porovnat s dokumentem.
+ *
+ * Čtenáři se ale ta samá věta ukazuje spojená. Dělení slova na konci řádku
+ * není nic, co by politik řekl; je to artefakt sazby. Zobrazit ho jako součást
+ * výroku by bylo méně věrné, ne víc.
+ *
+ * Rozdíl je vědomý a jednosměrný: mění se **jen zobrazení**, nikdy uložený
+ * text. V redakční konzoli se proto citace ukazují syrové — tam se porovnávají
+ * s dokumentem a každý rozdíl by překážel.
+ */
+export function toReadableQuote(canonical: string): string {
+  return normalizeText(canonical).text;
+}
+
 export function toCanonicalSpan(
   normalized: NormalizedText,
   page: number,

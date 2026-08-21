@@ -2,6 +2,7 @@ import { DemoBadge } from "@/app/_components/DemoBadge";
 import { formatDate, formatTimestamp } from "@/shared/format";
 import type { Citation, SourceRef } from "@/modules/promises/queries";
 import { SOURCE_TYPE_LABELS } from "@/modules/sources/labels";
+import { toReadableQuote } from "@/modules/ingestion/normalize";
 
 /**
  * Odkaz na zdrojový dokument.
@@ -45,7 +46,9 @@ export function CitationBlock({ citation }: { citation: Citation }) {
 
   return (
     <figure className="border-border border-l-2 pl-4">
-      <blockquote className="text-[0.95rem] italic">„{citation.excerpt}“</blockquote>
+      <blockquote className="text-[0.95rem] italic">
+        „{toReadableQuote(citation.excerpt)}“
+      </blockquote>
       <figcaption className="mt-2 space-y-0.5">
         {locators.length > 0 ? <p className="text-muted text-sm">{locators.join(", ")}</p> : null}
         <SourceLine source={citation.source} />

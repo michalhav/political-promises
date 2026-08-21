@@ -5,11 +5,16 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/db/client";
 import { requireEditorialUser } from "@/modules/accounts/auth";
+import { matchEvidence } from "@/modules/ai/evidenceMatching";
 import { extractPromises } from "@/modules/ai/extraction";
 import { getAIProvider } from "@/modules/ai/factory";
 import { AIProviderError } from "@/modules/ai/provider";
 import { createElectoralList, createParty } from "@/modules/review/registry";
-import { acceptSuggestion, rejectSuggestion } from "@/modules/review/suggestions";
+import {
+  acceptEvidenceSuggestion,
+  acceptSuggestion,
+  rejectSuggestion,
+} from "@/modules/review/suggestions";
 import {
   attachEvidence,
   createAssessmentDraft,
@@ -113,6 +118,44 @@ export const extractPromisesAction: Action = async (formData) =>
           ? `Návrhů k revizi: ${result.accepted}. Zahozeno kvůli neověřitelné citaci: ${result.rejected}.`
           : `Návrhů k revizi: ${result.accepted}.`,
     };
+  });
+
+export const matchEvidenceAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const sourceDocumentId = text(formData, "sourceDocumentId");
+
+    let provider;
+    try {
+      provider = getAIProvider();
+    } catch (error) {
+      if (error instanceof AIProviderError) return { ok: false, errors: [error.message] };
+      throw error;
+    }
+
+    const result = await matchEvidence(db, actor, provider, sourceDocumentId);
+
+    revalidatePath(`/admin/sources/${sourceDocumentId}`);
+    return {
+      ok: true,
+      message:
+        result.rejected > 0
+          ? `Návrhů důkazů k revizi: ${result.accepted}. Zahozeno kvůli neověřitelné citaci nebo neznámému slibu: ${result.rejected}.`
+          : `Návrhů důkazů k revizi: ${result.accepted}.`,
+    };
+  });
+
+export const acceptEvidenceSuggestionAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+
+    await acceptEvidenceSuggestion(db, actor, {
+      suggestionId: text(formData, "suggestionId"),
+      relationType: (optionalText(formData, "relationType") ?? undefined) as never,
+    });
+
+    revalidatePath(`/admin/sources/${text(formData, "sourceDocumentId")}`);
+    return { ok: true, message: "Důkaz připojen ke slibu." };
   });
 
 export const acceptSuggestionAction: Action = async (formData) =>

@@ -54,10 +54,14 @@ export class HeuristicProvider implements AIProvider {
     };
 
     // Projde tímtéž schématem jako odpověď modelu — jinak by se testovalo něco
-    // jiného, než co poteče produkcí.
+    // jiného, než co poteče produkcí. Zároveň to odřízne úlohy, na které
+    // heuristika nestačí: rozhodnout, jestli usnesení závazek potvrzuje, nebo
+    // je s ním v rozporu, se výčtem sloves udělat nedá.
     const parsed = request.schema.safeParse(payload);
     if (!parsed.success) {
-      throw new AIProviderError("Heuristický dodavatel nedodržel schéma úlohy.");
+      throw new AIProviderError(
+        "Heuristika umí jen vytěžování kandidátů na slib. Na tuhle úlohu je potřeba model (AI_PROVIDER=anthropic).",
+      );
     }
 
     return {

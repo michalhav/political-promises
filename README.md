@@ -233,11 +233,13 @@ Vytěžování kandidátů na slib se spouští z detailu zdrojového dokumentu 
 - u každého běhu se ukládá poskytovatel, model, verze promptu, otisk vstupu, tokeny a cena (`ai_run`, `ai_suggestion`)
 - stejný dokument se stejnou verzí promptu neproběhne dvakrát — otisk vstupu to zachytí
 
+Druhá úloha, **hledání důkazů**, běží tlačítkem *Hledat důkazy k slibům* na témž místě. Model dostane očíslovaný seznam slibů a vrací číslo, ne identifikátor — číslo mimo seznam se zahodí, takže nemá jak navěsit důkaz na slib, který mu nikdo nedal. Přijetí návrhu zakládá vazbu **ověřenou člověkem**, pod jménem toho, kdo ji vzal; nepotvrzené vazby v datech nevznikají. Roli důkazu (dokládá průběh / výsledek / je v rozporu…) navrhuje model, ale přepsat ji může redaktor — na téhle rozvaze stojí hodnocení.
+
 Text dokumentu je pro model **data, ne instrukce**. Systémový prompt to říká, ale skutečnou pojistkou proti prompt injection je ověření citace: věta „ignoruj předchozí pokyny" v nahraném PDF může model zmást, do systému se ale nedostane, protože se v dokumentu nenajde jako doložitelná citace.
 
 | `AI_PROVIDER` | Co běží | Cena |
 | --- | --- | --- |
-| `fixture` (výchozí) | Deterministická heuristika `HeuristicPromiseExtractor` — laťka, kterou má model překonávat | 0 |
+| `fixture` (výchozí) | Deterministická heuristika `HeuristicPromiseExtractor` — laťka, kterou má model překonávat. Umí jen vytěžování kandidátů; u hledání důkazů to řekne a skončí | 0 |
 | `anthropic` | Claude přes oficiální SDK; vyžaduje `ANTHROPIC_API_KEY` | podle ceníku, ukládá se u běhu |
 | `local` | Zatím nenapojeno, skončí srozumitelnou chybou | — |
 

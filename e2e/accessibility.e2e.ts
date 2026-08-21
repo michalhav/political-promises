@@ -227,6 +227,18 @@ test.describe("přístupnost redakční konzole", () => {
     await expectAccessible(page, "/admin/lists");
     await expectAccessible(page, "/admin/promises/new");
     await expectAccessible(page, `/admin/promises/${PUBLISHED_SLUG}`);
+
+    // Detail zdroje nese fronty návrhů od stroje; cesta k němu vede přes
+    // seznam, protože identifikátor dokumentu dopředu neznáme.
+    await page.goto("/admin/sources");
+    await page.locator("table a").first().click();
+    await expect(page).toHaveURL(/\/admin\/sources\/[0-9a-f-]{36}$/);
+    const violations = await analyse(page);
+    expect(
+      violations,
+      `Přístupnost detailu zdroje:
+${describe(violations)}`,
+    ).toEqual([]);
   });
 });
 

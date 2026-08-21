@@ -1,8 +1,8 @@
 # Kontrola na každý push a pull request.
 #
 # Databázi workflow nepotřebuje: integrační testy běží proti PGlite (Postgres
-# ve WASM) a produkční build je záměrně postavený tak, aby se obešel bez
-# dostupné databáze. Runner tedy nemusí spouštět žádnou službu.
+# ve WASM) a produkční build se obejde nejen bez dostupné databáze, ale i bez
+# proměnné, která by na ni ukazovala. Runner tedy nemusí spouštět žádnou službu.
 name: Kontrola
 
 on:
@@ -36,10 +36,10 @@ jobs:
         run: npm run check
 
       - name: Produkční build
-        # Hodnota je smyšlená schválně: build k databázi nesmí sahat.
-        # Kdyby na ni sáhl, spadne to tady, a ne až při nasazení.
-        env:
-          DATABASE_URL: postgres://build:build@127.0.0.1:5432/build
+        # Schválně **bez jediné proměnné prostředí**. Build k databázi sahat
+        # nesmí a tenhle krok je to jediné, co to vynutí: dokud se sem
+        # podstrkovala smyšlená DATABASE_URL, chyba se schovala úplně stejně
+        # jako za .env na vývojářském stroji a projevila by se až v nasazení.
         run: npm run build
 
   e2e:

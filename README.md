@@ -203,21 +203,28 @@ Laťkou je deterministická heuristika (`baseline-heuristic`), aby budoucí mode
 
 ## Nasazení
 
-Cíl je Vercel + hostovaný Postgres (Neon). Build **nevyžaduje** dostupnou databázi — stránky, které z ní čtou, se vykreslují až při požadavku.
+Cíl je Vercel + hostovaný Postgres (Neon).
 
-```bash
-npm run build
-npm run start
-```
+**Sestavení nepotřebuje databázi ani jedinou proměnnou prostředí.** Databáze se otevírá až prvním dotazem; stránky, které z ní čtou, se vykreslují při požadavku. Ověřeno sestavením z čistého klonu bez `.env`.
 
 Postup z čistého checkoutu:
 
-1. Nastav `DATABASE_URL` na produkční databázi.
-2. `npm ci`
-3. `npm run db:migrate`
-4. `npm run build`
+```bash
+npm ci
+npm run build                                  # bez proměnných, bez databáze
+DATABASE_URL="postgres://…" npm run db:migrate # schéma z nuly na prázdné databázi
+DATABASE_URL="postgres://…" npm run start
+```
 
-Seed na produkci nespouštěj — smaže obsah.
+Na Vercelu:
+
+1. Nastav `DATABASE_URL` (Neon, s `sslmode=require`) v proměnných projektu. Buildu ji netřeba, běhu ano.
+2. **Migrace nejsou součástí buildu a nikdo je nespustí za tebe.** Pusť `npm run db:migrate` proti produkční databázi při každém nasazení, které přidává migraci — z lokálu nebo z deploy hooku. Bez toho aplikace nasadí, ale první dotaz spadne na chybějící tabulku.
+3. `AI_PROVIDER` nech nenastavené (výchozí `fixture`), dokud vědomě nechceš platit za model.
+
+Prázdná databáze je funkční stav: veřejné stránky se vykreslí s prázdnými seznamy, neexistující slib vrací 404. Ověřeno proti čerstvě zmigrované databázi bez jediného záznamu.
+
+`db:seed` a `db:reset` proti produkci **nespouštěj** — obojí data maže. Pojistka v `src/db/safety.ts` je proti nelokálnímu hostu i proti `NODE_ENV=production` odmítne, ale spoléhat se na ni jako na jedinou obranu není dobrý nápad.
 
 > Vercel Hobby zakazuje komerční užití. Jakmile přibudou dary nebo transparentní účet, je potřeba Pro.
 

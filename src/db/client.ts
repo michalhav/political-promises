@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 import * as schema from "@/db/schema";
@@ -21,6 +21,31 @@ function getPool(): Pool {
   return globalForDb.pool;
 }
 
-export const db = drizzle(getPool(), { schema });
+let instance: NodePgDatabase<typeof schema> | null = null;
 
-export type Database = typeof db;
+function getDb(): NodePgDatabase<typeof schema> {
+  instance ??= drizzle(getPool(), { schema });
+  return instance;
+}
+
+/**
+ * Databáze se otevírá až prvním dotazem, ne při načtení modulu.
+ *
+ * `next build` načítá moduly stránek, aby posbíral jejich konfiguraci. Kdyby
+ * se pool vyráběl na úrovni modulu, build by vyžadoval `DATABASE_URL` — a to
+ * je přesně ten druh závislosti, kvůli které nasazení padá až v CI, kde
+ * proměnná ještě není. Sestavení se o databázi zajímat nemá; stránky z ní
+ * čtou až při požadavku.
+ *
+ * Proxy je tu proto, aby zbytek kódu dál psal `db.select(...)` a nemusel volat
+ * `getDb()`. Je to jediné místo v projektu, kde se takový trik používá.
+ */
+export const db = new Proxy({} as NodePgDatabase<typeof schema>, {
+  get(_target, property) {
+    const real = getDb() as unknown as Record<string | symbol, unknown>;
+    const value = real[property];
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+});
+
+export type Database = NodePgDatabase<typeof schema>;

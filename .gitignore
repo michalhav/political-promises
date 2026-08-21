@@ -51,6 +51,7 @@ next-env.d.ts
 coverage
 playwright-report
 test-results
+# pracovní výstup snímků; zmrazená sada je v docs/design/
 /e2e/screenshots
 
 # korpus: zdrojové dokumenty do repozitáře nepatří, odvozené artefakty ano

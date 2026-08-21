@@ -62,7 +62,17 @@ export const promiseEvidence = pgTable(
     aiSuggestionId: uuid("ai_suggestion_id").references(() => aiSuggestions.id, {
       onDelete: "set null",
     }),
+    /** Co zdroj pro tenhle slib dokládá. Redakční výklad, ne text zdroje. */
     note: text("note"),
+    /**
+     * Co z tohoto zdroje naopak vyvodit **nelze**.
+     *
+     * Oddělené pole schválně. Sloučit obojí do jedné poznámky by smazalo rozdíl
+     * mezi tím, co zdroj podporuje, a tím, kam už nesahá — a právě na tomhle
+     * rozdílu stojí důvěryhodnost celého produktu. Zpráva dokládající 910 bytů
+     * neříká nic o tom, že jich bude 2 000.
+     */
+    limitationNote: text("limitation_note"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },

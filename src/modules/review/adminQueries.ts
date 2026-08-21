@@ -295,6 +295,7 @@ export interface AdminEvidenceRow {
   relationType: RelationTypeValue;
   humanVerified: boolean;
   note: string | null;
+  limitationNote: string | null;
   sourceTitle: string;
   sourceId: string;
 }
@@ -407,6 +408,7 @@ export async function getAdminPromiseDetail(
           relationType: promiseEvidence.relationType,
           humanVerified: promiseEvidence.humanVerified,
           note: promiseEvidence.note,
+          limitationNote: promiseEvidence.limitationNote,
           sourceTitle: sourceDocuments.title,
           sourceId: sourceDocuments.id,
         })

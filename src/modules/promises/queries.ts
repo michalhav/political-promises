@@ -83,7 +83,10 @@ export interface Citation {
 
 export interface EvidenceView extends Citation {
   relationType: RelationTypeValue;
+  /** Co zdroj dokládá — redakční výklad. */
   note: string | null;
+  /** Co z něj naopak vyvodit nelze. Oddělené schválně, viz schéma. */
+  limitationNote: string | null;
 }
 
 export interface TimelineEventView {
@@ -657,6 +660,7 @@ async function loadEvidence(db: AppDatabase, promiseId: string): Promise<Evidenc
     .select({
       relationType: promiseEvidence.relationType,
       note: promiseEvidence.note,
+      limitationNote: promiseEvidence.limitationNote,
       excerpt: evidence.excerpt,
       pageNumber: evidence.pageNumber,
       locator: evidence.locator,
@@ -672,6 +676,7 @@ async function loadEvidence(db: AppDatabase, promiseId: string): Promise<Evidenc
   return rows.map((row) => ({
     relationType: row.relationType,
     note: row.note,
+    limitationNote: row.limitationNote,
     excerpt: row.excerpt,
     pageNumber: row.pageNumber,
     locator: row.locator,

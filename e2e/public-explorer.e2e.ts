@@ -25,33 +25,65 @@ test.describe("veřejná část", () => {
     await expect(page).toHaveURL(/\/promises\/demo-a-2000-mestskych-najemnich-bytu$/);
   });
 
-  test("detail slibu doloží, o co se závěr opírá", async ({ page }) => {
+  test("detail slibu nejdřív odpoví a teprve pak dokládá", async ({ page }) => {
     await page.goto("/promises/demo-a-2000-mestskych-najemnich-bytu");
 
+    // Odpověď stojí nahoře, ne rozdrobená mezi metadaty.
+    const stav = page.getByRole("region", { name: "Aktuální stav" });
+    await expect(stav).toBeVisible();
+    await expect(stav).toContainText("Průběh realizace");
+    await expect(stav).toContainText("Výsledek");
+    await expect(stav).toContainText("Podle veřejných zdrojů prošlých k");
+    await expect(stav).toContainText("Co to znamená");
+
+    // Původní znění musí být rozeznatelné jako politický originál.
     await expect(page.getByRole("heading", { level: 2, name: "Co bylo slíbeno" })).toBeVisible();
-    await expect(page.getByText(/Stav podle veřejně dostupných zdrojů k/)).toBeVisible();
+    await expect(page.locator("blockquote").first()).toContainText("2 000");
 
-    // Odpověď na „proč to tak je" musí být na stránce, ne na vyžádání.
+    // Teprve pak „proč to říkáme", příběh a plný archiv.
+    await expect(page.getByRole("heading", { level: 2, name: "Jak to víme" })).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /Nakolik jde slib vůbec hodnotit/ }),
+      page.getByRole("heading", { level: 2, name: "Co se od voleb dělo" }),
     ).toBeVisible();
-    await expect(page.getByText(/Vážené skóre/).first()).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Důkazy a zdroje" })).toBeVisible();
 
-    await expect(page.getByRole("heading", { name: "Co se se slibem dělo" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Čím je to doložené" })).toBeVisible();
+    // Metodika je deep-dive, ne první, co čtenář potká.
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Jak vzniklo hodnocení" }),
+    ).toBeVisible();
 
     // Metrika: slíbený cíl i naměřená hodnota.
     await expect(page.getByText("Slíbený cíl")).toBeVisible();
     await expect(page.getByText("Naměřené hodnoty")).toBeVisible();
   });
 
-  test("nehodnotitelný slib se netváří jako splněný", async ({ page }) => {
+  test("důkaz odděluje, co zdroj dokládá, od toho, co z něj neplyne", async ({ page }) => {
+    await page.goto("/promises/demo-a-2000-mestskych-najemnich-bytu");
+
+    const archiv = page.getByRole("region", { name: "Důkazy a zdroje" });
+    await expect(archiv.getByText("Co tento zdroj dokládá").first()).toBeVisible();
+    // Nejcennější věta celého bloku: kam už zdroj nesahá.
+    await expect(archiv.getByText("Co z něj nelze vyvodit").first()).toBeVisible();
+    await expect(archiv.getByText(/neříká nic o dosažení slíbených 2 000/)).toBeVisible();
+  });
+
+  test("stav bez doloženého postupu nelze číst jako konstatování nečinnosti", async ({ page }) => {
+    await page.goto("/promises/demo-d-500-novych-kamer");
+
+    const stav = page.getByRole("region", { name: "Aktuální stav" });
+    await expect(stav).toContainText("Bez doloženého postupu");
+    await expect(stav).toContainText("Co to neznamená");
+    await expect(stav).toContainText("neznamená, že se nic neděje");
+  });
+
+  test("nehodnotitelný slib dá odpověď větou, ne třemi štítky", async ({ page }) => {
     await page.goto("/promises/demo-a-snizeni-dph-na-stavebni-prace");
 
-    // Stupeň je i ve štítku v hlavičce, proto se ptáme na sekci se stavy.
-    const status = page.getByRole("region", { name: "V jakém je slib stavu" });
-    await expect(status.getByText("Nehodnotitelné")).toBeVisible();
-    await expect(page.getByText(/pravomoci daného orgánu/)).toBeVisible();
+    const verdikt = page.getByRole("region", {
+      name: "Tento slib nelze objektivně vyhodnotit",
+    });
+    await expect(verdikt).toBeVisible();
+    await expect(verdikt).toContainText(/pravomoci daného orgánu/);
   });
 
   test("porovnání s koaliční smlouvou ukazuje obě znění", async ({ page }) => {

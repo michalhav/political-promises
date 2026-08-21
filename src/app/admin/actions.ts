@@ -140,6 +140,7 @@ export const attachEvidenceAction: Action = async (formData) =>
       locator: optionalText(formData, "locator"),
       relationType: text(formData, "relationType") as never,
       note: optionalText(formData, "note"),
+      limitationNote: optionalText(formData, "limitationNote"),
     });
 
     revalidatePath(`/admin/promises/${slug}`);

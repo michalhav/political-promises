@@ -283,8 +283,14 @@ export default async function AdminPromiseDetailPage({
                   />
                 </Field>
               </div>
-              <Field label="Poznámka" hint="Proč je tenhle zdroj pro slib podstatný.">
+              <Field label="Co zdroj dokládá" hint="Proč je tenhle zdroj pro slib podstatný.">
                 <TextArea name="note" rows={2} />
+              </Field>
+              <Field
+                label="Co z něj nelze vyvodit"
+                hint="Kam už zdroj nesahá. Nejcennější věta celého důkazu — bez ní se tvrzení tváří doložitelněji, než je."
+              >
+                <TextArea name="limitationNote" rows={2} />
               </Field>
             </AdminForm>
           </div>

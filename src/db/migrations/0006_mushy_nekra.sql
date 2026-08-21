@@ -1,0 +1,1 @@
+ALTER TABLE "promise_evidence" ADD COLUMN "limitation_note" text;

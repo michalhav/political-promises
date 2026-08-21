@@ -133,6 +133,26 @@ body {
   max-width: 68ch;
 }
 
+/**
+ * Kotva nesmí skončit pod lepící navigací.
+ *
+ * Řeší se to plošně, ne u každého nadpisu zvlášť: každý cíl odkazu na téže
+ * stránce je nadpis nebo sekce s `id`, takže jedno pravidlo je spolehlivější
+ * než třída, na kterou se u příští sekce zapomene.
+ */
+:where(h1, h2, h3, section)[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Lišta se posouvá prstem nebo fokusem; pruh scrollbaru by z ní ukrajoval. */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -105,6 +105,10 @@ test.describe("přístupnost na mobilu", () => {
     await expectAccessible(page, "/promises");
   });
 
+  test("detail slibu na úzké obrazovce", async ({ page }) => {
+    await expectAccessible(page, `/promises/${PUBLISHED_SLUG}`);
+  });
+
   test("otevřená zásuvka s filtry je dialog, ne jen odsunutý obsah", async ({ page }) => {
     await page.goto("/promises");
     await page.getByRole("button", { name: /Filtry a hledání/ }).click();

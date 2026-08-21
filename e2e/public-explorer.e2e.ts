@@ -126,6 +126,43 @@ test.describe("veřejná část", () => {
 });
 
 /**
+ * Mapa dlouhé stránky.
+ *
+ * Detail slibu má na mobilu přes jedenáct obrazovek. Lišta je jediné, co
+ * čtenáři dovolí se v tom pohybovat, takže se testuje i to, že kotva
+ * neskončí schovaná pod lištou samotnou.
+ */
+test.describe("navigace po detailu slibu", () => {
+  test("lišta odkazuje na sekce a kotva neskončí pod ní", async ({ page }) => {
+    await page.goto("/promises/demo-a-2000-mestskych-najemnich-bytu");
+
+    const listaSekci = page.getByRole("navigation", { name: "Části stránky" });
+    await expect(listaSekci).toBeVisible();
+
+    await listaSekci.getByRole("link", { name: "Stav" }).click();
+    await expect(page).toHaveURL(/#aktualni-stav$/);
+
+    const nadpis = page.getByRole("heading", { level: 2, name: "Aktuální stav" });
+    await expect(nadpis).toBeInViewport();
+
+    const nadpisBox = await nadpis.boundingBox();
+    const listaBox = await listaSekci.boundingBox();
+    expect(nadpisBox).not.toBeNull();
+    expect(listaBox).not.toBeNull();
+    expect(nadpisBox!.y).toBeGreaterThanOrEqual(listaBox!.y + listaBox!.height);
+  });
+
+  test("lišta nenabízí sekci, která na stránce není", async ({ page }) => {
+    // Nehodnotitelný slib nemá ani metriky, ani „Jak to víme".
+    await page.goto("/promises/demo-a-snizeni-dph-na-stavebni-prace");
+
+    const listaSekci = page.getByRole("navigation", { name: "Části stránky" });
+    await expect(listaSekci.getByRole("link", { name: "Jak to víme" })).toHaveCount(0);
+    await expect(listaSekci.getByRole("link", { name: "Stav" })).toBeVisible();
+  });
+});
+
+/**
  * Zásuvka s filtry na mobilu.
  *
  * Vlastní implementace bez knihovny, takže se od ní očekává, že se otestuje

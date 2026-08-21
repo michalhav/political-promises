@@ -11,6 +11,7 @@ import { EvidenceBlock } from "@/app/(public)/promises/_components/EvidenceBlock
 import { EvidenceSummary } from "@/app/(public)/promises/_components/EvidenceSummary";
 import { MetricPanel } from "@/app/(public)/promises/_components/MetricPanel";
 import { OriginalPromise } from "@/app/(public)/promises/_components/OriginalPromise";
+import { SectionNav, type SectionLink } from "@/app/(public)/promises/_components/SectionNav";
 import { Timeline } from "@/app/(public)/promises/_components/Timeline";
 import { db } from "@/db/client";
 import {
@@ -67,6 +68,32 @@ export default async function PromiseDetailPage({ params }: PageProps<"/promises
   const assessment = promise.assessment;
   const isNonAssessable = assessment?.assessability === "NOT_ASSESSABLE";
 
+  // Podmínky sdílené s vykreslením níž, aby lišta nikdy neodkazovala na sekci,
+  // která na stránce není. Pojmenované proměnné jsou tu jediná pojistka proti
+  // rozejití — pro sedm sekcí je to spolehlivější než další vrstva abstrakce.
+  const hasEvidenceSummary = !isNonAssessable;
+  const hasMetrics = promise.metrics.length > 0;
+  const hasEvidence = promise.evidence.length > 0;
+  const hasHistory = promise.corrections.length > 0 || promise.assessmentHistory.length > 0;
+
+  const sections: SectionLink[] = [
+    { id: "co-bylo-slibeno", label: "Slib" },
+    ...(assessment
+      ? [
+          isNonAssessable
+            ? { id: "nehodnotitelny", label: "Stav" }
+            : { id: "aktualni-stav", label: "Stav" },
+        ]
+      : []),
+    ...(hasEvidenceSummary ? [{ id: "jak-to-vime", label: "Jak to víme" }] : []),
+    ...(hasMetrics ? [{ id: "cim-se-meri", label: "Měření" }] : []),
+    { id: "co-se-delo", label: "Co se dělo" },
+    ...(promise.coalition ? [{ id: "koalice", label: "Koalice" }] : []),
+    ...(hasEvidence ? [{ id: "dukazy", label: "Důkazy" }] : []),
+    ...(assessment ? [{ id: METHODOLOGY_SECTION, label: "Metodika" }] : []),
+    ...(hasHistory ? [{ id: "historie", label: "Opravy" }] : []),
+  ];
+
   return (
     <article className="mx-auto max-w-3xl space-y-12 px-4 py-10 sm:py-14">
       <header className="space-y-4">
@@ -105,6 +132,8 @@ export default async function PromiseDetailPage({ params }: PageProps<"/promises
         </p>
       </header>
 
+      <SectionNav sections={sections} />
+
       <Section id="co-bylo-slibeno" title="Co bylo slíbeno">
         <OriginalPromise
           originalText={promise.originalText}
@@ -127,7 +156,7 @@ export default async function PromiseDetailPage({ params }: PageProps<"/promises
         )
       ) : null}
 
-      {!isNonAssessable ? (
+      {hasEvidenceSummary ? (
         <Section
           id="jak-to-vime"
           title="Jak to víme"
@@ -137,7 +166,7 @@ export default async function PromiseDetailPage({ params }: PageProps<"/promises
         </Section>
       ) : null}
 
-      {promise.metrics.length > 0 ? (
+      {hasMetrics ? (
         <Section
           id="cim-se-meri"
           title="Čím se splnění měří"
@@ -161,7 +190,7 @@ export default async function PromiseDetailPage({ params }: PageProps<"/promises
 
       {promise.coalition ? <CoalitionSection promise={promise} /> : null}
 
-      {promise.evidence.length > 0 ? (
+      {hasEvidence ? (
         <Section id="dukazy" title="Důkazy a zdroje">
           <div className="space-y-4">
             {promise.evidence.map((item, index) => (
@@ -196,7 +225,7 @@ export default async function PromiseDetailPage({ params }: PageProps<"/promises
         </Section>
       ) : null}
 
-      {promise.corrections.length > 0 || promise.assessmentHistory.length > 0 ? (
+      {hasHistory ? (
         <Section
           id="historie"
           title="Opravy a starší verze"

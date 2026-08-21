@@ -1,0 +1,18 @@
+# Konce řádků normalizujeme na LF v repozitáři, v pracovní kopii ať si je
+# každý systém převede po svém. Bez toho vyrobí checkout na Windows diff
+# přes celý projekt.
+* text=auto eol=lf
+
+# Binární soubory se nesmí převádět.
+*.pdf binary
+*.png binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# Vygenerované soubory nezahlcují diff v code review.
+package-lock.json linguist-generated=true -diff
+src/db/migrations/meta/*.json linguist-generated=true -diff
+corpus/**/extracted.json linguist-generated=true -diff
+corpus/**/golden.draft.json linguist-generated=true -diff
+corpus/**/diagnostics.json linguist-generated=true -diff

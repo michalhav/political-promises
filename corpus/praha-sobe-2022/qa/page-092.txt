@@ -1,0 +1,35 @@
+=== STRÁNKA 92 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 92,
+  "lineCount": 8,
+  "itemCount": 12,
+  "characterCount": 237,
+  "columns": 1,
+  "wordOverlap": 1,
+  "bulletLines": 0,
+  "barePageNumberItems": 0,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "info@prahasobe.cz",
+  "lastCanonicalLine": "známým. Děkujeme!"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+PRAHA, KTERÁ SLOUŽÍ
+VŠEM PRAŽANŮM
+Sbíráme 100 tisíc podpisů Pražanů, abychom mohli
+kandidovat na magistrát a na radnice městských
+částí. Podepište naši petici a dejte podepsat svým
+známým. Děkujeme!
+info@prahasobe.cz
+https://prahasobe.cz
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+info@prahasobe.cz
+https://prahasobe.cz
+PRAHA, KTERÁ SLOUŽÍ
+VŠEM PRAŽANŮM
+Sbíráme 100 tisíc podpisů Pražanů, abychom mohli
+kandidovat na magistrát a na radnice městských
+částí. Podepište naši petici a dejte podepsat svým
+známým. Děkujeme!

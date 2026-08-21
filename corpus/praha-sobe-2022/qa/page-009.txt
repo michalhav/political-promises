@@ -1,0 +1,117 @@
+=== STRÁNKA 9 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 9,
+  "lineCount": 26,
+  "itemCount": 53,
+  "characterCount": 2957,
+  "columns": 4,
+  "wordOverlap": 1,
+  "bulletLines": 0,
+  "barePageNumberItems": 1,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "9",
+  "lastCanonicalLine": "Naši lidé"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+MILENA JOHNOVÁ
+Díky Mileně se Praha konečně učí, že na každém člověku záleží.
+Milena opravdu ví, o čem mluví, protože se během své třicetileté
+praxe v sociálních službách setkala s tisíci příběhy těch nejzranitel-
+nějších lidí. Vystudovala molekulární biologii a genetiku, ale hned
+po škole se místo práce v laboratoři rozhodla napřít svou energii
+do pomoci lidem s postižením jako vedoucí úplně prvního chrá-
+něného bydlení v Česku. Inovativní přístupy v sociální a zdravot-
+ní péči jsou Mileně vlastní, protože ví, že dokážou od základů mě-
+nit životy. Jako radní teď čtvrtým rokem bojuje za lepší životy dětí
+s postižením, rodin v krizi nebo osamělých seniorů. Z kojeneckého
+ústavu vytvořila centrum podpory rodin, otevřela první asistované
+byty a odlehčovací služby pro lidi s autismem nebo připravila in-
+vestiční plán dvou miliard korun na služby pro seniory. Díky Mileně
+také Praha opustila komunistickou praxi vyvážení lidí s postižením
+za své hranice – uzavřela zámek ve Svojšicích, kde klienti žili v ne-
+příznivých podmínkách i po osmi lidech na jednom pokoji, a místo
+toho všem zajistila důstojné bydlení se službami. V oblasti zdravot-
+nictví Milena posílila kapacitu a kvalitu paliativní a následné péče,
+vytvořila podmínky pro rozvoj péče o duševní zdraví zejména dětí
+a posílila zdravotní prevenci. Pro Milenu je zásadní, aby se v Praze
+každý mohl cítit jako přínosný a oceňovaný obyvatel města.
+ADAM SCHEINHERR
+Adam se nezdá. Je to bojovník a jen málokdo by s ním mohl sou-
+těžit v rozsahu odborných znalostí. Má tři technické vysokoškol-
+ské tituly, z toho dva ze zahraničí. Ve svém předchozím zaměstná-
+ní organizoval přepravu nebezpečných jaderných paliv po celém
+světě, včetně nebezpečných lokalit na různých kontinentech,
+v rámci programu OSN za snížení celosvětové jaderné hrozby.
+Dnes v hlavě nosí a následně v praxi úspěšně připravuje desítky až
+stovky dopravních projektů. Se svým týmem zkušených spolupra-
+covníků tak konečně pořádně nastartoval to, co minulé politické
+reprezentace zanedbaly. Když se v roce 2018 ujal funkce náměstka
+pro dopravu, neprobíhala v Praze jediná velká dopravní stavba a ne-
+existovalo ani žádné připravené stavební povolení. Adam věci zá-
+sadně urychlil a z říše snů do skutečnosti dostal tři nové mosty přes
+Vltavu, metro D, tři nové tramvajové tratě nebo projekt Městského
+okruhu. K tomu rozjel nejvíce oprav komunikací od sametové re-
+voluce, otevřel desítky nových přechodů pro chodce, pracoval dál
+na vnitřním okruhu Prahy a tlačil a stále tlačí ministerstvo dopravy,
+aby konečně pohnulo s tím vnějším. V hlavě má komplexní vizi do-
+pravy a plány na velké projekty pro budoucnost v čele s okružním
+metrem. Díky Adamovi se v Praze konečně masivně staví a na roz-
+díl od minulosti se u toho navíc neodklání žádné peníze do kapes
+různých „kamarádíčků“. Adam cítí jako zodpovědnost pokračovat
+v práci další čtyři roky, aby rozjeté infrastrukturní projekty dokončil
+a uvedl k životu další.
+Naši lidé
+9
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+9
+MILENA JOHNOVÁ
+Díky Mileně se Praha konečně učí, že na každém člověku záleží.
+Milena opravdu ví, o čem mluví, protože se během své třicetileté
+praxe v sociálních službách setkala s tisíci příběhy těch nejzranitel-
+nějších lidí. Vystudovala molekulární biologii a genetiku, ale hned
+po škole se místo práce v laboratoři rozhodla napřít svou energii
+do pomoci lidem s postižením jako vedoucí úplně prvního chrá-
+něného bydlení v Česku. Inovativní přístupy v sociální a zdravot-
+ní péči jsou Mileně vlastní, protože ví, že dokážou od základů mě-
+nit životy. Jako radní teď čtvrtým rokem bojuje za lepší životy dětí
+s postižením, rodin v krizi nebo osamělých seniorů. Z kojeneckého
+ústavu vytvořila centrum podpory rodin, otevřela první asistované
+byty a odlehčovací služby pro lidi s autismem nebo připravila in-
+vestiční plán dvou miliard korun na služby pro seniory. Díky Mileně
+také Praha opustila komunistickou praxi vyvážení lidí s postižením
+za své hranice – uzavřela zámek ve Svojšicích, kde klienti žili v ne-
+příznivých podmínkách i po osmi lidech na jednom pokoji, a místo
+toho všem zajistila důstojné bydlení se službami. V oblasti zdravot-
+nictví Milena posílila kapacitu a kvalitu paliativní a následné péče,
+vytvořila podmínky pro rozvoj péče o duševní zdraví zejména dětí
+a posílila zdravotní prevenci. Pro Milenu je zásadní, aby se v Praze
+každý mohl cítit jako přínosný a oceňovaný obyvatel města.
+ADAM SCHEINHERR
+Adam se nezdá. Je to bojovník a jen málokdo by s ním mohl sou-
+těžit v rozsahu odborných znalostí. Má tři technické vysokoškol-
+ské tituly, z toho dva ze zahraničí. Ve svém předchozím zaměstná-
+ní organizoval přepravu nebezpečných jaderných paliv po celém
+světě, včetně nebezpečných lokalit na různých kontinentech,
+v rámci programu OSN za snížení celosvětové jaderné hrozby.
+Dnes v hlavě nosí a následně v praxi úspěšně připravuje desítky až
+stovky dopravních projektů. Se svým týmem zkušených spolupra-
+covníků tak konečně pořádně nastartoval to, co minulé politické
+reprezentace zanedbaly. Když se v roce 2018 ujal funkce náměstka
+pro dopravu, neprobíhala v Praze jediná velká dopravní stavba a ne-
+existovalo ani žádné připravené stavební povolení. Adam věci zá-
+sadně urychlil a z říše snů do skutečnosti dostal tři nové mosty přes
+Vltavu, metro D, tři nové tramvajové tratě nebo projekt Městského
+okruhu. K tomu rozjel nejvíce oprav komunikací od sametové re-
+voluce, otevřel desítky nových přechodů pro chodce, pracoval dál
+na vnitřním okruhu Prahy a tlačil a stále tlačí ministerstvo dopravy,
+aby konečně pohnulo s tím vnějším. V hlavě má komplexní vizi do-
+pravy a plány na velké projekty pro budoucnost v čele s okružním
+metrem. Díky Adamovi se v Praze konečně masivně staví a na roz-
+díl od minulosti se u toho navíc neodklání žádné peníze do kapes
+různých „kamarádíčků“. Adam cítí jako zodpovědnost pokračovat
+v práci další čtyři roky, aby rozjeté infrastrukturní projekty dokončil
+a uvedl k životu další.
+Naši lidé

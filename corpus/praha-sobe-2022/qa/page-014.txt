@@ -1,0 +1,78 @@
+=== STRÁNKA 14 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 14,
+  "lineCount": 24,
+  "itemCount": 64,
+  "characterCount": 579,
+  "columns": 1,
+  "wordOverlap": 0.7097,
+  "bulletLines": 0,
+  "barePageNumberItems": 1,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "PRAHA SOBĚ I Naše vize a konkrétních 218 zlepšení14",
+  "lastCanonicalLine": "88/"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+PLÁN PRO PRAHU
+Doprava
+20/tým Adama Scheinherra
+Školství, věda, sport
+34/tým Mariany Čapkové
+Zdravotnictví a pomoc potřebným
+42/tým Mileny Johnové
+Bydlení a správa majetku
+50/tým Pavla Zelenky
+Veřejný prostor
+54/tým Kristýny Drápalové
+Sídliště
+60/tým Petra Zemana
+Rozvoj města
+64/tým Petra Zemana
+Městské finance a podpora podnikání
+68/tým Pavla Vyhnánka
+Životní prostředí, péče o zeleň a bezpečnost
+74/tým Jiřího Knitla
+Kultura a cestovní ruch
+82/tým Hany Třeštíkové
+Otevřený a efektivní úřad
+88/tým Jana Čižinského
+14PRAHA SOBĚINaše vize a konkrétních 218 zlepšení
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+PRAHA SOBĚ I Naše vize a konkrétních 218 zlepšení14
+PLÁN PRO PRAHU
+Doprava
+tým Adama Scheinherra
+Školství, věda, sport
+tým Mariany Čapkové
+Zdravotnictví a pomoc potřebným
+tým Mileny Johnové
+Bydlení a správa majetku
+tým Pavla Zelenky
+Veřejný prostor
+tým Kristýny Drápalové
+Sídliště
+tým Petra Zemana
+Rozvoj města
+tým Petra Zemana
+Městské finance a podpora podnikání
+tým Pavla Vyhnánka
+Životní prostředí, péče o zeleň a bezpečnost
+tým Jiřího Knitla
+Kultura a cestovní ruch
+tým Hany Třeštíkové
+Otevřený a efektivní úřad
+tým Jana Čižinského
+20/
+34/
+42/
+50/
+54/
+60/
+64/
+68/
+74/
+82/
+88/

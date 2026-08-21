@@ -1,0 +1,27 @@
+=== STRÁNKA 1 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 1,
+  "lineCount": 4,
+  "itemCount": 5,
+  "characterCount": 51,
+  "columns": 1,
+  "wordOverlap": 1,
+  "bulletLines": 0,
+  "barePageNumberItems": 0,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "NAŠE VIZE A KONKRÉTNÍCH",
+  "lastCanonicalLine": "PRO PRAHU"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+PLÁN
+PRO PRAHU
+NAŠE VIZE A KONKRÉTNÍCH
+218 ZLEPŠENÍ
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+NAŠE VIZE A KONKRÉTNÍCH
+218 ZLEPŠENÍ
+PLÁN
+PRO PRAHU

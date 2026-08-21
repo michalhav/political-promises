@@ -1,0 +1,158 @@
+=== STRÁNKA 33 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 33,
+  "lineCount": 45,
+  "itemCount": 82,
+  "characterCount": 3970,
+  "columns": 3,
+  "wordOverlap": 0.9967,
+  "bulletLines": 0,
+  "barePageNumberItems": 1,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "33",
+  "lastCanonicalLine": "Zdroj: ATELIER 6 a TUBES"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+U veřejných zakázek zohledníme
+nejen cenu, ale i kvalitu
+U veřejných zakázek na novou výstavbu a rekonstrukce infrastruk-
+tury jsme nastavili zcela nová hodnoticí kritéria. Zatímco dříve
+Prahu zajímala prakticky jen cena, my jsme mezi kritéria přidali také
+délku zhotovení a délku záruční doby. Dáváme tím jasný signál, že
+modernímu městu nezáleží jen na ceně, ale i na rychlosti stavby
+a výsledné kvalitě. Platí to pro nové stavby i opravy. Nově jsme také
+definovali třídy pražských komunikací. To nám významně pomů-
+že plánovat tak, abychom na frekventovaných silnicích využíva-
+li ty nejkvalitnější materiály, které maximálně prodlouží životnost,
+zatímco na méně frekventovaných ulicích dosáhneme stejné ži-
+votnosti méně tvrdým asfaltem. Kde to hygienické a další předpisy
+umožňují, tam opravujeme doslova od rána do večera, víkendy ne-
+vyjímaje. Budeme v tom pokračovat a díky těmto změnám se Praha
+dočká daleko kvalitnější a rychlejší výstavby.
+Rozvineme city logistiku na řece
+Budeme nadále rozvíjet pražské přívozy, které jsou u Pražanů velmi
+oblíbené. Prověříme také vznik vodní linky podél Vltavy propojují-
+cí nádraží Podbaba, Troju, nádraží Holešovice a Karlín. Řeku využi-
+jeme i pro přepravu stavebních materiálů a rubaniny či odpadu ze
+staveb podél ní. Tím urychlíme logistiku a odlehčíme silnicím, záro-
+veň budeme dbát na šetrnost lodí k ovzduší. Využití lodní dopravy
+pro přepravu materiálů se nám podařilo prosadit například u rekon-
+strukce Barrandovského mostu nebo stavby Štvanické lávky.
+Mosty
+Ohlídáme technický stav mostů
+Pád Trojské lávky máme v paměti všichni. Zařekli jsme se, že nic ta-
+kového už Pražané zažít nesmí. Díky tomu je dnes v Praze přesně
+nula uzavřených mostů v havarijním stavu. Navýšili jsme prostředky
+na údržbu, posílili tým mostařů, vyjednali 6 miliard korun na rekon-
+strukce mostů a důsledně je naplánovali. V detailních diagnosti-
+kách, které umožní maximální efektivitu oprav, budeme pokračo-
+vat. Běží oprava Libeňského a Barrandovského mostu, na který
+téměř čtyřicet let nikdo nenašel odvahu sáhnout. Předláždili jsme
+také jako první pomoc bez nutnosti zdlouhavého povolování po-
+vrch Hlávkova mostu a po opravě Libeňského a Barrandovského
+mostu ho opravíme kompletně. Diagnostiky máme hotové také pro
+Mánesův most, kde potřebuje opravu tramvajová trať.
+Postavíme nové mosty přes Vltavu
+Za třicet let od sametové revoluce se v Praze postavily jen dva
+nové mosty a město zaspalo v propojování rychle se rozvíjejících
+čtvrtí. Nová spojení jsou potřeba a Praha bude mít brzy tři nové
+mosty. Pod jeden rok jsme stlačili stavbu nové Trojské lávky, kte-
+rá už stojí, a na jaře 2023 otevřeme také Štvanickou lávku mezi
+Holešovicemi a Karlínem se vstupem na Štvanici, kterou promění-
+me v nový park. Ještě letos začneme stavět i Dvorecký most mezi
+Podolím a Smíchovem, kde jsme v rámci koordinace prací už při-
+pravili napojení u vytížené zastávky Lihovar. Vyhlásíme také archi-
+tektonickou soutěž na Rohanský most pro tramvaje, auta a cyklisty
+a začneme ho projektovat.
+Zdroj: ATELIER 6 a TUBES
+Zasadíme se o záchranu železničního mostu na Výtoni
+Železniční most na Výtoni je ikonickou stavbou navždy zapsanou
+do historie mostařství a železnice a především do pražského pano-
+ramatu. Za hlavní město se nám podařilo rekonstruovat obě vykon-
+zolované lávky. Je vidět, že původní nýtařské řemeslo stále existu-
+je a je jen o vůli s tím něco dělat. Most je dokonalé technické dílo
+s výjimečně elegantní konstrukcí. Přesně proto bojujeme za jeho
+záchranu.
+Most je v dlouhodobě špatném stavu a stát se kloní k jeho zbou-
+rání a vybudování nového mostu s vyšší kapacitou. Té ale může-
+me dosáhnout i přistavěním třetí koleje dle architektonické sou-
+těže. Třetí kolej navíc umožní provoz během citlivé rekonstrukce.
+Inspirovali jsme se třeba u projektantů rekonstrukce Mauternerova
+mostu přes Dunaj nedaleko Kremsu, který je součástí světového
+dědictví UNESCO. Prosazujeme také vznik nové železniční zastávky
+na Výtoni.
+Doprava33
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+33
+U veřejných zakázek zohledníme
+nejen cenu, ale i kvalitu
+U veřejných zakázek na novou výstavbu a rekonstrukce infrastruk-
+tury jsme nastavili zcela nová hodnoticí kritéria. Zatímco dříve
+Prahu zajímala prakticky jen cena, my jsme mezi kritéria přidali také
+délku zhotovení a délku záruční doby. Dáváme tím jasný signál, že
+modernímu městu nezáleží jen na ceně, ale i na rychlosti stavby
+a výsledné kvalitě. Platí to pro nové stavby i opravy. Nově jsme také
+definovali třídy pražských komunikací. To nám významně pomů-
+že plánovat tak, abychom na frekventovaných silnicích využíva-
+li ty nejkvalitnější materiály, které maximálně prodlouží životnost,
+zatímco na méně frekventovaných ulicích dosáhneme stejné ži-
+votnosti méně tvrdým asfaltem. Kde to hygienické a další předpisy
+umožňují, tam opravujeme doslova od rána do večera, víkendy ne-
+vyjímaje. Budeme v tom pokračovat a díky těmto změnám se Praha
+dočká daleko kvalitnější a rychlejší výstavby.
+Rozvineme city logistiku na řece
+Budeme nadále rozvíjet pražské přívozy, které jsou u Pražanů velmi
+oblíbené. Prověříme také vznik vodní linky podél Vltavy propojují-
+cí nádraží Podbaba, Troju, nádraží Holešovice a Karlín. Řeku využi-
+jeme i pro přepravu stavebních materiálů a rubaniny či odpadu ze
+staveb podél ní. Tím urychlíme logistiku a odlehčíme silnicím, záro-
+veň budeme dbát na šetrnost lodí k ovzduší. Využití lodní dopravy
+pro přepravu materiálů se nám podařilo prosadit například u rekon-
+strukce Barrandovského mostu nebo stavby Štvanické lávky.
+Mosty
+Ohlídáme technický stav mostů
+Pád Trojské lávky máme v paměti všichni. Zařekli jsme se, že nic ta-
+kového už Pražané zažít nesmí. Díky tomu je dnes v Praze přesně
+nula uzavřených mostů v havarijním stavu. Navýšili jsme prostředky
+na údržbu, posílili tým mostařů, vyjednali 6 miliard korun na rekon-
+strukce mostů a důsledně je naplánovali. V detailních diagnosti-
+kách, které umožní maximální efektivitu oprav, budeme pokračo-
+vat. Běží oprava Libeňského a Barrandovského mostu, na který
+téměř čtyřicet let nikdo nenašel odvahu sáhnout. Předláždili jsme
+také jako první pomoc bez nutnosti zdlouhavého povolování po-
+vrch Hlávkova mostu a po opravě Libeňského a Barrandovského
+mostu ho opravíme kompletně. Diagnostiky máme hotové také pro
+Mánesův most, kde potřebuje opravu tramvajová trať.
+Postavíme nové mosty přes Vltavu
+Za třicet let od sametové revoluce se v Praze postavily jen dva
+nové mosty a město zaspalo v propojování rychle se rozvíjejících
+čtvrtí. Nová spojení jsou potřeba a Praha bude mít brzy tři nové
+mosty. Pod jeden rok jsme stlačili stavbu nové Trojské lávky, kte-
+rá už stojí, a na jaře 2023 otevřeme také Štvanickou lávku mezi
+Holešovicemi a Karlínem se vstupem na Štvanici, kterou promění-
+me v nový park. Ještě letos začneme stavět i Dvorecký most mezi
+Podolím a Smíchovem, kde jsme v rámci koordinace prací už při-
+pravili napojení u vytížené zastávky Lihovar. Vyhlásíme také archi-
+tektonickou soutěž na Rohanský most pro tramvaje, auta a cyklisty
+a začneme ho projektovat.
+Zasadíme se o záchranu železničního mostu na Výtoni
+Železniční most na Výtoni je ikonickou stavbou navždy zapsanou
+do historie mostařství a železnice a především do pražského pano-
+ramatu. Za hlavní město se nám podařilo rekonstruovat obě vykon-
+zolované lávky. Je vidět, že původní nýtařské řemeslo stále existu-
+je a je jen o vůli s tím něco dělat. Most je dokonalé technické dílo
+s výjimečně elegantní konstrukcí. Přesně proto bojujeme za jeho
+záchranu.
+Most je v dlouhodobě špatném stavu a stát se kloní k jeho zbou-
+rání a vybudování nového mostu s vyšší kapacitou. Té ale může-
+me dosáhnout i přistavěním třetí koleje dle architektonické sou-
+těže. Třetí kolej navíc umožní provoz během citlivé rekonstrukce.
+Inspirovali jsme se třeba u projektantů rekonstrukce Mauternerova
+mostu přes Dunaj nedaleko Kremsu, který je součástí světového
+dědictví UNESCO. Prosazujeme také vznik nové železniční zastávky
+na Výtoni.
+Doprava
+Zdroj: ATELIER 6 a TUBES

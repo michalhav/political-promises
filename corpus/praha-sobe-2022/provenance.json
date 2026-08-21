@@ -1,0 +1,22 @@
+{
+  "sourceType": "ELECTION_PROGRAM",
+  "title": "Plán pro Prahu — Naše vize a 218 konkrétních zlepšení",
+  "publisher": "Praha Sobě",
+  "url": "https://prahasobe.cz/wp-content/uploads/2022/04/Plan-pro-Prahu-2022-web.pdf",
+  "landingPage": "https://prahasobe.cz/plan-pro-prahu-2022/",
+  "publishedAt": "2022-04-13",
+  "retrievedAt": "2026-08-21T10:44:00Z",
+  "httpLastModified": "2022-04-17T16:38:37Z",
+  "contentHash": "ae5ff08a7a294e013c460e88eed1c488484f39515dc2d4a0e3d1d62f23b5cda3",
+  "byteSize": 2427797,
+  "mimeType": "application/pdf",
+  "licenseMode": "FULL_TEXT_STORED",
+  "licenseNote": "Volební program politického subjektu. Politický dokument určený k veřejné distribuci, ukládáme celý text (pravidlo B2 v briefu).",
+  "isDemo": false,
+  "election": "Komunální volby v Praze 2022",
+  "extractorVersion": "pdfjs-1.0.0",
+  "normalizationVersion": "1.0.0",
+  "note": "Zmrazeno pro účely evaluace extrakce. Do aplikační databáze se dokument zatím nevkládá — publikace čeká na vyřešení sekce B briefu (právní vrstva).",
+  "fileName": "plan-pro-prahu-2022.pdf",
+  "processingVersion": "norm-1.0.0+struct-1.0.0+seg-1.0.0"
+}

@@ -1,0 +1,15 @@
+.next
+node_modules
+out
+coverage
+src/db/migrations
+package-lock.json
+public
+
+# Zadání a dokumentace se needituje formátovačem — jsou to ručně psané dokumenty
+# a plošné přeformátování by v diffu utopilo skutečné změny.
+*.md
+playwright-report
+test-results
+e2e/screenshots
+corpus

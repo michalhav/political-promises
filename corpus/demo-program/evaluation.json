@@ -1,0 +1,67 @@
+{
+  "extractor": "baseline-heuristic",
+  "extractorVersion": "heuristic-1.0.0",
+  "overlapThreshold": 0.5,
+  "goldPromiseCount": 8,
+  "predictionCount": 8,
+  "truePositives": 7,
+  "falsePositives": 1,
+  "falseNegatives": 1,
+  "precision": 0.875,
+  "recall": 0.875,
+  "f1": 0.875,
+  "quoteFidelity": 1,
+  "unsupportedCount": 0,
+  "unsupportedRate": 0,
+  "knownNegativeHits": 1,
+  "matched": [
+    {
+      "exampleId": "p1-003",
+      "overlap": 1,
+      "quote": "Postavíme 2 000 nových městských nájemních bytů do konce volebního období."
+    },
+    {
+      "exampleId": "p1-006",
+      "overlap": 1,
+      "quote": "Navýšíme kapacitu mateřských škol o 1 200 míst do roku 2026."
+    },
+    {
+      "exampleId": "p2-010",
+      "overlap": 1,
+      "quote": "Zahájíme stavbu tramvajové trati do Demo čtvrti nejpozději v roce 2025."
+    },
+    {
+      "exampleId": "p1-004",
+      "overlap": 1,
+      "quote": "Byty udržíme v majetku města a nebudeme je rozprodávat."
+    },
+    {
+      "exampleId": "p2-011",
+      "overlap": 1,
+      "quote": "Rozšíříme síť chráněných cyklotras v centru města."
+    },
+    {
+      "exampleId": "p2-014",
+      "overlap": 1,
+      "quote": "Nezvýšíme daň z nemovitosti po celé volební období."
+    },
+    {
+      "exampleId": "p2-015",
+      "overlap": 1,
+      "quote": "Prosadíme snížení daně z přidané hodnoty na stavební práce."
+    }
+  ],
+  "missed": [
+    {
+      "exampleId": "p1-007",
+      "quote": "Do konce roku 2025 vznikne v každé městské části nové dětské hřiště."
+    }
+  ],
+  "spurious": [
+    {
+      "quote": "Rozšíříme obzory našich dětí a jejich možnosti.",
+      "page": 1,
+      "reason": "Trefilo anotovaný protipříklad p1-008."
+    }
+  ]
+}

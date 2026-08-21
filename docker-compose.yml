@@ -1,0 +1,22 @@
+# Lokální Postgres pro vývoj. Verze 17 kvůli paritě s Neon (produkční target).
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: slib-skutek-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: slib
+      POSTGRES_PASSWORD: slib
+      POSTGRES_DB: slib_skutek
+    ports:
+      - "5432:5432"
+    volumes:
+      - slib-skutek-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U slib -d slib_skutek"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  slib-skutek-pgdata:

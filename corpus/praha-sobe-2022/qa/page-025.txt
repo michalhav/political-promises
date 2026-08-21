@@ -1,0 +1,168 @@
+=== STRÁNKA 25 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 25,
+  "lineCount": 46,
+  "itemCount": 87,
+  "characterCount": 3951,
+  "columns": 3,
+  "wordOverlap": 0.9968,
+  "bulletLines": 0,
+  "barePageNumberItems": 1,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "25",
+  "lastCanonicalLine": "Doprava"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+jedeme dál. Výstavbu jsme osvobodili od žalob, dosáhli dohody
+s vlastníky pozemků, na Pankráci připravili náhradní tramvajové
+spojení a na čtyřech místech jsme vyhloubili v rámci geologického
+průzkumu 30 metrů hluboké šachty. Ty se původně měly zasypat,
+ale přeplánovali jsme projekt tak, aby se využily pro samotné tu-
+nely a stanice a stavba se zrychlila. Díky geologickému průzkumu
+také předejdeme překvapením, jaké kdysi Pražanům připravili naši
+předchůdci při ražení (a propadech) Blanky. Nové stanice metra
+dostanou díky výtvarným soutěžím kvalitnější podobu než ty po-
+slední na lince A. Nebudou taky končit nesmyslně v poli jako metro
+C v Letňanech. Za pár let se metrem D všichni svezeme.
+Rozšíříme počet bezbariérových stanic metra
+Pražské metro je skvělé a musí být ještě lepší. Je páteří pražské do-
+pravy. Proto je v centru naší pozornosti. Zlepšili jsme úklid a údrž-
+bu a zřídili jsme funkci architektky metra. Pokračujeme v celkových
+rekonstrukcích nejstarších stanic. Hlavní je pro nás zachovat vyso-
+kou kvalitu cestování a mít pražské metro kompletně bezbariéro-
+vé. Nové výtahy vznikly na Opatově a Karlově náměstí, právě teď
+se hloubí na stanici Jiřího z Poděbrad, která se stane 47. bezbarié-
+rovou stanicí metra. U sta-
+nic Českomoravská, Flora,
+Kačerov a Želivského jsou
+bezbariérová zpřístupnění
+součástí jejich rekonstruk-
+cí, nyní už běží projektová
+příprava. Rozběhli jsme také
+přípravné práce pro bezbari-
+érové zpřístupnění stanic me-
+tra Křižíkova, Malostranská,
+Hradčanská a Náměstí
+Republiky, v plánu máme rov-
+něž výtah ve stanici Jinonice.
+To všechno dotáhneme a za-
+hájíme práce na bezbariéro-
+vosti dalších stanic.
+Nad eskalátory přidáme informační tabule
+Pilotně jsme na Hradčanské a dalších stanicích otestovali tabule
+s časy odjezdů nad eskalátory a také tabule s informacemi o navazu-
+jících autobusech, tramvajích a vlacích. Zpětná vazba od cestujících
+je skvělá, proto je nyní rozšíříme na všechny klíčové stanice metra.
+Zkrátíme intervaly mezi jízdami
+S plnou automatizací počítáme u nové linky metra D, nejmoderněj-
+ší technologie chceme využít také na lince C. Díky tomu zkrátíme
+intervaly mezi vlaky z dnešních 115 sekund až na 80. To znamená
+zvýšení kapacity o 30 %. Zkrácení intervalů se bude hodit mimo
+jiné po velkých koncertech nebo zápasech, kdy jezdí metro na-
+rvané. Metro D navíc bude jezdit bez strojvůdce stejně jako metra
+v Paříži, Barceloně nebo Budapešti. K tomu jsme museli prosadit
+změnu zákona. Aby byl systém bezpečný, mezi soupravou a nástu-
+pištěm budou automatické dveře.
+Dáme prostor talentovaným architektům
+V metru trávíme spoustu času. Stanice proto musí lidem nabíd-
+nout funkčnost, ale také dobrý pocit z tohoto veřejného prostoru.
+Nedopustíme, aby se opakovala ostuda se sterilními stanicemi pro-
+dloužení Áčka, kde navíc chyběly eskalátory nebo odtok při deš-
+ti. Všechny nové stanice proto vzejdou z architektonické soutěže.
+Vypsali jsme už soutěž na 62. stanici metra Depo Zličín, která bude
+napojena na nové P + R parkoviště. Další na řadě je architektonická
+soutěž na stanici metra D Náměstí Bratří Synků, se kterou chceme
+zároveň řešit celé náměstí. Pokračujeme i v obnově stávajících sta-
+nic a zahrneme i ty stanice, které potřebují důkladnější rekonstruk-
+ci – třeba Florenc nebo Jiřího z Poděbrad.
+Posuneme vizi okružního metra O – Óčka
+Praha extrémně rychle roste. Už teď má podobně obyvatel jako
+Mnichov a v budoucích letech se k nám nastěhuje dalších skoro
+300 tisíc lidí. Dopravně není na tento nárůst Praha absolutně při-
+pravená. Město na to jednoduše není postaveno. A nepomůže ani
+ono mytické dobudování okruhů, protože ty k sobě přitahují dal-
+ší dopravu. Navíc aut bude v Praze tou dobou ještě o statisíce víc
+než dnešní téměř milion. Jestli má být Praha pro nás a naše děti
+a vnoučata dobrým místem k životu – s bezpečnými ulicemi, parky
+a čistým vzduchem –, potřebuje víc než okruhy. Potřebuje novou
+tepnu pro MHD a ta se vejde jedině pod zem.
+Doprava25
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+25
+jedeme dál. Výstavbu jsme osvobodili od žalob, dosáhli dohody
+s vlastníky pozemků, na Pankráci připravili náhradní tramvajové
+spojení a na čtyřech místech jsme vyhloubili v rámci geologického
+průzkumu 30 metrů hluboké šachty. Ty se původně měly zasypat,
+ale přeplánovali jsme projekt tak, aby se využily pro samotné tu-
+nely a stanice a stavba se zrychlila. Díky geologickému průzkumu
+také předejdeme překvapením, jaké kdysi Pražanům připravili naši
+předchůdci při ražení (a propadech) Blanky. Nové stanice metra
+dostanou díky výtvarným soutěžím kvalitnější podobu než ty po-
+slední na lince A. Nebudou taky končit nesmyslně v poli jako metro
+C v Letňanech. Za pár let se metrem D všichni svezeme.
+Rozšíříme počet bezbariérových stanic metra
+Pražské metro je skvělé a musí být ještě lepší. Je páteří pražské do-
+pravy. Proto je v centru naší pozornosti. Zlepšili jsme úklid a údrž-
+bu a zřídili jsme funkci architektky metra. Pokračujeme v celkových
+rekonstrukcích nejstarších stanic. Hlavní je pro nás zachovat vyso-
+kou kvalitu cestování a mít pražské metro kompletně bezbariéro-
+vé. Nové výtahy vznikly na Opatově a Karlově náměstí, právě teď
+se hloubí na stanici Jiřího z Poděbrad, která se stane 47. bezbarié-
+rovou stanicí metra. U sta-
+nic Českomoravská, Flora,
+Kačerov a Želivského jsou
+bezbariérová zpřístupnění
+součástí jejich rekonstruk-
+cí, nyní už běží projektová
+příprava. Rozběhli jsme také
+přípravné práce pro bezbari-
+érové zpřístupnění stanic me-
+tra Křižíkova, Malostranská,
+Hradčanská a Náměstí
+Republiky, v plánu máme rov-
+něž výtah ve stanici Jinonice.
+To všechno dotáhneme a za-
+hájíme práce na bezbariéro-
+vosti dalších stanic.
+Nad eskalátory přidáme informační tabule
+Pilotně jsme na Hradčanské a dalších stanicích otestovali tabule
+s časy odjezdů nad eskalátory a také tabule s informacemi o navazu-
+jících autobusech, tramvajích a vlacích. Zpětná vazba od cestujících
+je skvělá, proto je nyní rozšíříme na všechny klíčové stanice metra.
+Zkrátíme intervaly mezi jízdami
+S plnou automatizací počítáme u nové linky metra D, nejmoderněj-
+ší technologie chceme využít také na lince C. Díky tomu zkrátíme
+intervaly mezi vlaky z dnešních 115 sekund až na 80. To znamená
+zvýšení kapacity o 30 %. Zkrácení intervalů se bude hodit mimo
+jiné po velkých koncertech nebo zápasech, kdy jezdí metro na-
+rvané. Metro D navíc bude jezdit bez strojvůdce stejně jako metra
+v Paříži, Barceloně nebo Budapešti. K tomu jsme museli prosadit
+změnu zákona. Aby byl systém bezpečný, mezi soupravou a nástu-
+pištěm budou automatické dveře.
+Dáme prostor talentovaným architektům
+V metru trávíme spoustu času. Stanice proto musí lidem nabíd-
+nout funkčnost, ale také dobrý pocit z tohoto veřejného prostoru.
+Nedopustíme, aby se opakovala ostuda se sterilními stanicemi pro-
+dloužení Áčka, kde navíc chyběly eskalátory nebo odtok při deš-
+ti. Všechny nové stanice proto vzejdou z architektonické soutěže.
+Vypsali jsme už soutěž na 62. stanici metra Depo Zličín, která bude
+napojena na nové P + R parkoviště. Další na řadě je architektonická
+soutěž na stanici metra D Náměstí Bratří Synků, se kterou chceme
+zároveň řešit celé náměstí. Pokračujeme i v obnově stávajících sta-
+nic a zahrneme i ty stanice, které potřebují důkladnější rekonstruk-
+ci – třeba Florenc nebo Jiřího z Poděbrad.
+Posuneme vizi okružního metra O – Óčka
+Praha extrémně rychle roste. Už teď má podobně obyvatel jako
+Mnichov a v budoucích letech se k nám nastěhuje dalších skoro
+300 tisíc lidí. Dopravně není na tento nárůst Praha absolutně při-
+pravená. Město na to jednoduše není postaveno. A nepomůže ani
+ono mytické dobudování okruhů, protože ty k sobě přitahují dal-
+ší dopravu. Navíc aut bude v Praze tou dobou ještě o statisíce víc
+než dnešní téměř milion. Jestli má být Praha pro nás a naše děti
+a vnoučata dobrým místem k životu – s bezpečnými ulicemi, parky
+a čistým vzduchem –, potřebuje víc než okruhy. Potřebuje novou
+tepnu pro MHD a ta se vejde jedině pod zem.
+Doprava

@@ -1,0 +1,97 @@
+=== STRÁNKA 17 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 17,
+  "lineCount": 37,
+  "itemCount": 49,
+  "characterCount": 1867,
+  "columns": 4,
+  "wordOverlap": 1,
+  "bulletLines": 0,
+  "barePageNumberItems": 1,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "17",
+  "lastCanonicalLine": "Co odpracujeme"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+CO
+ODPRACUJEME
+TO NEJDŮLEŽITĚJŠÍ
+PRO PRAHU
+1. Okružní metro O bude novou tepnou pro
+veřejnou dopravu
+Už teď plánuje Praha výstavbu pro další čtvrt milion lidí. Chceme,
+aby se v našem městě dobře žilo, aby se nezahltilo dopravou, zů-
+staly v něm bezpečné ulice, parky a čistý vzduch. Proto kromě
+stavby metra D, kterou jsme už rozjeli, potřebujeme začít plánovat
+další novou tepnu MHD. A ta se vejde jedině pod zem. Chceme,
+aby vznikla nová okružní linka metra O, která propojí veřejnou do-
+pravu do uceleného systému. Spojí dnešní ramena metra, místa
+nového developmentu a místa, mezi nimiž lidé dojíždějí do práce.
+Napojí na sebe rychlodráhu, příměstské vlaky a pomůže, aby stře-
+dočeská auta nezahlcovala naše město. Všem nám urychlí pohyb
+po Praze.
+2. Praha zase musí mít své byty
+Po rozprodání bytů a pozemků minulými politickými reprezenta-
+cemi zůstala Praha s prázdnýma rukama. Nemá byty pro lékaře
+a sestřičky, policisty, učitele, seniory… My jsme už položili základy
+k tomu, aby v Praze bylo bytů zase dost. Díky novým pravidlům pro
+developery získá město část bytů v nové zástavbě do svého majet-
+ku. Na zbylých městských pozemcích už chystáme výstavbu byto-
+vých domů. A máme připraveny nové způsoby, jak lidem umožnit
+získat vlastní bydlení za rozumné peníze – třeba formou takzvané-
+ho spolkového bydlení.
+3. Chceme město pro všechny: chodníky bez
+bariér i veřejné záchody
+Ti šťastnější z nás žádné překážky nevnímají. Jiní se naopak při
+každé cestě ven dostávají do nepříjemných situací. Senioři, lidé
+s postižením, rodiče s dětmi… Nejen pro ně budeme pokračovat
+v systematickém odstraňování všech bariér. Chceme kompletně
+bezbariérové přechody stejně jako veřejnou dopravu. Máme i dal-
+ší cíl: zapracujeme na tom, aby se zásadně rozšířila síť veřejně pří-
+stupných toalet. Cesta po městě nesmí být pro nikoho stresující
+závod s časem.
+Co odpracujeme
+17
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+17
+CO
+ODPRACUJEME
+TO NEJDŮLEŽITĚJŠÍ
+PRO PRAHU
+1. Okružní metro O bude novou tepnou pro
+veřejnou dopravu
+Už teď plánuje Praha výstavbu pro další čtvrt milion lidí. Chceme,
+aby se v našem městě dobře žilo, aby se nezahltilo dopravou, zů-
+staly v něm bezpečné ulice, parky a čistý vzduch. Proto kromě
+stavby metra D, kterou jsme už rozjeli, potřebujeme začít plánovat
+další novou tepnu MHD. A ta se vejde jedině pod zem. Chceme,
+aby vznikla nová okružní linka metra O, která propojí veřejnou do-
+pravu do uceleného systému. Spojí dnešní ramena metra, místa
+nového developmentu a místa, mezi nimiž lidé dojíždějí do práce.
+Napojí na sebe rychlodráhu, příměstské vlaky a pomůže, aby stře-
+dočeská auta nezahlcovala naše město. Všem nám urychlí pohyb
+po Praze.
+2. Praha zase musí mít své byty
+Po rozprodání bytů a pozemků minulými politickými reprezenta-
+cemi zůstala Praha s prázdnýma rukama. Nemá byty pro lékaře
+a sestřičky, policisty, učitele, seniory… My jsme už položili základy
+k tomu, aby v Praze bylo bytů zase dost. Díky novým pravidlům pro
+developery získá město část bytů v nové zástavbě do svého majet-
+ku. Na zbylých městských pozemcích už chystáme výstavbu byto-
+vých domů. A máme připraveny nové způsoby, jak lidem umožnit
+získat vlastní bydlení za rozumné peníze – třeba formou takzvané-
+ho spolkového bydlení.
+3. Chceme město pro všechny: chodníky bez
+bariér i veřejné záchody
+Ti šťastnější z nás žádné překážky nevnímají. Jiní se naopak při
+každé cestě ven dostávají do nepříjemných situací. Senioři, lidé
+s postižením, rodiče s dětmi… Nejen pro ně budeme pokračovat
+v systematickém odstraňování všech bariér. Chceme kompletně
+bezbariérové přechody stejně jako veřejnou dopravu. Máme i dal-
+ší cíl: zapracujeme na tom, aby se zásadně rozšířila síť veřejně pří-
+stupných toalet. Cesta po městě nesmí být pro nikoho stresující
+závod s časem.
+Co odpracujeme

@@ -1,0 +1,23 @@
+=== STRÁNKA 5 ===
+Rozměr: 595.276 × 595.276
+{
+  "pageNumber": 5,
+  "lineCount": 2,
+  "itemCount": 3,
+  "characterCount": 11,
+  "columns": 1,
+  "wordOverlap": 1,
+  "bulletLines": 0,
+  "barePageNumberItems": 1,
+  "possiblySplitNumbers": 0,
+  "firstCanonicalLine": "5",
+  "lastCanonicalLine": "NAŠI LIDÉ"
+}
+
+--- VIZUÁLNÍ POŘADÍ (rekonstruované z poloh) ---
+NAŠI LIDÉ
+5
+
+--- KANONICKÝ TEXT (pořadí z extrakce) ---
+5
+NAŠI LIDÉ

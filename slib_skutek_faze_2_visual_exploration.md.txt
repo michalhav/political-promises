@@ -1,0 +1,1761 @@
+# Slib → Skutek
+## Fáze 2 redesignu — Visual Exploration Layer / Cesty slibů
+
+Tato část navazuje na konsolidovaný UX / Product Design redesign brief a předpokládá, že jeho základní směr zůstává beze změny.
+
+Primární veřejná zkušenost Slib → Skutek nadále stojí na principu „editorial case file“:
+
+- uživatel nejprve pochopí, co bylo slíbeno,
+- rychle zjistí aktuální stav,
+- rozliší SOURCE FACT / INTERPRETATION / ASSESSMENT,
+- pochopí, proč aplikace k závěru došla,
+- může projít timeline,
+- může otevřít plný důkazní archiv,
+- může auditovat metodiku a historii změn.
+
+Visual exploration layer tento model nenahrazuje.
+
+Je to sekundární, dobrovolná vrstva určená k objevování vztahů mezi sliby a jejich dalším vývojem.
+
+---
+
+# 1. Strategický verdikt
+
+Slib → Skutek by měl mít vizuální exploration layer.
+
+Neměl by však být stejně dominantní jako Promise Explorer nebo Promise Detail.
+
+Jeho úloha není dávat definitivní odpověď na stav slibu.
+
+Jeho úloha je vzbudit zvědavost a pomoci uživateli pochopit vztahy, které se v běžném seznamu nebo individuálním detailu čtou obtížně.
+
+Primární produkt zůstává:
+
+- editorial,
+- evidence-based,
+- auditovatelný,
+- answer-first,
+- čitelný i bez vizualizace.
+
+Visual exploration layer má odpovídat především na otázky typu:
+
+> Kam tento slib vedl?
+
+> Jak se změnil po volbách?
+
+> Které původně samostatné sliby se v koalici spojily?
+
+> Co se dělo se sliby o jednom tématu?
+
+> Kde se jednotlivé promise journeys potkávají nebo rozcházejí?
+
+Největší příležitostí proto není „udělat graph“.
+
+Největší příležitostí je vizuálně ukázat cestu konkrétního slibu přes jeho politický a realizační lifecycle.
+
+Doporučená hlavní mentální zkratka:
+
+PROGRAM
+→ KOALICE
+→ ROZHODNUTÍ
+→ PENÍZE
+→ REALIZACE
+→ VÝSLEDEK
+
+Tento lifecycle již odpovídá základnímu produktu Slib → Skutek a není nutné vymýšlet nový abstraktní datový prostor.
+
+---
+
+# 2. Co má smysl vizualizovat
+
+Ne všechny relationships v domain modelu mají stejnou hodnotu.
+
+## 2.1 Vysoká hodnota
+
+### Promise → Coalition commitment
+
+Tento vztah je jeden z nejsilnějších.
+
+Uživatel může pochopit:
+
+- zda se slib dostal do koaliční dohody,
+- zda byl převzat,
+- změněn,
+- sloučen,
+- nezahrnut,
+- nebo je vztah nejasný.
+
+To je intuitivní a politicky relevantní otázka.
+
+---
+
+### Více promises → jeden coalition commitment
+
+Toto je pravděpodobně nejcennější network relationship v celém produktu.
+
+Například:
+
+Promise A
+\
+ > Coalition commitment X
+/
+Promise B
+
+Takový vztah se v klasickém seznamu nebo jednom Promise Detail špatně chápe.
+
+Ve vizuální vrstvě je však okamžitě čitelný.
+
+---
+
+### Promise → Political decision → Funding → Implementation → Outcome
+
+Toto je samotná podstata Slib → Skutek.
+
+Vizualizace může uživateli ukázat dokumentovanou cestu:
+
+- co bylo slíbeno,
+- co se stalo v koalici,
+- jaká politická rozhodnutí následovala,
+- zda se objevilo financování,
+- jaké implementační události lze doložit,
+- jaký výsledek lze k research cutoff ověřit.
+
+---
+
+### Topic → Promises
+
+Topic je vhodný především jako vstupní navigační a grouping mechanism.
+
+Například:
+
+Bydlení
+- Promise A
+- Promise B
+- Promise C
+
+Doprava
+- Promise D
+- Promise E
+
+Téma je srozumitelnější entry point pro běžného uživatele než abstraktní graph všech entities.
+
+---
+
+### Evidence → Lifecycle event
+
+Ano, ale pouze jako sekundární vrstva.
+
+Například event může mít:
+
+„2 zdroje“
+
+nebo
+
+„Doloženo 3 veřejnými zdroji“
+
+Evidence documenty nemají být permanentní graph nodes v hlavním exploration pohledu.
+
+Jejich role je důkazní, ne navigační.
+
+---
+
+# 3. Co nemá být součástí hlavního vizuálního pohledu
+
+## Candidate / Party
+
+Candidate a party jsou důležitá metadata a filtr.
+
+Nemusí však být samostatný typ graph node.
+
+V hlavním visualization layeru by zbytečně zvyšovaly počet uzlů.
+
+---
+
+## Programme document
+
+Programme je důležitý source/provenance context.
+
+Nemusí být permanentní graph node.
+
+Stačí, že promise má jasně uvedený původ.
+
+---
+
+## Evidence documents jako jednotlivé uzly
+
+Pokud by každý source document byl samostatný node, graf by velmi rychle zaplnily PDF, rozpočty, zápisy, usnesení a reporty.
+
+Výsledek by byl vhodnější pro researcher tool než pro veřejný discovery experience.
+
+---
+
+## Assessment / status jako node
+
+Assessment není další událost v lifecycle.
+
+Je to redakční vrstva vzniklá z evidence.
+
+Má zůstat explicitně odlišená v contextual panelu nebo Promise Detail.
+
+Nemá být zobrazena jako objekt mezi implementation eventy.
+
+---
+
+## Corrections / assessment history
+
+Patří do Promise Detail a auditní vrstvy.
+
+V globálním visualization layeru nepřináší dostatečnou navigační hodnotu.
+
+---
+
+## AI nebo similarity relationship
+
+Do MVP nevkládat vztahy typu:
+
+„podobný slib“
+
+„semanticky související slib“
+
+pokud nejsou explicitně definované a redakčně ověřené.
+
+Obzvlášť ne edge typu:
+
+RELATED_TO
+
+bez přesné taxonomie.
+
+Ve veřejném evidence produktu by uživatel mohl relationship chápat jako fact, přestože by šlo pouze o algoritmický odhad.
+
+---
+
+# 4. Co má visualization umět lépe než list/detail UX
+
+Promise Explorer má odpovídat především na:
+
+> Je toto slib, jehož detail chci otevřít?
+
+Promise Detail má odpovídat:
+
+> Co přesně o tomto slibu víme a proč?
+
+Visual Explorer má přidat jiný typ otázky:
+
+> Jak tento slib zapadá do širšího příběhu?
+
+Konkrétně má být silnější v těchto situacích:
+
+1. Ukázat, že několik promises směřuje k jednomu coalition commitmentu.
+2. Ukázat, že promise mění svou podobu mezi programem a koaliční dohodou.
+3. Ukázat celou dokumentovanou journey od programu po outcome.
+4. Ukázat více promises jednoho tématu v jednom kontextu.
+5. Ukázat, kde se promise journeys spojují nebo rozdělují.
+6. Pomoci uživateli vybrat další související case k otevření.
+
+---
+
+# 5. Co bude zajímavé pro běžného uživatele
+
+Uživatel se nebude vracet proto, že aplikace má graph.
+
+Zajímavost musí vzniknout z obsahu.
+
+Ideální micro-journey:
+
+Uživatel zvolí:
+
+Bydlení
+
+Vidí:
+
+„2 000 nových městských nájemních bytů“
+
+Klikne.
+
+Cesta se rozbalí:
+
+PROGRAM
+→ původní závazek
+
+KOALICE
+→ cíl byl změněn
+
+ROZHODNUTÍ
+→ schválen investiční program
+
+PENÍZE
+→ vyčleněno 600 mil. Kč
+
+REALIZACE
+→ podepsána smlouva na první část
+
+VÝSLEDEK
+→ doloženo 910 dokončených jednotek
+
+Tento moment vytváří přirozené:
+
+> „Aha, takže takhle se ten slib vyvíjel.“
+
+To je požadovaný discovery effect.
+
+Pokud první klik pouze zobrazí další množství teček a spojnic, vizualizace selhává.
+
+---
+
+# 6. Čtyři zvažované koncepty
+
+## 6.1 Cesty slibů — layered lifecycle explorer
+
+### Koncept
+
+Deterministický vizuální explorer se šesti pevnými stages:
+
+PROGRAM
+KOALICE
+ROZHODNUTÍ
+PENÍZE
+REALIZACE
+VÝSLEDEK
+
+Promise journey se čte zleva doprava.
+
+Více slibů může konvergovat do jednoho coalition commitmentu.
+
+Při výběru jednoho promise se jeho cesta rozbalí.
+
+### User question
+
+> Co se s tímto slibem skutečně stalo?
+
+Sekundárně:
+
+> Jak souvisí s ostatními sliby?
+
+### Silné stránky
+
+- přímá shoda s produktem,
+- srozumitelná prostorová logika,
+- dobré progressive disclosure,
+- podporuje relationship i lifecycle,
+- není závislý na efektech,
+- lze dobře vysvětlit bez manuálu.
+
+### Rizika
+
+- příliš mnoho promises v jednom tématu může vytvořit clutter,
+- příliš mnoho intermediate events může zahltit viewport,
+- prázdný stage nesmí znamenat „nic se nestalo“,
+- potřebuje explicitní domain relationships.
+
+### Complexity
+
+MEDIUM.
+
+### Ordinary-user verdict
+
+Nejsilnější kandidát.
+
+Uživatel okamžitě chápe základní princip:
+
+> Kliknu na slib a zjistím, kam vedl.
+
+---
+
+## 6.2 Program → Koalice Transformation Flow
+
+### Koncept
+
+Alluvial / Sankey-like visualization zaměřená pouze na transformaci:
+
+Volební program
+→ Koaliční dohoda
+
+Zobrazuje vztahy:
+
+- Převzato
+- Změněno
+- Sloučeno
+- Nezahrnuto
+- Nejasné
+
+### User question
+
+> Co se s volebními sliby změnilo při vzniku koalice?
+
+### Silné stránky
+
+- vysoká politická relevance,
+- výborně zobrazuje merge více promises,
+- intuitivní relationship,
+- dobře navazuje na Compare functionality.
+
+### Rizika
+
+- řeší pouze jednu část lifecycle,
+- neodpovídá na otázku „co bylo potom?“,
+- Sankey thickness nesmí být interpretována jako relevance nebo míra splnění,
+- Nezahrnuto nesmí vizuálně působit jako fail state.
+
+### Complexity
+
+MEDIUM.
+
+### Ordinary-user verdict
+
+Zajímavé a srozumitelné, ale příliš úzké jako flagship visualization celého produktu.
+
+---
+
+## 6.3 Policy Timeline Landscape
+
+### Koncept
+
+Několik promises jednoho tématu je zobrazeno jako paralelní timeline lanes.
+
+Například:
+
+              2022      2023      2024      2025      2026
+
+Promise A       ●---------●----------●---------●
+Promise B       ●---------------●-------------●
+Promise C       ●------●
+
+Body reprezentují pouze dokumentované events.
+
+### User question
+
+> Co se od voleb dělo se sliby o bydlení?
+
+### Silné stránky
+
+- velmi dobrá chronologie,
+- intuitivní pro novináře,
+- dobře navazuje na existující timeline model,
+- výborná mobile transformace.
+
+### Rizika
+
+- méně dobře ukazuje many-to-many relationships,
+- prázdná část timeline může vypadat jako stagnace,
+- menší discovery appeal než layered lifecycle explorer.
+
+### Complexity
+
+MEDIUM.
+
+### Ordinary-user verdict
+
+Užitečné hlavně tehdy, když uživatel již konkrétní topic řeší.
+
+Méně silné jako hlavní discovery feature.
+
+---
+
+## 6.4 Obsidian-style force-directed graph
+
+### Koncept
+
+Force-directed síť nodes a edges.
+
+Teoretické node types:
+
+- promise,
+- topic,
+- party,
+- candidate,
+- coalition commitment,
+- decision,
+- funding,
+- implementation event,
+- evidence document,
+- outcome.
+
+### User question
+
+> Jak spolu všechny tyto věci souvisejí?
+
+### Silné stránky
+
+- vysoký wow effect,
+- pocit objevování,
+- může odhalit neočekávané many-to-many relationships,
+- vizuálně výrazně diferencující.
+
+### Rizika
+
+- position nemá domain meaning,
+- graph spaghetti,
+- labels soupeří o prostor,
+- vysoký cognitive load,
+- vysoká accessibility náročnost,
+- špatný mobile experience,
+- obtížné pochopení bez legendy,
+- u force-directed layoutu se může pozice měnit,
+- velmi snadno se z evidence productu stane „cool visualization demo“.
+
+### Complexity
+
+HIGH.
+
+### Ordinary-user verdict
+
+Prvních několik sekund může být velmi atraktivní.
+
+Dlouhodobá informační hodnota je však nižší než u layered lifecycle exploreru.
+
+Proto není doporučen jako hlavní koncept.
+
+---
+
+# 7. Explicitní rozhodnutí o Obsidian-like graphu
+
+Síťová logika je pro Slib → Skutek relevantní.
+
+Obsidian-like interface jako takový doporučen není.
+
+Z Obsidianu má smysl převzít:
+
+- focus + context,
+- progressive reveal,
+- zvýraznění přímých relationships,
+- discovery feeling.
+
+Nemá smysl převzít:
+
+- force-directed positioning,
+- infinite canvas,
+- neustále viditelné množství nodes,
+- arbitrary node positions,
+- dragování uzlů,
+- graph jako primární navigaci.
+
+---
+
+# 8. Doporučené node types
+
+V exploration layeru:
+
+## Primary nodes
+
+- Promise
+- Coalition commitment
+- Selected lifecycle event
+
+## Grouping/context
+
+- Topic
+
+## Metadata, ne nodes
+
+- Candidate
+- Party
+- Programme
+
+## On demand, ne permanentní nodes
+
+- Evidence document
+- Assessment
+- Corrections
+- Assessment history
+
+---
+
+# 9. Doporučené edge types
+
+Povolovat pouze explicitní, typed relationships.
+
+Například:
+
+PROMISE
+→ INCLUDED_AS
+→ COALITION_COMMITMENT
+
+PROMISE
+→ MODIFIED_AS
+→ COALITION_COMMITMENT
+
+PROMISE
+→ MERGED_INTO
+→ COALITION_COMMITMENT
+
+PROMISE
+→ HAS_EVENT
+→ IMPLEMENTATION_EVENT
+
+EVENT
+→ SUPPORTED_BY
+→ EVIDENCE
+
+Do MVP nepřidávat generický vztah:
+
+RELATED_TO
+
+bez přesné redakční definice.
+
+---
+
+# 10. Layout
+
+Doporučený layout je deterministický.
+
+Ne force-directed.
+
+Důvod:
+
+Slib → Skutek již má přirozeně uspořádanou doménu.
+
+Program → Coalition → Decision → Funding → Implementation → Outcome
+
+Poloha uzlu proto může nést význam.
+
+Uživatel okamžitě pochopí:
+
+- proč je něco vlevo,
+- proč je něco vpravo,
+- jaký je směr čtení.
+
+To je výrazně silnější informační princip než fyzikální rozložení graphu.
+
+---
+
+# 11. Hlavní doporučený koncept
+
+## Cesty slibů
+
+Doporučený název veřejné feature:
+
+# Cesty slibů
+
+Doporučený route:
+
+/explore
+
+Navigation label:
+
+Prozkoumat
+
+Krátké vysvětlení:
+
+> Sledujte, jak se volební sliby proměnily v koaliční závazky, rozhodnutí, financování a konkrétní výsledky.
+
+---
+
+# 12. First-load state
+
+Nezobrazovat všechny nodes celé databáze.
+
+První obrazovka má nabídnout jednoduchý vstup přes topics.
+
+Například:
+
+Bydlení
+Doprava
+Školství
+Klima
+Bezpečnost
+
+Každé téma může zobrazit pouze:
+
+- název,
+- počet sledovaných promises,
+- případně datum poslední aktualizace.
+
+Nezobrazovat:
+
+- completion rate,
+- party ranking,
+- success score,
+- procenta splnění.
+
+Volitelně lze zobrazit jeden featured journey.
+
+Featured case musí být vybrán transparentně.
+
+Například:
+
+- poslední publikovaný,
+- poslední aktualizovaný,
+- redakčně vybraný a označený jako ukázka.
+
+Ne automaticky „nejlepší“ nebo „nejhorší“.
+
+---
+
+# 13. Desktop composition
+
+Po výběru topicu:
+
+[Téma: Bydlení]
+[Kandidát: všichni]
+[Hledat slib]
+
+PROGRAM | KOALICE | ROZHODNUTÍ | PENÍZE | REALIZACE | VÝSLEDEK
+
+Pod jednotlivými columns se zobrazí compact promise journeys.
+
+Například:
+
+PROGRAM          KOALICE          ROZHODNUTÍ       PENÍZE       REALIZACE        VÝSLEDEK
+
+Promise A -----\
+                > Commitment X ---- Program A ----- 600 mil. ---- 340 bytů ------ 910 bytů
+Promise B -----/
+
+Promise C ---------- Nezahrnuto
+
+Promise D ---------- Commitment Y ------------------- ...
+
+Důležitý princip:
+
+- všechny stages mají pevné místo,
+- graph není infinite canvas,
+- horizontal position má semantic meaning,
+- běžný desktop nemá vyžadovat horizontal scroll.
+
+---
+
+# 14. Promise node
+
+Promise je hlavní obsahový entry point.
+
+Příklad:
+
+2 000 nových městských nájemních bytů
+
+Demo A · Bydlení
+
+Party identification:
+
+- pouze malý marker,
+- případně malé logo,
+- subtilní party accent.
+
+Party color nesmí barvit path ani assessment.
+
+---
+
+# 15. Coalition commitment node
+
+Příklad:
+
+Rozšíření obecního nájemního bydlení
+
+Koaliční dohoda · bod 4.2
+
+Relation label na connection:
+
+Změněno
+
+nebo:
+
+Sloučeno
+
+nebo:
+
+Převzato
+
+Relation musí být čitelný textově.
+
+Barva může být pouze sekundární.
+
+---
+
+# 16. Lifecycle event node
+
+Event může být menší než Promise / Coalition commitment.
+
+Například:
+
+Schválen investiční program
+6/2023
+
+Funding:
+
+Vyčleněno 600 mil. Kč
+12/2023
+
+Outcome:
+
+Doloženo 910 dokončených jednotek
+1/2026
+
+Důležité:
+
+Outcome event není automaticky current assessment.
+
+Je to dokumentovaný source fact / event.
+
+Current assessment musí zůstat samostatná epistemická vrstva.
+
+---
+
+# 17. Connections
+
+Connection neznamená automaticky kauzalitu.
+
+Vizualizace nesmí říkat:
+
+A způsobilo B
+
+pokud domain model říká pouze:
+
+A a B jsou součástí stejné promise journey.
+
+Doporučená semantic interpretation:
+
+- navazuje na,
+- je součástí dokumentované cesty,
+- je propojeno explicitním editorial relationship.
+
+Kauzální relationship zobrazovat pouze tehdy, pokud je skutečně podložen a domain model jej rozlišuje.
+
+---
+
+# 18. Selected state
+
+Po kliknutí na promise:
+
+1. selected promise získá jasný focus,
+2. jeho upstream / downstream path se zvýrazní,
+3. ostatní relationships zůstanou jako context, ale vizuálně ustoupí,
+4. intermediate lifecycle events se mohou rozbalit,
+5. vpravo se otevře contextual panel.
+
+Contextual panel:
+
+Název promise
+
+Průběh realizace:
+Částečně splněno
+
+Výsledek:
+Částečně dosažen
+
+Ověřeno k:
+31. 1. 2026
+
+7 ověřených zdrojů
+
+[Otevřít celý případ →]
+
+Assessment se nezobrazuje pouze color codingem v graphu.
+
+Zůstává explicitní textová informace.
+
+---
+
+# 19. Shared node behavior
+
+Shared coalition commitment je jeden z nejcennějších interaction moments.
+
+Například:
+
+Promise A --\
+             > Coalition commitment X
+Promise B --/
+
+Kliknutí na Coalition commitment X zobrazí:
+
+> Tento koaliční závazek navazuje na 2 sledované volební sliby.
+
+Potom:
+
+Promise A
+- relation: Změněno
+
+Promise B
+- relation: Sloučeno
+
+Uživatel tak pochopí konsolidaci původních politických promises.
+
+---
+
+# 20. Hover / focus behavior
+
+Hover nesmí být nutný pro pochopení.
+
+Hover nebo keyboard focus může:
+
+- zvýraznit direct edges,
+- zvýraznit neighbouring nodes,
+- zobrazit krátké secondary metadata.
+
+Permanentní action vzniká až click / Enter.
+
+Escape selection zruší.
+
+Všechny hlavní nodes musí být skutečné focusable DOM controls.
+
+---
+
+# 21. Evidence behavior
+
+Evidence documents nejsou permanentní graph nodes.
+
+U eventu lze zobrazit:
+
+2 zdroje
+
+nebo:
+
+3 ověřené zdroje
+
+Klik může otevřít lightweight evidence preview:
+
+- evidence role,
+- source title,
+- publisher,
+- datum,
+- link.
+
+Plný Evidence Block zůstává v Promise Detail.
+
+Visual Explorer nemá být druhý evidence archive.
+
+---
+
+# 22. Filters
+
+MVP doporučení:
+
+## Primary
+
+Téma
+
+## Secondary
+
+Kandidát / strana
+
+## Search
+
+Vyhledat slib
+
+Volitelně:
+
+Program → Coalition relation
+
+- Převzato
+- Změněno
+- Sloučeno
+- Nezahrnuto
+- Nejasné
+
+Nedoporučuje se v MVP přidávat:
+
+- mnoho advanced filters,
+- arbitrary graph toggles,
+- zobrazování / skrývání deseti node types,
+- technický graph control panel.
+
+Explorer musí působit jako veřejný editorial product, ne research visualization software.
+
+---
+
+# 23. Motion
+
+Motion má být použit pouze pro vysvětlení změny stavu.
+
+Doporučené použití:
+
+- selected path se zvýrazní,
+- nepříbuzné relationships ustoupí,
+- intermediate events se objeví,
+- layout se jemně přeskupí při změně tématu,
+- contextual panel se otevře.
+
+Doporučené duration:
+
+cca 200–300 ms.
+
+Nepoužívat:
+
+- moving particle,
+- glowing line,
+- pulzující nodes,
+- animovanou kuličku cestující lifecycle,
+- decorative background movement.
+
+Moving progress dot by navíc mohl mylně implikovat lineární progress nebo kauzalitu.
+
+Musí být podporováno prefers-reduced-motion.
+
+---
+
+# 24. Empty states
+
+Nikdy nezobrazovat wording:
+
+„Nic se nestalo.“
+
+Prázdný stage nemusí znamenat, že daný krok nenastal.
+
+Může znamenat například:
+
+- nemáme publikovaný evidence record,
+- nemáme relationship explicitně zmodelovaný,
+- událost není pro daný promise relevantní,
+- výsledek ještě nelze změřit.
+
+Doporučený wording:
+
+> Pro tuto fázi zatím nemáme publikovanou a propojenou ověřenou událost.
+
+Nebo:
+
+> Toto zobrazení vychází z publikovaných a propojených záznamů dostupných k [cutoff].
+
+Pokud pro topic není možné visualization sestavit:
+
+> Pro toto téma zatím nemáme dostatek publikovaných vztahů pro vizuální zobrazení.
+
+> Sliby můžete stále procházet v běžném seznamu.
+
+---
+
+# 25. Loading state
+
+Použít skeleton respektující lifecycle layout.
+
+Například:
+
+PROGRAM | KOALICE | ROZHODNUTÍ | PENÍZE | REALIZACE | VÝSLEDEK
+
+Pod nimi několik neutrálních placeholder items.
+
+Není potřeba dominantní spinner.
+
+Loading state má zachovat prostorovou orientaci.
+
+---
+
+# 26. Navigation do Promise Detail
+
+CTA:
+
+Otevřít celý případ
+
+Po otevření Promise Detail je nutné zachovat return context.
+
+Například:
+
+← Zpět na Cesty slibů
+
+Explorer state má být uložen v URL.
+
+Například:
+
+/explore?topic=bydleni&promise=2000-bytu
+
+Při návratu se zachová:
+
+- topic,
+- candidate filter,
+- search,
+- selected promise.
+
+Uživatel nesmí po návratu začínat znovu.
+
+---
+
+# 27. Mobile experience
+
+Desktop visualization se nemá pouze zmenšit.
+
+Mobile dostane jinou presentation stejného information modelu.
+
+Doporučený flow:
+
+## Screen 1
+
+Cesty slibů
+
+Vyberte téma:
+
+- Bydlení
+- Doprava
+- Školství
+- …
+
+## Screen 2
+
+Bydlení
+
+Seznam promises:
+
+2 000 nových městských nájemních bytů
+
+[Otevřít cestu →]
+
+## Screen 3
+
+Vertikální journey:
+
+PROGRAM
+|
+● 2 000 nových městských nájemních bytů
+|
+| Změněno
+|
+KOALICE
+|
+● Rozvoj obecního nájemního bydlení
+|
+ROZHODNUTÍ
+|
+● Schválen investiční program
+|
+PENÍZE
+|
+● Vyčleněno 600 mil. Kč
+|
+REALIZACE
+|
+● Podepsána smlouva…
+|
+VÝSLEDEK
+|
+● Doloženo 910 jednotek
+
+Na mobile nepoužívat:
+
+- pan/zoom,
+- infinite graph,
+- pinch zoom,
+- horizontální canvas,
+- hover-dependent interaction.
+
+Touch target minimálně 44 × 44 px.
+
+Labels zůstávají normálně čitelné.
+
+---
+
+# 28. Accessibility
+
+Complex visualization musí mít equivalent structured representation.
+
+Například selected journey musí být zároveň dostupná jako semantic ordered structure:
+
+1. Program
+2. Coalition
+3. Decision
+4. Funding
+5. Implementation
+6. Outcome
+
+Každý node:
+
+- focusable,
+- dostupný klávesnicí,
+- s viditelným focus state,
+- s textovým názvem,
+- se semantic role.
+
+Hover-only informace nejsou přípustné.
+
+Status nesmí být komunikován pouze barvou.
+
+Selected state nesmí být komunikován pouze barvou.
+
+Uncertain relationship nesmí být komunikován pouze dashed line.
+
+Screen reader musí být schopen získat stejné informace jako z visual path, i když presentation nebude identická.
+
+---
+
+# 29. Homepage integration
+
+Full visualization nepatří do hero.
+
+Homepage má zůstat jednoduchá a vysvětlující.
+
+Doporučené použití:
+
+Hero
+→ trust statement
+→ jednoduchý lifecycle
+→ jeden featured promise journey
+→ další sledované sliby
+→ evidence/trust sections
+
+Featured journey může být velmi jednoduchá mini verze:
+
+SLIB
+→ KOALICE
+→ PENÍZE
+→ REALIZACE
+→ VÝSLEDEK
+
+Například:
+
+„2 000 městských nájemních bytů“
+
+4 klíčové události
+7 ověřených zdrojů
+aktuální stav
+
+CTA:
+
+Prozkoumat další cesty slibů →
+
+Úloha homepage visualization není nabídnout plný exploration experience.
+
+Má uživateli ukázat, co produkt dělá.
+
+---
+
+# 30. Promise Explorer integration
+
+Nedoporučuje se udělat:
+
+Seznam | Vizuálně
+
+jako jednoduchý view switch.
+
+Důvod:
+
+Promise Explorer a Cesty slibů odpovídají na různé otázky.
+
+Promise Explorer:
+
+> Je toto slib, jehož detail chci otevřít?
+
+Cesty slibů:
+
+> Jak tento slib zapadá do širšího politického a realizačního vývoje?
+
+Doporučení:
+
+/promises zůstává samostatný list/filter experience.
+
+/explore je samostatný route.
+
+Mezi nimi může být CTA:
+
+Prozkoumat vztahy a cesty →
+
+Filtry typu topic nebo candidate lze mezi routes přenášet.
+
+---
+
+# 31. Promise Detail integration
+
+Promise Detail může obsahovat malou local visualization.
+
+Nemá však nahrazovat hlavní narrative timeline.
+
+Doporučený lightweight stage overview:
+
+PROGRAM — KOALICE — ROZHODNUTÍ — PENÍZE — REALIZACE — VÝSLEDEK
+
+Každý relevantní stage může mít malý marker.
+
+Kliknutí může scrollnout na odpovídající event v timeline.
+
+Tato mini visualization funguje jako:
+
+- journey overview,
+- section locator,
+- orientace v lifecycle.
+
+Není to druhá timeline.
+
+Není to global graph.
+
+---
+
+# 32. Visual direction
+
+Visual Explorer musí působit jako stejný produkt jako redesignovaný Slib → Skutek.
+
+## Geometry
+
+Preferovat:
+
+- obdélníkové nebo lehce rounded labeled nodes,
+- radius přibližně 8–10 px,
+- jednoduché surfaces,
+- jasné text labels.
+
+Nepoužívat:
+
+- abstraktní circles jako výchozí node,
+- bubble visualization,
+- glowing dots,
+- sci-fi graph language.
+
+---
+
+## Density
+
+Neoptimalizovat na:
+
+„Zobrazit všech 218 promises najednou.“
+
+To není žádoucí.
+
+Visualization musí vždy pracovat s omezeným relevantním kontextem.
+
+Nejčastěji:
+
+- jeden topic,
+- několik promises,
+- selected path.
+
+---
+
+## Whitespace
+
+Použít dostatek prostoru mezi lifecycle columns.
+
+Cesta musí být čitelná bez zoomu.
+
+Whitespace má oddělovat semantic groups.
+
+---
+
+## Lines
+
+Default:
+
+1 px neutral connector.
+
+Selected:
+
+2 px deep navy.
+
+Uncertain relationship:
+
+může být dashed, ale vždy zároveň s textovým označením.
+
+Například:
+
+Nejasné
+
+Nikdy:
+
+dashed line bez vysvětlení.
+
+---
+
+## Typography
+
+Node labels musí být čitelné.
+
+Doporučení:
+
+14–16 px podle importance.
+
+Promise title může být větší.
+
+Nedávat významná labels do 11–12 px.
+
+---
+
+## Party identification
+
+Party color pouze jako malý identity marker.
+
+Nikdy:
+
+- status,
+- full node background,
+- full journey path,
+- outcome signal.
+
+---
+
+## Status indication
+
+Status není graph color.
+
+Current Assessment se zobrazí explicitně:
+
+Průběh realizace:
+Probíhá
+
+Výsledek:
+Zatím neměřitelný
+
+Status color zůstává sekundární.
+
+---
+
+## Evidence indication
+
+Použít například:
+
+document icon + „2 zdroje“
+
+Ne permanentní source nodes.
+
+---
+
+# 33. MVP scope
+
+Nejdříve musí být dokončen základní redesignový jazyk produktu:
+
+- Promise Detail,
+- Current Assessment,
+- Status component,
+- Evidence Block,
+- evidence summary,
+- narrative timeline,
+- mobile Promise Detail,
+- simplified Explorer.
+
+Teprve potom implementovat Visual Exploration Layer.
+
+Doporučené Visual Exploration MVP:
+
+1. nový route /explore,
+2. název „Cesty slibů“,
+3. topic selection,
+4. candidate filter,
+5. search,
+6. šest pevných lifecycle columns,
+7. Promise nodes,
+8. explicitní Program → Coalition relationships,
+9. selected lifecycle events,
+10. progressive reveal selected path,
+11. evidence count / preview,
+12. contextual panel,
+13. deep link do Promise Detail,
+14. URL-preserved state,
+15. mobile vertical journey,
+16. keyboard interaction,
+17. textual fallback,
+18. prefers-reduced-motion.
+
+---
+
+# 34. Co neimplementovat v MVP
+
+- force-directed graph,
+- Cytoscape-style infinite graph workspace,
+- draggable nodes,
+- arbitrary zoom,
+- mini-map,
+- graph physics,
+- source document graph,
+- inferred similarity,
+- AI-generated relationships,
+- cross-election visualization,
+- graph of all topics simultaneously,
+- deset node type filters,
+- custom graph query builder,
+- progress percentages,
+- party performance visualization,
+- gamification.
+
+---
+
+# 35. Možnosti pro pozdější fázi
+
+Pouze pokud analytics a user testing ukážou, že lidé Visual Explorer skutečně používají.
+
+## Shared Evidence view
+
+Například:
+
+> Tento veřejný zdroj je použit u 7 sledovaných promises.
+
+Vhodné hlavně pro journalist / researcher mode.
+
+---
+
+## Shared implementation entities
+
+Pokud se později ukáže, že několik promises vede ke stejnému projektu, investici nebo policy programme, lze zobrazit explicitní convergence.
+
+---
+
+## Cross-election evolution
+
+Jak se stejné policy commitments mění mezi volebními obdobími.
+
+---
+
+## Topic subclusters
+
+Například:
+
+Bydlení
+- městské byty
+- povolování
+- brownfieldy
+- sociální bydlení
+
+Pouze pokud taxonomy existuje v domain modelu.
+
+---
+
+## Shareable exploration states
+
+Například:
+
+/explore?topic=bydleni&promise=2000-bytu
+
+Velmi vhodné pro média, social sharing a odkazy v článcích.
+
+---
+
+# 36. Hlavní rizika a safeguards
+
+## Graph spaghetti
+
+Safeguards:
+
+- vždy jeden topic context,
+- progressive reveal,
+- pevné columns,
+- omezený počet simultaneously visible promises,
+- selected path focus.
+
+Nikdy „show everything“.
+
+---
+
+## False relationships
+
+Každá edge musí být:
+
+- explicitní,
+- typed,
+- uložená nebo spolehlivě odvoditelná z existujícího domain modelu,
+- redakčně významově definovaná.
+
+Visualization nesmí vztahy „vymýšlet“.
+
+---
+
+## Implicit causality
+
+Connection mezi lifecycle events nesmí automaticky znamenat kauzalitu.
+
+Copy a interaction musí respektovat rozdíl mezi:
+
+„součást dokumentované cesty“
+
+a
+
+„způsobilo“.
+
+---
+
+## Political bias
+
+Nikdy:
+
+- node size podle success,
+- party ranking,
+- green/red path,
+- default sorting podle completion,
+- „nejlepší“ / „nejhorší“ party,
+- visualization winner/loser.
+
+Initial ordering musí mít transparentní logiku.
+
+Například:
+
+- source order,
+- alphabetical,
+- last updated,
+- explicitně editorial selected featured case.
+
+---
+
+## Absence of evidence
+
+Prázdný stage:
+
+≠ nic se nestalo.
+
+UI musí umět explicitně zobrazit:
+
+> Pro tuto fázi zatím nemáme publikovanou a propojenou ověřenou událost.
+
+Pokud existuje NO_VERIFIED_PROGRESS assessment, musí být prezentován s research cutoff a definicí.
+
+---
+
+## Over-gamification
+
+Zakázat:
+
+- journey percentage,
+- 5/6 stages complete,
+- progress bar,
+- badges,
+- streaks,
+- green success journey,
+- red failed journey.
+
+---
+
+## Accessibility failure
+
+Visualization nikdy nesmí být jediným místem, kde relationship existuje.
+
+Musí být dostupná structured text alternative.
+
+---
+
+## Performance
+
+Nenačítat celý graph corpus při prvním otevření /explore.
+
+Doporučený loading model:
+
+1. načíst topic summary,
+2. po výběru načíst data pro active topic,
+3. detail evidence načíst až po selection.
+
+---
+
+## Mobile failure
+
+Mobile není zmenšený desktop graph.
+
+Má vlastní vertical journey representation.
+
+Žádný pan/zoom.
+
+---
+
+# 37. Technické doporučení
+
+Technologii vybírat až podle interaction modelu.
+
+Pro doporučený MVP není nutné automaticky přidávat React Flow nebo Cytoscape.
+
+Nejprve prověřit implementaci:
+
+- normal React DOM nodes,
+- CSS / grid layout,
+- SVG connector layer za nodes.
+
+Výhody:
+
+- dobrá typografie,
+- jednoduchá accessibility,
+- focusable DOM controls,
+- přirozená integrace se shadcn/ui,
+- responsive variants,
+- plná kontrola nad semantic HTML.
+
+Pokud skutečná data ukážou složitou many-to-many strukturu a crossing reduction bude problém, lze doplnit deterministic DAG layout engine.
+
+Například Dagre nebo jiný lightweight directed graph layout.
+
+React Flow nebo Cytoscape začínají dávat smysl až tehdy, pokud se Visual Explorer později změní v obecnější graph application.
+
+Není vhodné vybírat library jako první krok a přizpůsobovat mu UX.
+
+---
+
+# 38. Doporučení coding agentovi
+
+Implementuj nový optional public route:
+
+/explore
+
+s názvem:
+
+Cesty slibů
+
+Neměň existující Promise Explorer ani Promise Detail.
+
+Použij deterministický layered lifecycle layout:
+
+Program
+→ Koalice
+→ Rozhodnutí
+→ Peníze
+→ Realizace
+→ Výsledek
+
+Primary relationship objects:
+
+- Promise
+- Coalition commitment
+- selected lifecycle events
+
+Topic používej jako grouping / entry point.
+
+Candidate / party používej jako metadata a filter.
+
+Evidence documents nepoužívej jako permanentní graph nodes.
+
+Každá connection musí odpovídat explicitní domain relationship.
+
+Nepřidávej:
+
+- inferred relationships,
+- force-directed graph,
+- draggable nodes,
+- infinite canvas,
+- arbitrary zoom,
+- progress percentage,
+- party score,
+- status-only color encoding.
+
+Při výběru promise:
+
+- zvýrazni jeho kompletní dokumentovanou path,
+- zachovej surrounding context,
+- zobraz intermediate events,
+- otevři contextual panel,
+- zobraz current assessment,
+- zobraz research cutoff,
+- zobraz evidence count,
+- nabídni „Otevřít celý případ“.
+
+Desktop:
+
+- šest fixed semantic columns,
+- bounded viewport,
+- vertical scroll podle potřeby.
+
+Mobile:
+
+- samostatná vertical journey,
+- žádný pan/zoom.
+
+State uchovávej v URL.
+
+Podporuj:
+
+- keyboard navigation,
+- focus states,
+- semantic textual equivalent,
+- prefers-reduced-motion,
+- non-color encoding.
+
+Zachovej existující business logic, editorial semantics a domain truth.
+
+Pokud backend explicitní relationship neobsahuje, nevytvářej ho pouze proto, aby visualization vypadala lépe.
+
+---
+
+# 39. Finální designový princip této fáze
+
+Slib → Skutek nepotřebuje graph view, ve kterém uživatel zkoumá síť jako abstraktní knowledge graph.
+
+Potřebuje vizuální explorer, ve kterém uživatel sleduje cestu konkrétního slibu.
+
+Síťové relationships se mají odhalovat pouze tam, kde pomáhají pochopit skutečný politický nebo realizační vývoj.
+
+Správný pocit není:
+
+> „Tohle je cool graph.“
+
+Správný pocit je:
+
+> „Aha. Takže takhle se ten slib změnil a sem nakonec vedl.“
+
+A současně musí zůstat pravda:
+
+> Každý zobrazený relationship lze vysvětlit, doložit a auditovat.
+
+To je podmínka, aby Visual Exploration Layer zvýšila engagement, ale neoslabovala důvěryhodnost Slib → Skutek.

@@ -1,0 +1,209 @@
+{
+  "datasetVersion": "1",
+  "guidelinesVersion": "1.0.0",
+  "document": {
+    "sourceName": "program.pdf",
+    "contentHash": "9732be64d24f2cf02881f6a6b4175f93f608eae1ea45cd6f5b86258e5284fd6b",
+    "extractorVersion": "pdfjs-1.0.0"
+  },
+  "examples": [
+    {
+      "id": "p1-002",
+      "label": "NOT_PROMISE",
+      "page": 1,
+      "span": {
+        "start": 59,
+        "end": 126
+      },
+      "quote": "Bydlení je v našem městě dlouhodobě drahé a mladé rodiny odcházejí.",
+      "notes": "Popis stavu, ne závazek.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21"
+    },
+    {
+      "id": "p1-003",
+      "label": "PROMISE",
+      "page": 1,
+      "span": {
+        "start": 127,
+        "end": 201
+      },
+      "quote": "Postavíme 2 000 nových městských nájemních bytů do konce volebního období.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "HOUSING"
+    },
+    {
+      "id": "p1-004",
+      "label": "PROMISE",
+      "page": 1,
+      "span": {
+        "start": 202,
+        "end": 257
+      },
+      "quote": "Byty udržíme v majetku města a nebudeme je rozprodávat.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "HOUSING"
+    },
+    {
+      "id": "p1-005",
+      "label": "NOT_PROMISE",
+      "page": 1,
+      "span": {
+        "start": 258,
+        "end": 304
+      },
+      "quote": "Chceme, aby bydlení bylo dostupné pro každého.",
+      "notes": "Přání bez závazku. „Chceme“ není „uděláme“.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21"
+    },
+    {
+      "id": "p1-006",
+      "label": "PROMISE",
+      "page": 1,
+      "span": {
+        "start": 314,
+        "end": 374
+      },
+      "quote": "Navýšíme kapacitu mateřských škol o 1 200 míst do roku 2026.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "EDUCATION"
+    },
+    {
+      "id": "p1-007",
+      "label": "PROMISE",
+      "page": 1,
+      "span": {
+        "start": 375,
+        "end": 443
+      },
+      "quote": "Do konce roku 2025 vznikne v každé městské části nové dětské hřiště.",
+      "notes": "Závazek bez slovesa v 1. osobě. Neosobní vazba „vznikne“ je v programech běžná.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "EDUCATION"
+    },
+    {
+      "id": "p1-008",
+      "label": "NOT_PROMISE",
+      "page": 1,
+      "span": {
+        "start": 444,
+        "end": 491
+      },
+      "quote": "Rozšíříme obzory našich dětí a jejich možnosti.",
+      "notes": "Sloveso závazku, ale nedá se určit, co by znamenalo splnění.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21"
+    },
+    {
+      "id": "p1-009",
+      "label": "NOT_PROMISE",
+      "page": 1,
+      "span": {
+        "start": 492,
+        "end": 529
+      },
+      "quote": "Věříme v kvalitní veřejné vzdělávání.",
+      "notes": "Hodnotový postoj.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21"
+    },
+    {
+      "id": "p2-010",
+      "label": "PROMISE",
+      "page": 2,
+      "span": {
+        "start": 8,
+        "end": 79
+      },
+      "quote": "Zahájíme stavbu tramvajové trati do Demo čtvrti nejpozději v roce 2025.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "TRANSPORT"
+    },
+    {
+      "id": "p2-011",
+      "label": "PROMISE",
+      "page": 2,
+      "span": {
+        "start": 80,
+        "end": 130
+      },
+      "quote": "Rozšíříme síť chráněných cyklotras v centru města.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "TRANSPORT"
+    },
+    {
+      "id": "p2-012",
+      "label": "NOT_PROMISE",
+      "page": 2,
+      "span": {
+        "start": 131,
+        "end": 182
+      },
+      "quote": "Stát slíbil dostavbu městského okruhu do roku 2030.",
+      "notes": "Závazek někoho jiného.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21"
+    },
+    {
+      "id": "p2-013",
+      "label": "NOT_PROMISE",
+      "page": 2,
+      "span": {
+        "start": 183,
+        "end": 228
+      },
+      "quote": "Budeme se tématu parkování soustavně věnovat.",
+      "notes": "Procesní vata bez měřitelného obsahu.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21"
+    },
+    {
+      "id": "p2-014",
+      "label": "PROMISE",
+      "page": 2,
+      "span": {
+        "start": 245,
+        "end": 296
+      },
+      "quote": "Nezvýšíme daň z nemovitosti po celé volební období.",
+      "notes": "Závazek k nekonání. Doložitelný z obecně závazné vyhlášky.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "PUBLIC_FINANCE"
+    },
+    {
+      "id": "p2-015",
+      "label": "PROMISE",
+      "page": 2,
+      "span": {
+        "start": 297,
+        "end": 356
+      },
+      "quote": "Prosadíme snížení daně z přidané hodnoty na stavební práce.",
+      "notes": "Slib je mimo pravomoc města, ale slibem zůstává. Hodnotitelnost řeší až aplikace, ne anotace.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21",
+      "topic": "PUBLIC_FINANCE"
+    },
+    {
+      "id": "p2-016",
+      "label": "NOT_PROMISE",
+      "page": 2,
+      "span": {
+        "start": 357,
+        "end": 422
+      },
+      "quote": "Za našeho vedení jsme snížili zadlužení města o 3 miliardy korun.",
+      "notes": "Popis minulosti.",
+      "annotator": "Demo anotátor",
+      "annotatedOn": "2026-08-21"
+    }
+  ]
+}

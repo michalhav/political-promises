@@ -88,6 +88,8 @@ export const sourceDocumentInputSchema = z
     publishedAt: z.iso.date().optional().or(z.literal("")),
     licenseMode: z.enum(licenseModeEnum.enumValues),
     rawText: z.string().max(2_000_000).optional(),
+    /** Počet stran původního dokumentu. Známý jen u toho, co prošlo extrakcí. */
+    pageCount: z.coerce.number().int().min(1).max(100_000).optional(),
     isDemo: z.boolean().default(false),
   })
   .refine((value) => value.licenseMode === "FULL_TEXT_STORED" || !value.rawText?.trim(), {
@@ -141,6 +143,7 @@ export async function createSourceDocument(
         contentHash: hash,
         licenseMode: input.licenseMode,
         rawText: storedText.length > 0 ? storedText : null,
+        pageCount: input.pageCount ?? null,
         isDemo: input.isDemo,
         processingState: "REVIEW_REQUIRED",
       })
@@ -781,7 +784,12 @@ export async function resolveCorrection(
 // Pomocné
 // ---------------------------------------------------------------------------
 
-function parse<T extends z.ZodType>(schema: T, value: unknown): z.output<T> {
+/**
+ * Validace vstupu z formuláře. Exportovaná, aby stejné chybové hlášky měly
+ * i další redakční moduly — dvě různá znění téže chyby matou redaktora víc
+ * než samotná chyba.
+ */
+export function parseEditorialInput<T extends z.ZodType>(schema: T, value: unknown): z.output<T> {
   const result = schema.safeParse(value);
   if (!result.success) {
     throw new EditorialError(
@@ -793,6 +801,8 @@ function parse<T extends z.ZodType>(schema: T, value: unknown): z.output<T> {
   }
   return result.data;
 }
+
+const parse = parseEditorialInput;
 
 async function loadPromise(db: AppDatabase, promiseId: string) {
   const [row] = await db.select().from(promises).where(eq(promises.id, promiseId)).limit(1);

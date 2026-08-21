@@ -51,6 +51,16 @@ npm run dev               # http://localhost:3000
 
 Bez Dockeru stačí jakýkoli Postgres 17 — jen uprav `DATABASE_URL`.
 
+Kdo Docker ani Postgres nemá, spustí aplikaci proti PGlite:
+
+```bash
+npm run dev:pglite                                  # http://localhost:3000
+npm run dev:pglite -- --corpus corpus/nazev-dokumentu  # navíc nahraje dokument z korpusu
+```
+
+Databáze je v paměti a se zastavením procesu mizí. Je to náhrada pro rychlý
+pohled na aplikaci, ne pro průběžnou práci.
+
 ---
 
 ## Proměnné prostředí
@@ -106,10 +116,12 @@ Dva účty jsou potřeba schválně: **hodnocení nesmí schválit jeho vlastní
 Redakční postup:
 
 ```text
-zdroj → kandidát na slib → důkazy → hodnocení
-      → předat k revizi → schválit / vrátit → publikovat
-      → nová verze nebo korekce
+kandidátka → zdroj → kandidát na slib → důkazy → hodnocení
+           → předat k revizi → schválit / vrátit → publikovat
+           → nová verze nebo korekce
 ```
+
+Kandidátky a strany se zakládají na `/admin/lists`. Slib patří **kandidátce**, ne straně — kandidátka totiž šla do voleb s programem; koalice vznikne výběrem víc stran do jedné kandidátky.
 
 Hodnocení prochází stavy `DRAFT → IN_REVIEW → CHANGES_REQUESTED → APPROVED → PUBLISHED`. Přechody se vynucují na serveru; neplatný přechod skončí chybou, ne jen chybějícím tlačítkem. Publikovaná verze je neměnná — změna se dělá novou verzí s uvedeným důvodem.
 
@@ -168,7 +180,13 @@ npm run corpus:demo                                        # vyrobí ukázkové 
 npm run corpus:extract  -- corpus/demo-program/program.pdf # PDF → kanonický text
 npm run corpus:scaffold -- corpus/demo-program/extracted.json --annotator "Jméno"
 npm run corpus:evaluate -- corpus/demo-program             # metriky proti anotacím
+npm run corpus:import   -- corpus/demo-program             # vloží dokument do databáze
 ```
+
+`corpus:import` čte `provenance.json` a `extracted.json` a zakládá zdrojový dokument
+stejnou cestou jako redakční konzole — se stejnou kontrolou otisku i licenčního režimu.
+Bez `provenance.json` import neproběhne: uložit cizí text bez evidence původu je přesně
+to, čemu má provenience bránit.
 
 **Extrakce textu z PDF nikdy nepoužívá model.** Kdyby text z dokumentu vytahoval jazykový model, přestala by být citace citací — nešlo by odlišit, co v dokumentu stojí, od toho, co model doplnil.
 

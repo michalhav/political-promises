@@ -39,7 +39,12 @@ export const EXECUTION_STATUS_LABELS: Record<ExecutionStatusValue, StatusLabel> 
     label: "Částečně splněno",
     meaning: "Část závazku je hotová, zbytek ne.",
   },
-  COMPLETED: { label: "Splněno", meaning: "Závazek byl podle zdrojů realizován v plném rozsahu." },
+  COMPLETED: {
+    // „Dokončeno" pro průběh, „Dosažen" pro výsledek. Rozdíl mezi oběma osami
+    // má být patrný z jazyka, ne až z popisku pod ním.
+    label: "Dokončeno",
+    meaning: "Závazek byl podle zdrojů realizován v plném rozsahu.",
+  },
   ABANDONED: {
     label: "Opuštěno",
     meaning: "Doložený krok ukazuje, že se od závazku ustoupilo.",
@@ -60,16 +65,16 @@ export const EXECUTION_STATUS_LABELS: Record<ExecutionStatusValue, StatusLabel> 
 
 export const OUTCOME_STATUS_LABELS: Record<OutcomeStatusValue, StatusLabel> = {
   NOT_MEASURABLE_YET: {
-    label: "Zatím neměřitelné",
+    label: "Zatím neměřitelný",
     meaning: "Cílový stav se ještě nedá změřit, například protože nenastal termín.",
   },
-  ACHIEVED: { label: "Dosaženo", meaning: "Naměřená hodnota dosáhla slíbeného cíle." },
+  ACHIEVED: { label: "Dosažen", meaning: "Naměřená hodnota dosáhla slíbeného cíle." },
   PARTIALLY_ACHIEVED: {
-    label: "Částečně dosaženo",
+    label: "Částečně dosažen",
     meaning: "Naměřená hodnota se k cíli přiblížila, ale nedosáhla ho.",
   },
-  NOT_ACHIEVED: { label: "Nedosaženo", meaning: "Naměřená hodnota slíbeného cíle nedosáhla." },
-  UNKNOWN: { label: "Nezjištěno", meaning: "Nemáme naměřenou hodnotu, ze které by šlo vyjít." },
+  NOT_ACHIEVED: { label: "Nedosažen", meaning: "Naměřená hodnota slíbeného cíle nedosáhla." },
+  UNKNOWN: { label: "Nezjištěn", meaning: "Nemáme naměřenou hodnotu, ze které by šlo vyjít." },
   NOT_APPLICABLE: {
     label: "Neuplatňuje se",
     meaning: "Slib neurčuje cílový stav, který by šlo měřit.",
@@ -94,3 +99,59 @@ export const ASSESSABILITY_LABELS: Record<AssessabilityLevel, StatusLabel> = {
     meaning: "U slibu nelze objektivně určit, co by znamenalo splnění.",
   },
 };
+
+/**
+ * Vizuální odstín stavu. **Sekundární signál** — význam vždy nese text.
+ *
+ * Škála není dobrý–špatný. Rozlišuje jen povahu tvrzení:
+ *   active  — něco doloženě běží,
+ *   settled — věc je uzavřená (dokončená i opuštěná; obojí je závěr),
+ *   caution — realizace narazila, nebo je závěr nejistý,
+ *   neutral — o skutečnosti netvrdíme nic.
+ */
+export type StatusTone = "active" | "settled" | "caution" | "neutral";
+
+export const EXECUTION_STATUS_TONE: Record<ExecutionStatusValue, StatusTone> = {
+  NO_VERIFIED_PROGRESS: "neutral",
+  NOT_STARTED: "neutral",
+  PLANNED: "active",
+  IN_PROGRESS: "active",
+  PARTIALLY_COMPLETED: "active",
+  COMPLETED: "settled",
+  // Opuštěno je uzavřená věc, zastaveno je překážka — proto různý odstín.
+  ABANDONED: "settled",
+  BLOCKED: "caution",
+  NOT_ASSESSABLE: "neutral",
+  UNKNOWN: "neutral",
+};
+
+export const OUTCOME_STATUS_TONE: Record<OutcomeStatusValue, StatusTone> = {
+  NOT_MEASURABLE_YET: "neutral",
+  ACHIEVED: "settled",
+  PARTIALLY_ACHIEVED: "active",
+  NOT_ACHIEVED: "caution",
+  UNKNOWN: "neutral",
+  NOT_APPLICABLE: "neutral",
+};
+
+/**
+ * Znak před popiskem. Druhý nositel významu vedle textu, aby stav nešel
+ * poznat jen podle odstínu. Je to text, ne obrázek — čte ho i odečítač
+ * a přežije zvětšení písma.
+ */
+export const STATUS_TONE_MARK: Record<StatusTone, string> = {
+  active: "◐",
+  settled: "●",
+  caution: "▲",
+  neutral: "○",
+};
+
+/**
+ * Stavy, u kterých se čtenář snadno splete a potřebuje vysvětlení přímo
+ * u hodnoty, ne až v metodice. „Bez doloženého postupu" se dá číst jako
+ * „nic se nestalo", což by bylo tvrzení, které nemáme z čeho doložit.
+ */
+export const EXECUTION_NEEDS_SAFEGUARD: readonly ExecutionStatusValue[] = [
+  "NO_VERIFIED_PROGRESS",
+  "NOT_STARTED",
+];

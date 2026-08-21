@@ -25,33 +25,65 @@ test.describe("veřejná část", () => {
     await expect(page).toHaveURL(/\/promises\/demo-a-2000-mestskych-najemnich-bytu$/);
   });
 
-  test("detail slibu doloží, o co se závěr opírá", async ({ page }) => {
+  test("detail slibu nejdřív odpoví a teprve pak dokládá", async ({ page }) => {
     await page.goto("/promises/demo-a-2000-mestskych-najemnich-bytu");
 
+    // Odpověď stojí nahoře, ne rozdrobená mezi metadaty.
+    const stav = page.getByRole("region", { name: "Aktuální stav" });
+    await expect(stav).toBeVisible();
+    await expect(stav).toContainText("Průběh realizace");
+    await expect(stav).toContainText("Výsledek");
+    await expect(stav).toContainText("Podle veřejných zdrojů prošlých k");
+    await expect(stav).toContainText("Co to znamená");
+
+    // Původní znění musí být rozeznatelné jako politický originál.
     await expect(page.getByRole("heading", { level: 2, name: "Co bylo slíbeno" })).toBeVisible();
-    await expect(page.getByText(/Stav podle veřejně dostupných zdrojů k/)).toBeVisible();
+    await expect(page.locator("blockquote").first()).toContainText("2 000");
 
-    // Odpověď na „proč to tak je" musí být na stránce, ne na vyžádání.
+    // Teprve pak „proč to říkáme", příběh a plný archiv.
+    await expect(page.getByRole("heading", { level: 2, name: "Jak to víme" })).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: /Nakolik jde slib vůbec hodnotit/ }),
+      page.getByRole("heading", { level: 2, name: "Co se od voleb dělo" }),
     ).toBeVisible();
-    await expect(page.getByText(/Vážené skóre/).first()).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Důkazy a zdroje" })).toBeVisible();
 
-    await expect(page.getByRole("heading", { name: "Co se se slibem dělo" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Čím je to doložené" })).toBeVisible();
+    // Metodika je deep-dive, ne první, co čtenář potká.
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Jak vzniklo hodnocení" }),
+    ).toBeVisible();
 
     // Metrika: slíbený cíl i naměřená hodnota.
     await expect(page.getByText("Slíbený cíl")).toBeVisible();
     await expect(page.getByText("Naměřené hodnoty")).toBeVisible();
   });
 
-  test("nehodnotitelný slib se netváří jako splněný", async ({ page }) => {
+  test("důkaz odděluje, co zdroj dokládá, od toho, co z něj neplyne", async ({ page }) => {
+    await page.goto("/promises/demo-a-2000-mestskych-najemnich-bytu");
+
+    const archiv = page.getByRole("region", { name: "Důkazy a zdroje" });
+    await expect(archiv.getByText("Co tento zdroj dokládá").first()).toBeVisible();
+    // Nejcennější věta celého bloku: kam už zdroj nesahá.
+    await expect(archiv.getByText("Co z něj nelze vyvodit").first()).toBeVisible();
+    await expect(archiv.getByText(/neříká nic o dosažení slíbených 2 000/)).toBeVisible();
+  });
+
+  test("stav bez doloženého postupu nelze číst jako konstatování nečinnosti", async ({ page }) => {
+    await page.goto("/promises/demo-d-500-novych-kamer");
+
+    const stav = page.getByRole("region", { name: "Aktuální stav" });
+    await expect(stav).toContainText("Bez doloženého postupu");
+    await expect(stav).toContainText("Co to neznamená");
+    await expect(stav).toContainText("neznamená, že se nic neděje");
+  });
+
+  test("nehodnotitelný slib dá odpověď větou, ne třemi štítky", async ({ page }) => {
     await page.goto("/promises/demo-a-snizeni-dph-na-stavebni-prace");
 
-    // Stupeň je i ve štítku v hlavičce, proto se ptáme na sekci se stavy.
-    const status = page.getByRole("region", { name: "V jakém je slib stavu" });
-    await expect(status.getByText("Nehodnotitelné")).toBeVisible();
-    await expect(page.getByText(/pravomoci daného orgánu/)).toBeVisible();
+    const verdikt = page.getByRole("region", {
+      name: "Tento slib nelze objektivně vyhodnotit",
+    });
+    await expect(verdikt).toBeVisible();
+    await expect(verdikt).toContainText(/pravomoci daného orgánu/);
   });
 
   test("porovnání s koaliční smlouvou ukazuje obě znění", async ({ page }) => {
@@ -74,8 +106,100 @@ test.describe("veřejná část", () => {
     await expect(page.getByRole("heading", { name: /Co tahle metodika neumí/ })).toBeVisible();
   });
 
+  test("zapnuté filtry jsou vidět nad výsledky a dají se odtud zrušit", async ({ page }) => {
+    await page.goto("/promises?topic=HOUSING");
+
+    // Bez tohohle by čtenář na mobilu viděl zkrácený seznam a nevěděl proč:
+    // panel s filtry je tam schovaný v zásuvce.
+    const shrnuti = page.getByText("Filtruje se podle:");
+    await expect(shrnuti).toBeVisible();
+
+    await page.getByRole("link", { name: /Bydlení — zrušit tento filtr/ }).click();
+    await expect(page).toHaveURL(/\/promises$/);
+    await expect(page.getByText("Filtruje se podle:")).toHaveCount(0);
+  });
+
   test("neexistující slib vrací 404", async ({ page }) => {
     const response = await page.request.get("/promises/neexistujici-slib");
     expect(response.status()).toBe(404);
+  });
+});
+
+/**
+ * Mapa dlouhé stránky.
+ *
+ * Detail slibu má na mobilu přes jedenáct obrazovek. Lišta je jediné, co
+ * čtenáři dovolí se v tom pohybovat, takže se testuje i to, že kotva
+ * neskončí schovaná pod lištou samotnou.
+ */
+test.describe("navigace po detailu slibu", () => {
+  test("lišta odkazuje na sekce a kotva neskončí pod ní", async ({ page }) => {
+    await page.goto("/promises/demo-a-2000-mestskych-najemnich-bytu");
+
+    const listaSekci = page.getByRole("navigation", { name: "Části stránky" });
+    await expect(listaSekci).toBeVisible();
+
+    await listaSekci.getByRole("link", { name: "Stav" }).click();
+    await expect(page).toHaveURL(/#aktualni-stav$/);
+
+    const nadpis = page.getByRole("heading", { level: 2, name: "Aktuální stav" });
+    await expect(nadpis).toBeInViewport();
+
+    const nadpisBox = await nadpis.boundingBox();
+    const listaBox = await listaSekci.boundingBox();
+    expect(nadpisBox).not.toBeNull();
+    expect(listaBox).not.toBeNull();
+    expect(nadpisBox!.y).toBeGreaterThanOrEqual(listaBox!.y + listaBox!.height);
+  });
+
+  test("lišta nenabízí sekci, která na stránce není", async ({ page }) => {
+    // Nehodnotitelný slib nemá ani metriky, ani „Jak to víme".
+    await page.goto("/promises/demo-a-snizeni-dph-na-stavebni-prace");
+
+    const listaSekci = page.getByRole("navigation", { name: "Části stránky" });
+    await expect(listaSekci.getByRole("link", { name: "Jak to víme" })).toHaveCount(0);
+    await expect(listaSekci.getByRole("link", { name: "Stav" })).toBeVisible();
+  });
+});
+
+/**
+ * Zásuvka s filtry na mobilu.
+ *
+ * Vlastní implementace bez knihovny, takže se od ní očekává, že se otestuje
+ * to, co by knihovna měla vyřešená: otevření, zavření klávesou a hlavně že
+ * filtry uvnitř zůstanou obyčejné odkazy.
+ */
+test.describe("filtry na mobilu", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("zásuvka se otevře, odfiltruje a zavře klávesou Escape", async ({ page }) => {
+    await page.goto("/promises");
+
+    const otevrit = page.getByRole("button", { name: /Filtry a hledání/ });
+    await expect(otevrit).toBeVisible();
+    await otevrit.click();
+
+    const dialog = page.getByRole("dialog", { name: "Filtry a hledání" });
+    await expect(dialog).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    // Focus se musí vrátit tam, odkud se zásuvka otevřela.
+    await expect(otevrit).toBeFocused();
+
+    await otevrit.click();
+    await dialog.getByRole("link", { name: "Bydlení", exact: true }).click();
+    await expect(page).toHaveURL(/topic=HOUSING/);
+    await expect(page.getByRole("status")).toContainText("Nalezeno");
+
+    // Po přechodu je zásuvka zase zavřená a stav je čitelný ze stránky samotné.
+    await expect(page.getByText("Filtruje se podle:")).toBeVisible();
+  });
+
+  test("počet zapnutých filtrů je vidět už na tlačítku", async ({ page }) => {
+    await page.goto("/promises?topic=HOUSING&execution=IN_PROGRESS");
+    await expect(page.getByRole("button", { name: /Filtry a hledání/ })).toContainText(
+      "2 aktivních",
+    );
   });
 });

@@ -476,6 +476,10 @@ type MetricDirection = (typeof promiseMetrics.$inferInsert)["direction"];
 interface DemoEvidenceLink {
   evidenceKey: EvidenceKey;
   relationType: RelationType;
+  /** Co zdroj dokládá. */
+  note?: string;
+  /** Co z něj naopak vyvodit nelze. */
+  limitationNote?: string;
   /** Nepotvrzená vazba = návrh AI. Veřejně se nezobrazuje. */
   humanVerified?: false;
   aiSuggestionKey?: string;
@@ -627,11 +631,22 @@ const DEMO_PROMISES: DemoPromise[] = [
     evidenceLinks: [
       { evidenceKey: "koalice-byty", relationType: "SUPPORTS" },
       { evidenceKey: "usneseni-byty", relationType: "IMPLEMENTATION" },
-      { evidenceKey: "rozpocet-byty", relationType: "FUNDING" },
+      {
+        evidenceKey: "rozpocet-byty",
+        relationType: "FUNDING",
+        note: "Rozpočet na rok 2024 vyčleňuje na program 600 mil. Kč.",
+        limitationNote: "Vyčlenění peněz není doklad o tom, že byly utraceny nebo že vznikly byty.",
+      },
       { evidenceKey: "zakazka-byty", relationType: "PROGRESS" },
       { evidenceKey: "smlouva-byty", relationType: "IMPLEMENTATION" },
       { evidenceKey: "clanek-vystavba", relationType: "PROGRESS" },
-      { evidenceKey: "zprava-byty", relationType: "OUTCOME" },
+      {
+        evidenceKey: "zprava-byty",
+        relationType: "OUTCOME",
+        note: "Zpráva města uvádí počet bytů zkolaudovaných v rámci programu k 31. 12. 2025.",
+        limitationNote:
+          "Sama o sobě neříká nic o dosažení slíbených 2 000 bytů ani o tempu zbývající výstavby.",
+      },
     ],
     events: [
       {
@@ -1200,7 +1215,13 @@ const DEMO_PROMISES: DemoPromise[] = [
       },
     ],
     evidenceLinks: [
-      { evidenceKey: "usneseni-dluh", relationType: "CONTRADICTS" },
+      {
+        evidenceKey: "usneseni-dluh",
+        relationType: "CONTRADICTS",
+        note: "Zastupitelstvo schválilo emisi dluhopisů a vzalo na vědomí ukončení programu snižování zadluženosti.",
+        limitationNote:
+          "Usnesení nevypovídá o tom, proč se tak rozhodlo ani jestli šlo o reakci na mimořádné výdaje.",
+      },
       { evidenceKey: "zprava-dluh", relationType: "OUTCOME" },
     ],
     events: [
@@ -1536,6 +1557,8 @@ const demoPromiseEvidence: (typeof promiseEvidence.$inferInsert)[] = DEMO_PROMIS
         evidenceId: evidenceId(link.evidenceKey),
         relationType: link.relationType,
         confidence: link.confidence ?? null,
+        note: link.note ?? null,
+        limitationNote: link.limitationNote ?? null,
         humanVerified,
         verifiedById: humanVerified ? USER_REVIEWER : null,
         verifiedAt: humanVerified ? REVIEWED_AT : null,

@@ -4,6 +4,15 @@
  * Institucionální, neutrální paleta. Vědomě žádné stranické barvy a žádný
  * dominantní akcent — aplikace nesmí působit jako kampaň. Stav se nikdy
  * nesmí kódovat jen barvou, vždy i textem (přístupnost, viz brief UI/UX).
+ *
+ * Povrchy odpovídají čtyřem významovým vrstvám z redesign briefu. Není jich
+ * víc než čtyři schválně: dřívější problém nebyl nedostatek efektů, ale to,
+ * že karty, rámečky a metadata měly stejnou vizuální váhu, takže nic nevyčnívalo.
+ *
+ *   assessment — redakční závěr. Nejsilnější povrch na stránce.
+ *   evidence   — zdroj a jeho doslovný citát.
+ *   note       — epistemická výhrada, rozhodné datum, limity.
+ *   (běžný obsah nemá povrch žádný — jen nadpis, typografie a prostor)
  */
 :root {
   --background: #ffffff;
@@ -13,6 +22,28 @@
   --muted: #5c5b57;
   --accent: #1f3a5f;
   --accent-foreground: #ffffff;
+
+  /* Významové povrchy */
+  --surface-assessment: #f4f6f9;
+  --border-assessment: #c3cedd;
+  --surface-evidence: #fbfaf8;
+  --border-evidence: #e0ded8;
+  --surface-note: #faf8f3;
+  --border-note: #ddd4bd;
+
+  /**
+   * Odstíny stavů. Sekundární signál, nikdy jediný nositel významu.
+   * Vědomě tu není zelená pro „dokončeno" ani červená pro „opuštěno" —
+   * škála dobrý–špatný by ze stránky udělala hodnocení politiků.
+   */
+  --tint-active: #e8eef6;
+  --tint-active-border: #a8bdd6;
+  --tint-neutral: #efeeeb;
+  --tint-neutral-border: #cfcdc6;
+  --tint-caution: #f7f0e2;
+  --tint-caution-border: #d9c493;
+  --tint-settled: #e6e8ea;
+  --tint-settled-border: #a9b0b6;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +55,24 @@
     --muted: #a3a29c;
     --accent: #9fc0e8;
     --accent-foreground: #12120f;
+
+    /* Tmavý režim má působit jako „dark editorial", ne jako vývojářský panel:
+       inkoustové neutrály místo absolutní černé a neonu. */
+    --surface-assessment: #1a1e24;
+    --border-assessment: #39434f;
+    --surface-evidence: #1a1a17;
+    --border-evidence: #33332d;
+    --surface-note: #1e1b16;
+    --border-note: #453d2c;
+
+    --tint-active: #1d242e;
+    --tint-active-border: #3f4e61;
+    --tint-neutral: #232320;
+    --tint-neutral-border: #46453f;
+    --tint-caution: #262117;
+    --tint-caution-border: #574a2f;
+    --tint-settled: #212426;
+    --tint-settled-border: #454b50;
   }
 }
 
@@ -35,6 +84,23 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-surface-assessment: var(--surface-assessment);
+  --color-border-assessment: var(--border-assessment);
+  --color-surface-evidence: var(--surface-evidence);
+  --color-border-evidence: var(--border-evidence);
+  --color-surface-note: var(--surface-note);
+  --color-border-note: var(--border-note);
+
+  --color-tint-active: var(--tint-active);
+  --color-tint-active-border: var(--tint-active-border);
+  --color-tint-neutral: var(--tint-neutral);
+  --color-tint-neutral-border: var(--tint-neutral-border);
+  --color-tint-caution: var(--tint-caution);
+  --color-tint-caution-border: var(--tint-caution-border);
+  --color-tint-settled: var(--tint-settled);
+  --color-tint-settled-border: var(--tint-settled-border);
+
   --font-sans: var(--font-inter);
 }
 
@@ -47,4 +113,52 @@ body {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/**
+ * Doslovná citace ze zdroje.
+ *
+ * Uživatel musí poznat, že tohle napsal politik nebo instituce, ne aplikace.
+ * Nese to levá linka a kurzíva — ne barevná karta, která by citaci vizuálně
+ * povýšila na redakční sdělení.
+ */
+.source-quote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+/* Dlouhý text čte se lépe v úzkém sloupci; 65–75 znaků na řádek. */
+.prose-measure {
+  max-width: 68ch;
+}
+
+/**
+ * Kotva nesmí skončit pod lepící navigací.
+ *
+ * Řeší se to plošně, ne u každého nadpisu zvlášť: každý cíl odkazu na téže
+ * stránce je nadpis nebo sekce s `id`, takže jedno pravidlo je spolehlivější
+ * než třída, na kterou se u příští sekce zapomene.
+ */
+:where(h1, h2, h3, section)[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Lišta se posouvá prstem nebo fokusem; pruh scrollbaru by z ní ukrajoval. */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

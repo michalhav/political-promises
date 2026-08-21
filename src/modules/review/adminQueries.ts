@@ -258,8 +258,38 @@ export interface AdminPromiseRow {
   published: boolean;
   latestState: AssessmentWorkflowState | null;
   latestVersion: number | null;
+  /** Kdy se se slibem naposledy něco dělo. Bez toho nejde seznam řadit podle práce. */
+  latestActivityAt: Date;
+  /** Kdo hodnocení naposledy schválil nebo vrátil. Null, dokud revize neproběhla. */
+  reviewerName: string | null;
 }
 
+/**
+ * Poslední pohyb na slibu: novější z posledního hodnocení a založení slibu.
+ *
+ * Postgresí `greatest` nully přeskakuje, takže slib bez hodnocení spadne na
+ * datum založení sám od sebe. Výraz je konstanta proto, že ho potřebuje jak
+ * `select`, tak `order by` — dvě kopie by se dřív nebo později rozešly.
+ *
+ * `mapWith` tu není kosmetika: surový `sql` chodí z driveru jako řetězec a
+ * samotný `sql<Date>` je jen tvrzení pro typechecker. Bez převodu by volající
+ * dostal string přetypovaný na Date a spadl by až za běhu.
+ */
+const latestActivityAt = sql`greatest(
+  ${promises.createdAt},
+  (
+    select max(created_at) from promise_assessment
+    where promise_assessment.promise_id = ${promises.id}
+  )
+)`.mapWith(promises.createdAt);
+
+/**
+ * Inventář slibů pro redakci.
+ *
+ * Řadí se podle poslední práce, ne podle založení: seznam má nahoře držet to,
+ * čeho se někdo naposledy dotkl, ne to, co bylo shodou okolností zapsáno jako
+ * poslední a od té doby leží.
+ */
 export async function listAdminPromises(db: AppDatabase): Promise<AdminPromiseRow[]> {
   const rows = await db
     .select({
@@ -268,7 +298,6 @@ export async function listAdminPromises(db: AppDatabase): Promise<AdminPromiseRo
       listShortName: electoralLists.shortName,
       topic: promises.topic,
       published: promises.published,
-      createdAt: promises.createdAt,
       latestState: sql<AssessmentWorkflowState | null>`(
         select workflow_state from promise_assessment
         where promise_assessment.promise_id = ${promises.id}
@@ -279,10 +308,18 @@ export async function listAdminPromises(db: AppDatabase): Promise<AdminPromiseRo
         where promise_assessment.promise_id = ${promises.id}
         order by version desc limit 1
       )`,
+      latestActivityAt,
+      reviewerName: sql<string | null>`(
+        select reviewer.display_name from promise_assessment
+        join app_user as reviewer on reviewer.id = promise_assessment.reviewed_by_id
+        where promise_assessment.promise_id = ${promises.id}
+          and promise_assessment.reviewed_by_id is not null
+        order by promise_assessment.version desc limit 1
+      )`,
     })
     .from(promises)
     .innerJoin(electoralLists, eq(promises.electoralListId, electoralLists.id))
-    .orderBy(desc(promises.createdAt));
+    .orderBy(desc(latestActivityAt));
 
   return rows;
 }
@@ -295,6 +332,7 @@ export interface AdminEvidenceRow {
   relationType: RelationTypeValue;
   humanVerified: boolean;
   note: string | null;
+  limitationNote: string | null;
   sourceTitle: string;
   sourceId: string;
 }
@@ -407,6 +445,7 @@ export async function getAdminPromiseDetail(
           relationType: promiseEvidence.relationType,
           humanVerified: promiseEvidence.humanVerified,
           note: promiseEvidence.note,
+          limitationNote: promiseEvidence.limitationNote,
           sourceTitle: sourceDocuments.title,
           sourceId: sourceDocuments.id,
         })

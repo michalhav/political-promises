@@ -83,7 +83,10 @@ export interface Citation {
 
 export interface EvidenceView extends Citation {
   relationType: RelationTypeValue;
+  /** Co zdroj dokládá — redakční výklad. */
   note: string | null;
+  /** Co z něj naopak vyvodit nelze. Oddělené schválně, viz schéma. */
+  limitationNote: string | null;
 }
 
 export interface TimelineEventView {
@@ -158,7 +161,8 @@ export interface PromiseListItem {
   assessability: AssessabilityLevel | null;
   executionStatus: ExecutionStatusValue | null;
   outcomeStatus: OutcomeStatusValue | null;
-  latestEvent: { eventType: EventTypeValue; eventDate: string; title: string } | null;
+  /** Datum, ke kterému byly zdroje procházeny. Null, dokud slib nemá hodnocení. */
+  sourcesReviewedUpTo: string | null;
   evidenceCount: number;
 }
 
@@ -398,6 +402,7 @@ export async function listPublishedPromises(
       assessability: promiseAssessments.assessability,
       executionStatus: promiseAssessments.executionStatus,
       outcomeStatus: promiseAssessments.outcomeStatus,
+      sourcesReviewedUpTo: promiseAssessments.sourcesReviewedUpTo,
     })
     .from(promises)
     .innerJoin(electoralLists, eq(promises.electoralListId, electoralLists.id))
@@ -408,9 +413,8 @@ export async function listPublishedPromises(
     .offset((page - 1) * PAGE_SIZE);
 
   const promiseIds = rows.map((row) => row.id);
-  const [lists, latestEvents, evidenceCounts] = await Promise.all([
+  const [lists, evidenceCounts] = await Promise.all([
     loadElectoralLists(db, [...new Set(rows.map((row) => row.electoralListId))]),
-    loadLatestEvents(db, promiseIds),
     loadEvidenceCounts(db, promiseIds),
   ]);
 
@@ -430,41 +434,11 @@ export async function listPublishedPromises(
     assessability: row.assessability,
     executionStatus: row.executionStatus,
     outcomeStatus: row.outcomeStatus,
-    latestEvent: latestEvents.get(row.id) ?? null,
+    sourcesReviewedUpTo: row.sourcesReviewedUpTo,
     evidenceCount: evidenceCounts.get(row.id) ?? 0,
   }));
 
   return { items, total, page, pageSize: PAGE_SIZE, pageCount };
-}
-
-async function loadLatestEvents(
-  db: AppDatabase,
-  promiseIds: string[],
-): Promise<Map<string, { eventType: EventTypeValue; eventDate: string; title: string }>> {
-  if (promiseIds.length === 0) return new Map();
-
-  const rows = await db
-    .select({
-      promiseId: promiseEvents.promiseId,
-      eventType: promiseEvents.eventType,
-      eventDate: promiseEvents.eventDate,
-      title: promiseEvents.title,
-    })
-    .from(promiseEvents)
-    .where(inArray(promiseEvents.promiseId, promiseIds))
-    .orderBy(desc(promiseEvents.eventDate), desc(promiseEvents.createdAt));
-
-  const latest = new Map<string, { eventType: EventTypeValue; eventDate: string; title: string }>();
-  for (const row of rows) {
-    if (!latest.has(row.promiseId)) {
-      latest.set(row.promiseId, {
-        eventType: row.eventType,
-        eventDate: row.eventDate,
-        title: row.title,
-      });
-    }
-  }
-  return latest;
 }
 
 async function loadEvidenceCounts(
@@ -657,6 +631,7 @@ async function loadEvidence(db: AppDatabase, promiseId: string): Promise<Evidenc
     .select({
       relationType: promiseEvidence.relationType,
       note: promiseEvidence.note,
+      limitationNote: promiseEvidence.limitationNote,
       excerpt: evidence.excerpt,
       pageNumber: evidence.pageNumber,
       locator: evidence.locator,
@@ -672,6 +647,7 @@ async function loadEvidence(db: AppDatabase, promiseId: string): Promise<Evidenc
   return rows.map((row) => ({
     relationType: row.relationType,
     note: row.note,
+    limitationNote: row.limitationNote,
     excerpt: row.excerpt,
     pageNumber: row.pageNumber,
     locator: row.locator,

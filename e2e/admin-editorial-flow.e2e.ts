@@ -119,7 +119,7 @@ test.describe("redakční průchod", () => {
       await form.getByLabel("Pravomoc").fill("5");
       await form.getByLabel("Definice výsledku").fill("4");
       await form.getByLabel("Stav plnění").selectOption({ label: "Probíhá" });
-      await form.getByLabel("Stav výsledku").selectOption({ label: "Zatím neměřitelné" });
+      await form.getByLabel("Stav výsledku").selectOption({ label: "Zatím neměřitelný" });
       await form.getByLabel("Rozhodné datum rešerše").fill("2026-08-20");
       await form.getByLabel("Shrnutí").fill("Rada zavedení schválila, realizace běží.");
       await form.getByRole("button", { name: "Založit jako rozpracované" }).click();
@@ -159,7 +159,8 @@ test.describe("redakční průchod", () => {
       // Znění slibu je na stránce dvakrát: jako závazek a jako citace ze zdroje.
       await expect(page.getByText(PROMISE_TEXT).first()).toBeVisible();
       await expect(page.getByText(EVIDENCE_TEXT).first()).toBeVisible();
-      await expect(page.getByText(/Stav podle veřejně dostupných zdrojů k/)).toBeVisible();
+      // Rozhodné datum musí být u odpovědi, ne schované v metodice.
+      await expect(page.getByText(/Podle veřejných zdrojů prošlých k/)).toBeVisible();
     });
   });
 

@@ -66,12 +66,16 @@ describe("karta slibu", () => {
 });
 
 describe("detail slibu", () => {
-  it("vykreslí celou časovou osu i s citacemi", () => {
+  it("vykreslí celou časovou osu jako příběh, ne jako druhý důkazní archiv", () => {
     const html = renderToStaticMarkup(<Timeline events={byty.timeline} />);
 
     expect(html).toContain("Zkolaudováno 910 bytů z 2 000");
-    expect(html).toContain(QUOTES.usneseni_byty);
-    expect(html).not.toContain("zatím nemáme zdrojový dokument");
+    // Ke každé události vede odkaz na zdroj…
+    expect(html).toContain("Usnesení zastupitelstva č. 2023/0456");
+    // …ale doslovná citace patří do archivu níž. Kdyby stála i tady, čte
+    // uživatel tentýž odstavec dvakrát a osa přestane být čitelná jako příběh.
+    expect(html).not.toContain(QUOTES.usneseni_byty);
+    expect(html).not.toContain("Bez zdrojového dokumentu.");
   });
 
   it("vypíše, které pravidlo o hodnotitelnosti rozhodlo", () => {

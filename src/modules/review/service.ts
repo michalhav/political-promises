@@ -292,6 +292,7 @@ export const evidenceInputSchema = z.object({
   locator: z.string().trim().max(200).optional(),
   relationType: z.enum(relationTypeEnum.enumValues),
   note: z.string().trim().max(2000).optional(),
+  limitationNote: z.string().trim().max(2000).optional(),
 });
 
 export type EvidenceInput = z.input<typeof evidenceInputSchema>;
@@ -336,6 +337,7 @@ export async function attachEvidence(
         verifiedById: actor.id,
         verifiedAt: new Date(),
         note: input.note?.trim() || null,
+        limitationNote: input.limitationNote?.trim() || null,
       })
       .returning({ id: promiseEvidence.id });
 

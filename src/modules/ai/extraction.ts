@@ -26,6 +26,7 @@ import { aiRuns, aiSuggestions } from "@/modules/ai/schema";
 import type { AIProvider } from "@/modules/ai/provider";
 import { AIProviderError } from "@/modules/ai/provider";
 import { auditLogs } from "@/modules/review/schema";
+import { buildView, toCanonicalQuote } from "@/modules/ai/quoteMapping";
 import { EditorialError, type Actor } from "@/modules/review/service";
 import { sourceDocuments } from "@/modules/sources/schema";
 
@@ -113,11 +114,12 @@ export interface ExtractionResult {
 }
 
 /**
- * Ověření jednoho návrhu proti zdroji.
+ * Poslední kontrola před uložením: stojí citace doslova v tom, co je
+ * v databázi?
  *
- * Vrací důvod odmítnutí, nebo null. Je to čistá funkce, aby šla otestovat bez
- * databáze i bez dodavatele — a protože právě tohle je místo, kde se rozhoduje,
- * co se dá redakci pod ruku.
+ * Běží nad **kanonickým** textem, tedy nad tím, co uvidí čtenář na veřejné
+ * stránce. Je to schválně druhá kontrola za mapováním z normalizované podoby:
+ * kdyby se mapování někdy rozešlo s realitou, chytí to tahle.
  */
 export function rejectionReason(
   candidate: ExtractedCandidate,
@@ -130,6 +132,36 @@ export function rejectionReason(
     return `Znění slibu „${candidate.originalText.slice(0, 60)}…" není obsaženo ve své vlastní citaci.`;
   }
   return null;
+}
+
+/**
+ * Převod návrhu z podoby, kterou četl model, do podoby, která se ukládá.
+ *
+ * Model pracoval s normalizovaným textem, takže i jeho citace je normalizovaná.
+ * Tady se najde v normalizované podobě a vrátí se odpovídající **doslovný**
+ * výřez z kanonického textu. Když se nenajde, návrh padá — a to je správně:
+ * citace, kterou nejde ukotvit ve zdroji, je vymyšlená bez ohledu na to, jak
+ * věrohodně zní.
+ */
+export function canonicaliseCandidate(
+  candidate: ExtractedCandidate,
+  view: ReturnType<typeof buildView>,
+): { candidate: ExtractedCandidate } | { reason: string } {
+  const sourceExcerpt = toCanonicalQuote(view, candidate.sourceExcerpt);
+  if (!sourceExcerpt) {
+    return {
+      reason: `Citace „${candidate.sourceExcerpt.slice(0, 60)}…" ve zdroji doslova nestojí.`,
+    };
+  }
+
+  const originalText = toCanonicalQuote(view, candidate.originalText);
+  if (!originalText) {
+    return {
+      reason: `Znění slibu „${candidate.originalText.slice(0, 60)}…" ve zdroji doslova nestojí.`,
+    };
+  }
+
+  return { candidate: { ...candidate, sourceExcerpt, originalText } };
 }
 
 export async function extractPromises(
@@ -210,24 +242,37 @@ export async function extractPromises(
     let outputTokens = 0;
     let costUsd = 0;
 
+    const rejectionReasons: string[] = [];
+
     for (const chunk of chunks) {
+      // Model čte text bez dělení slov přes řádek. Kdyby četl kanonickou
+      // podobu, vracel by fragmenty typu „…polookruhu, kte-".
+      const view = buildView(chunk);
+
       const result = await provider.generate({
         promptVersion: PROMPT_VERSION,
         system: SYSTEM_PROMPT,
-        documentText: chunk,
+        documentText: view.normalized.text,
         instruction: INSTRUCTION,
         schema: promiseExtractionOutputSchema,
         maxTokens: 16_000,
       });
 
-      candidates.push(...result.data.candidatePromises);
+      for (const raw of result.data.candidatePromises) {
+        const mapped = canonicaliseCandidate(raw, view);
+        if ("reason" in mapped) {
+          rejectionReasons.push(mapped.reason);
+        } else {
+          candidates.push(mapped.candidate);
+        }
+      }
+
       model = result.model;
       inputTokens += result.inputTokens ?? 0;
       outputTokens += result.outputTokens ?? 0;
       costUsd += Number(result.costUsd ?? 0);
     }
 
-    const rejectionReasons: string[] = [];
     const verified: ExtractedCandidate[] = [];
 
     for (const candidate of candidates) {

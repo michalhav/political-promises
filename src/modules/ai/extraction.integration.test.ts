@@ -37,23 +37,28 @@ const ELECTION_ID = seedId("election:praha-2022");
 let sourceId = "";
 let listId = "";
 
-/** Dodavatel, který vrací přesně to, co mu předhodíme. Simuluje chování modelu. */
+/**
+ * Dodavatel, který vrací předem daný výstup — simuluje chování modelu.
+ *
+ * Kandidáty vrací jen u toho úryvku, ve kterém kotva doopravdy stojí. Model to
+ * má stejně: vidí vždycky jen jednu část dokumentu a citovat může jen z ní.
+ */
 class ScriptedProvider implements AIProvider {
   readonly name: string;
   private readonly candidates: ExtractedCandidate[];
-  private used = false;
+  private readonly anchor: string;
 
   // Jméno je parametr, protože otisk vstupu ho zahrnuje: dva scénáře nad týmž
   // dokumentem by jinak druhý běh odmítly jako duplicitní.
-  constructor(candidates: ExtractedCandidate[], name = "scripted") {
+  constructor(candidates: ExtractedCandidate[], name = "scripted", anchor = REAL_SENTENCE) {
     this.candidates = candidates;
     this.name = name;
+    this.anchor = anchor;
   }
 
   generate<T>(request: StructuredRequest<T>): Promise<StructuredResult<T>> {
-    // Kandidáti se vrátí jen u prvního úryvku, ať se nenásobí počtem částí.
-    const payload = { candidatePromises: this.used ? [] : this.candidates };
-    this.used = true;
+    const inThisChunk = request.documentText.includes(this.anchor);
+    const payload = { candidatePromises: inThisChunk ? this.candidates : [] };
 
     return Promise.resolve({
       data: request.schema.parse(payload),

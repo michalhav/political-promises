@@ -194,6 +194,56 @@ describe("metriky", () => {
     expect(result.precision).toBe(0.5);
   });
 
+  it("hodnotí jen stránky, které anotace pokrývá", async () => {
+    // Anotace jen ze strany 1 — přesně situace, kdy anotátor zvládl výsek.
+    const partial = parseGoldenDataset({
+      datasetVersion: "1",
+      guidelinesVersion: "1.0.0",
+      document: {
+        sourceName: document.sourceName,
+        contentHash: document.contentHash,
+        extractorVersion: document.extractorVersion,
+      },
+      examples: dataset.examples.filter((example) => example.page === 1),
+    });
+
+    const result = await evaluateExtractor(new HeuristicPromiseExtractor(), partial, document);
+
+    expect(result.annotatedPages).toEqual([1]);
+    // Závazky ze strany 2 nesmí spadnout do falešných poplachů — anotátor
+    // tu stránku neprošel, takže o ní nic nevíme.
+    expect(result.outOfScopeCount).toBeGreaterThan(0);
+    expect(result.precision).toBe(1);
+    expect(result.recall).toBe(1);
+  });
+
+  it("stránka bez jediného slibu se pořád počítá za prošlou", async () => {
+    // Samé protipříklady: anotátor stránku prošel a rozhodl, že tam slib není.
+    const negativesOnly = parseGoldenDataset({
+      datasetVersion: "1",
+      guidelinesVersion: "1.0.0",
+      document: {
+        sourceName: document.sourceName,
+        contentHash: document.contentHash,
+        extractorVersion: document.extractorVersion,
+      },
+      examples: dataset.examples.filter(
+        (example) => example.page === 1 && example.label === "NOT_PROMISE",
+      ),
+    });
+
+    const result = await evaluateExtractor(
+      new HeuristicPromiseExtractor(),
+      negativesOnly,
+      document,
+    );
+
+    expect(result.annotatedPages).toEqual([1]);
+    // Právě tady mají falešné poplachy smysl a musí se počítat.
+    expect(result.falsePositives).toBeGreaterThan(0);
+    expect(result.precision).toBe(0);
+  });
+
   it("prázdný výstup dá nulové metriky místo dělení nulou", async () => {
     const result = await evaluateExtractor(new FixturePromiseExtractor([]), dataset, document);
 

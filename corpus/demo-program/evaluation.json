@@ -14,6 +14,11 @@
   "unsupportedCount": 0,
   "unsupportedRate": 0,
   "knownNegativeHits": 1,
+  "annotatedPages": [
+    1,
+    2
+  ],
+  "outOfScopeCount": 0,
   "matched": [
     {
       "exampleId": "p1-003",

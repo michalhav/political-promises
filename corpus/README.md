@@ -19,6 +19,24 @@ npm run corpus:scaffold -- corpus/nazev/extracted.json --annotator "Jméno"
 npm run corpus:evaluate -- corpus/nazev
 ```
 
+## Nemusíš anotovat celý dokument
+
+Devadesátistránkový program má přes tisíc úseků a anotovat ho celý je práce na
+dny. Vezmi výsek:
+
+```bash
+npm run corpus:scaffold -- corpus/nazev/extracted.json --annotator "Jméno" --from 20 --to 35
+```
+
+**Měření to respektuje.** Metriky se počítají jen na stránkách, které anotace
+pokrývá; kandidáti mimo ně se vypíšou zvlášť jako „mimo anotovaný rozsah" a do
+přesnosti se nezapočítají. Bez toho by každá věta mimo výsek byla falešný
+poplach a číslo by vypadalo jako měření, aniž by cokoli měřilo.
+
+Stránka se počítá za prošlou, i když na ní žádný slib není — anotátor ji přečetl
+a rozhodl. Právě na takových stránkách mají falešné poplachy smysl, takže tam
+nech i protipříklady.
+
 Pravidla, co se počítá jako slib: [docs/promise-annotation-guidelines.md](../docs/promise-annotation-guidelines.md).
 
 Anotuj **dřív**, než se podíváš na výstup extraktoru. Jinak se anotace přizpůsobí tomu, co stroj našel, a měření pak vypovídá hlavně o vlastním odhadu.

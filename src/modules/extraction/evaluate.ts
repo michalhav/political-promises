@@ -57,6 +57,11 @@ export interface EvaluationResult {
   /** Predikce, které trefily větu anotovanou jako „tohle slib není". */
   knownNegativeHits: number;
 
+  /** Stránky, které anotace pokrývá. Jen na nich se počítají metriky. */
+  annotatedPages: number[];
+  /** Predikce mimo anotovaný rozsah. Nepočítají se, ale musí být vidět. */
+  outOfScopeCount: number;
+
   matched: MatchedPair[];
   missed: { exampleId: string; quote: string }[];
   spurious: { quote: string; page: number; reason: string }[];
@@ -121,6 +126,22 @@ export function evaluateCandidates(
   const positives = promiseExamples(dataset);
   const negatives = notPromiseExamples(dataset);
 
+  /**
+   * Metriky se počítají jen na stránkách, které anotace pokrývá.
+   *
+   * Anotovat celý 92stránkový program je práce na dny, takže se v praxi
+   * anotuje výsek. Kdyby se přitom hodnotily predikce z celého dokumentu,
+   * každá věta mimo výsek by se počítala jako falešný poplach a přesnost by
+   * spadla k nule z čistě organizačního důvodu. Číslo by vypadalo jako měření,
+   * ale neměřilo by nic.
+   *
+   * Stránka se počítá za anotovanou, i když na ní není žádný slib — anotátor
+   * ji prošel a rozhodl, že tam nic není. Právě tam mají falešné poplachy smysl.
+   */
+  const annotatedPages = new Set(dataset.examples.map((example) => example.page));
+  const inScope = candidates.filter((candidate) => annotatedPages.has(candidate.span.page));
+  const outOfScopeCount = candidates.length - inScope.length;
+
   const usedExamples = new Set<string>();
   const matched: MatchedPair[] = [];
   const spurious: EvaluationResult["spurious"] = [];
@@ -130,7 +151,7 @@ export function evaluateCandidates(
   let knownNegativeHits = 0;
 
   // Nejjistější predikce si vybírají anotaci první.
-  const ordered = [...candidates].sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0));
+  const ordered = [...inScope].sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0));
 
   for (const candidate of ordered) {
     const quoteCheck = checkQuote(document, candidate);
@@ -163,7 +184,7 @@ export function evaluateCandidates(
   }
 
   const truePositives = matched.length;
-  const falsePositives = candidates.length - truePositives;
+  const falsePositives = inScope.length - truePositives;
   const falseNegatives = positives.length - truePositives;
 
   const precision = ratio(truePositives, truePositives + falsePositives);
@@ -178,17 +199,19 @@ export function evaluateCandidates(
     extractorVersion,
     overlapThreshold: threshold,
     goldPromiseCount: positives.length,
-    predictionCount: candidates.length,
+    predictionCount: inScope.length,
     truePositives,
     falsePositives,
     falseNegatives,
     precision,
     recall,
     f1,
-    quoteFidelity: ratio(exactQuotes, candidates.length),
+    quoteFidelity: ratio(exactQuotes, inScope.length),
     unsupportedCount: unsupported,
-    unsupportedRate: ratio(unsupported, candidates.length),
+    unsupportedRate: ratio(unsupported, inScope.length),
     knownNegativeHits,
+    annotatedPages: [...annotatedPages].sort((a, b) => a - b),
+    outOfScopeCount,
     matched,
     missed: positives
       .filter((example) => !usedExamples.has(example.id))
@@ -214,14 +237,39 @@ export async function evaluateExtractor(
   );
 }
 
+/** „1–12, 20" místo výpisu všech stránek. */
+function describePages(pages: number[]): string {
+  if (pages.length === 0) return "žádný";
+
+  const parts: string[] = [];
+  let start = pages[0] as number;
+  let previous = start;
+
+  for (const page of pages.slice(1)) {
+    if (page === previous + 1) {
+      previous = page;
+      continue;
+    }
+    parts.push(start === previous ? `${start}` : `${start}–${previous}`);
+    start = page;
+    previous = page;
+  }
+  parts.push(start === previous ? `${start}` : `${start}–${previous}`);
+
+  return `${parts.join(", ")} (${pages.length} stran)`;
+}
+
 /** Krátký přehled do konzole. Podrobnosti zůstávají v JSON výstupu. */
 export function formatEvaluation(result: EvaluationResult): string {
   const percent = (value: number): string => `${(value * 100).toFixed(1)} %`;
 
   return [
     `Extraktor:            ${result.extractor} (${result.extractorVersion})`,
+    `Anotovaný rozsah:     ${describePages(result.annotatedPages)}`,
     `Anotovaných slibů:    ${result.goldPromiseCount}`,
-    `Nalezeno kandidátů:   ${result.predictionCount}`,
+    `Nalezeno kandidátů:   ${result.predictionCount}${
+      result.outOfScopeCount > 0 ? ` (+${result.outOfScopeCount} mimo anotovaný rozsah)` : ""
+    }`,
     "",
     `Přesnost:             ${percent(result.precision)}  (${result.truePositives}/${result.truePositives + result.falsePositives})`,
     `Úplnost:              ${percent(result.recall)}  (${result.truePositives}/${result.goldPromiseCount})`,

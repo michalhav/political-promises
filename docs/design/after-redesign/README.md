@@ -13,10 +13,13 @@ daty (`CAPTURE_SCREENSHOTS=1 npx playwright test screenshots`).
 | `21-mobil-sliby.png` | přehled na mobilu | filtry v zásuvce |
 | `22-mobil-detail.png` | detail na mobilu | mapa sekcí |
 | `31-tma-detail.png` | detail v tmavém režimu | nové významové povrchy |
+| `11-prehled.png` | redakční přehled | fronty místo dlaždic s čísly, další akce a stáří u položky |
+| `14-sliby.png` | seznam slibů v redakci | řazení podle poslední práce, revident a stáří místo samostatných sloupců |
 
-Ostatní snímky (`01`, `06`, `07`, `10`–`15`, `20`, `30`) zachycují části, kterých
-se redesign zatím nedotkl: homepage, *Program vs. koalice*, metodika a redakční
-konzole. Jsou tu proto, aby byl doložený i stav, který se **nezměnil**.
+Ostatní snímky (`01`, `06`, `07`, `10`, `12`, `13`, `15`, `20`, `30`) zachycují
+části, kterých se redesign zatím nedotkl: homepage, *Program vs. koalice*,
+metodika, přihlášení, zdroje a detail slibu v redakci. Jsou tu proto, aby byl
+doložený i stav, který se **nezměnil**.
 
 ## Rozměry stránek
 

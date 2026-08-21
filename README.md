@@ -176,6 +176,7 @@ Nejsou to snapshot testy. Porovnávat pixely u stránky, která se mění s obsa
 Než se napojí jazykový model, musí být na čem měřit, jestli něco přidává.
 
 ```bash
+npm run corpus:add -- <url> --dir corpus/nazev --title "…" --publisher "…"   # reálný dokument z webu
 npm run corpus:demo                                        # vyrobí ukázkové PDF
 npm run corpus:extract  -- corpus/demo-program/program.pdf # PDF → kanonický text
 npm run corpus:scaffold -- corpus/demo-program/extracted.json --annotator "Jméno"

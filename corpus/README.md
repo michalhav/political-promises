@@ -13,11 +13,28 @@ corpus/nazev-dokumentu/
 ## Postup
 
 ```bash
+npm run corpus:add      -- <url> --dir corpus/nazev --title "…" --publisher "…" --type COUNCIL_RESOLUTION
 npm run corpus:extract  -- corpus/nazev/program.pdf
 npm run corpus:scaffold -- corpus/nazev/extracted.json --annotator "Jméno"
 # ruční anotace: golden.draft.json → golden.json
 npm run corpus:evaluate -- corpus/nazev
 ```
+
+## Odkud se berou reálné dokumenty
+
+`corpus:add` stáhne dokument z veřejné adresy a v ten okamžik zapíše
+provenienci: adresu (po případném přesměrování), čas stažení, otisk SHA-256,
+velikost, typ obsahu a hlavičku `Last-Modified`. Teprve tím dokument vzniká.
+
+`corpus:fetch` je něco jiného — ten už existující otisk jen ověřuje, když
+dokument stahuješ znovu. Rozdíl v otisku není chyba nástroje, ale nález.
+
+Existující adresář se **nepřepisuje**. Nová verze téhož dokumentu patří do
+vlastního adresáře; přepsat zmrazený soubor by tiše znehodnotilo všechny citace
+a anotace, které se k němu vážou.
+
+U chráněného díla (novinový článek) patří `--license QUOTE_ONLY` — plný text se
+pak neukládá a pracuje se jen s citacemi.
 
 ## Nemusíš anotovat celý dokument
 

@@ -35,7 +35,8 @@
     "corpus:fetch": "tsx src/cli/fetchCorpus.ts",
     "corpus:inspect": "tsx src/cli/inspectPages.ts",
     "corpus:import": "tsx src/cli/importCorpus.ts",
-    "corpus:add": "tsx src/cli/addCorpusDocument.ts"
+    "corpus:add": "tsx src/cli/addCorpusDocument.ts",
+    "corpus:table": "tsx src/cli/addTableDocument.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.120.0",

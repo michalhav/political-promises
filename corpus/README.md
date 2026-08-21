@@ -36,6 +36,29 @@ a anotace, které se k němu vážou.
 U chráněného díla (novinový článek) patří `--license QUOTE_ONLY` — plný text se
 pak neukládá a pracuje se jen s citacemi.
 
+## Tabulková data (zakázky, rozpočty, faktury)
+
+Otevřená data měst jsou z velké části tabulky, ne próza. `corpus:table` z výřezu
+tabulky udělá textový dokument, kde je **jeden řádek tabulky na jednom řádku
+textu**:
+
+```bash
+npm run corpus:table -- https://storage.golemio.cz/ckan/tendersystems/verejne_zakazky.csv   --dir corpus/zakazky-mosty   --title "Veřejné zakázky MHMP — mosty (výřez)"   --publisher "Hlavní město Praha"   --type PUBLIC_PROCUREMENT   --match "most"   --columns nazev_zakazky,faze_zakazky,nazev_smluvniho_partnera,smluvni_cena_bez_dph_kc,datum_uzavreni_smlouvy
+```
+
+Od té chvíle je to pro systém obyčejný zdroj: platí otisk, doslovné ověření
+citace i celý redakční postup. Žádná nová entita, žádná migrace.
+
+Číslo řádku je z **původního** souboru, ne z výřezu — po změně filtru tak stará
+citace neukazuje jinam.
+
+Výběr řádků a sloupců je redakční rozhodnutí, ne technický detail, takže
+`provenance.json` nese blok `derivedFrom`: otisk původního souboru, použitý
+filtr, vybrané sloupce a kolik řádků měl originál. Bez toho by šlo výřez vydávat
+za celý dataset.
+
+Vytěžovat z tabulky sliby nemá smysl — je to podklad pro **důkazy**.
+
 ## Nemusíš anotovat celý dokument
 
 Devadesátistránkový program má přes tisíc úseků a anotovat ho celý je práce na

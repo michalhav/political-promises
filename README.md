@@ -177,6 +177,7 @@ Než se napojí jazykový model, musí být na čem měřit, jestli něco přid�
 
 ```bash
 npm run corpus:add -- <url> --dir corpus/nazev --title "…" --publisher "…"   # reálný dokument z webu
+npm run corpus:table -- <url|csv> --dir corpus/nazev --match "most" --columns a,b # výřez tabulky jako dokument
 npm run corpus:demo                                        # vyrobí ukázkové PDF
 npm run corpus:extract  -- corpus/demo-program/program.pdf # PDF → kanonický text
 npm run corpus:scaffold -- corpus/demo-program/extracted.json --annotator "Jméno"

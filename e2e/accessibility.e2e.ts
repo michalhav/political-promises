@@ -104,6 +104,21 @@ test.describe("přístupnost na mobilu", () => {
   test("přehled slibů na úzké obrazovce", async ({ page }) => {
     await expectAccessible(page, "/promises");
   });
+
+  test("otevřená zásuvka s filtry je dialog, ne jen odsunutý obsah", async ({ page }) => {
+    await page.goto("/promises");
+    await page.getByRole("button", { name: /Filtry a hledání/ }).click();
+
+    const dialog = page.getByRole("dialog", { name: "Filtry a hledání" });
+    await expect(dialog).toBeVisible();
+
+    const violations = await analyse(page);
+    expect(
+      violations,
+      `Přístupnost zásuvky:
+${describe(violations)}`,
+    ).toEqual([]);
+  });
 });
 
 test.describe("přístupnost redakční konzole", () => {

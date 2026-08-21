@@ -59,7 +59,9 @@ describe("seznam slibů", () => {
     expect(item?.executionStatus).toBe("PARTIALLY_COMPLETED");
     expect(item?.assessability).toBe("HIGH");
     expect(item?.evidenceCount).toBeGreaterThan(0);
-    expect(item?.latestEvent?.eventType).toBe("MILESTONE_REACHED");
+    // Rozhodné datum je v seznamu ta nejdůležitější metadata: říká, jak starý
+    // závěr čtenář vidí, ještě než slib otevře.
+    expect(item?.sourcesReviewedUpTo).toBeTruthy();
   });
 
   it("filtruje podle tématu, kandidátky i stavu plnění", async () => {

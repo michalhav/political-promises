@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { DemoDatasetNotice } from "@/app/_components/DemoBadge";
-import { FilterBar } from "@/app/(public)/promises/_components/FilterBar";
+import { ActiveFilters, FilterBar } from "@/app/(public)/promises/_components/FilterBar";
 import { PromiseCard } from "@/app/(public)/promises/_components/PromiseCard";
 import { db } from "@/db/client";
 import { buildFilterHref, parsePromiseFilters } from "@/modules/promises/filters";
@@ -44,14 +44,18 @@ export default async function PromisesPage({ searchParams }: PageProps<"/promise
 
       <FilterBar filters={filters} lists={lists} />
 
-      <p className="text-muted text-sm" role="status">
-        {result.total === 0
-          ? "Žádný slib neodpovídá zvoleným filtrům."
-          : `Nalezeno ${result.total} ${countLabel(result.total)}.`}
-      </p>
+      <div className="space-y-3">
+        <ActiveFilters filters={filters} lists={lists} />
+
+        <p className="text-muted text-sm" role="status">
+          {result.total === 0
+            ? "Žádný slib neodpovídá zvoleným filtrům."
+            : `Nalezeno ${result.total} ${countLabel(result.total)}.`}
+        </p>
+      </div>
 
       {result.items.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {result.items.map((promise) => (
             <PromiseCard key={promise.slug} promise={promise} />
           ))}

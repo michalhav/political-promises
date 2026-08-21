@@ -106,8 +106,63 @@ test.describe("veřejná část", () => {
     await expect(page.getByRole("heading", { name: /Co tahle metodika neumí/ })).toBeVisible();
   });
 
+  test("zapnuté filtry jsou vidět nad výsledky a dají se odtud zrušit", async ({ page }) => {
+    await page.goto("/promises?topic=HOUSING");
+
+    // Bez tohohle by čtenář na mobilu viděl zkrácený seznam a nevěděl proč:
+    // panel s filtry je tam schovaný v zásuvce.
+    const shrnuti = page.getByText("Filtruje se podle:");
+    await expect(shrnuti).toBeVisible();
+
+    await page.getByRole("link", { name: /Bydlení — zrušit tento filtr/ }).click();
+    await expect(page).toHaveURL(/\/promises$/);
+    await expect(page.getByText("Filtruje se podle:")).toHaveCount(0);
+  });
+
   test("neexistující slib vrací 404", async ({ page }) => {
     const response = await page.request.get("/promises/neexistujici-slib");
     expect(response.status()).toBe(404);
+  });
+});
+
+/**
+ * Zásuvka s filtry na mobilu.
+ *
+ * Vlastní implementace bez knihovny, takže se od ní očekává, že se otestuje
+ * to, co by knihovna měla vyřešená: otevření, zavření klávesou a hlavně že
+ * filtry uvnitř zůstanou obyčejné odkazy.
+ */
+test.describe("filtry na mobilu", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("zásuvka se otevře, odfiltruje a zavře klávesou Escape", async ({ page }) => {
+    await page.goto("/promises");
+
+    const otevrit = page.getByRole("button", { name: /Filtry a hledání/ });
+    await expect(otevrit).toBeVisible();
+    await otevrit.click();
+
+    const dialog = page.getByRole("dialog", { name: "Filtry a hledání" });
+    await expect(dialog).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    // Focus se musí vrátit tam, odkud se zásuvka otevřela.
+    await expect(otevrit).toBeFocused();
+
+    await otevrit.click();
+    await dialog.getByRole("link", { name: "Bydlení", exact: true }).click();
+    await expect(page).toHaveURL(/topic=HOUSING/);
+    await expect(page.getByRole("status")).toContainText("Nalezeno");
+
+    // Po přechodu je zásuvka zase zavřená a stav je čitelný ze stránky samotné.
+    await expect(page.getByText("Filtruje se podle:")).toBeVisible();
+  });
+
+  test("počet zapnutých filtrů je vidět už na tlačítku", async ({ page }) => {
+    await page.goto("/promises?topic=HOUSING&execution=IN_PROGRESS");
+    await expect(page.getByRole("button", { name: /Filtry a hledání/ })).toContainText(
+      "2 aktivních",
+    );
   });
 });

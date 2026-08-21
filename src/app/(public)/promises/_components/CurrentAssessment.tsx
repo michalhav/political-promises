@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { ExecutionAxis, needsSafeguard, OutcomeAxis } from "@/app/_components/StatusDisplay";
 import type { AssessmentView } from "@/modules/promises/queries";
 import { formatDateLong } from "@/shared/format";
@@ -73,12 +71,12 @@ export function CurrentAssessment({
         <div>
           <dt className="text-muted">Jak vzniklo</dt>
           <dd>
-            <Link
+            <a
               href={`#${methodologySectionId}`}
               className="hover:text-accent font-semibold underline underline-offset-4"
             >
               Rozpad hodnocení
-            </Link>
+            </a>
           </dd>
         </div>
       </dl>

@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 /**
  * Mapa dlouhé stránky.
  *
@@ -8,8 +6,14 @@ import Link from "next/link";
  * hlavně se nedostane zpátky k odpovědi, když se zavrtá do archivu.
  *
  * Nejsou to odkazy na jinou stránku, ale kotvy: navigace se proto drží
- * nahoře i při scrollování. Jde o obyčejné `<a href="#…">`, takže funguje
- * bez JavaScriptu i po odeslání odkazu někomu dalšímu.
+ * nahoře i při scrollování.
+ *
+ * Schválně `<a>`, ne `next/link`. Router odbaví kotvu na téže stránce sám a
+ * tím obejde nativní chování prohlížeče — stránka sice odscrolluje, ale
+ * **místo pro další tabulátor zůstane v liště**. Kdo se pohybuje klávesnicí,
+ * skočí na sekci a dalším tabem se vrátí do navigace, aniž by se k obsahu
+ * vůbec dostal. Nativní odkaz to nastaví správně a nic za to neplatíme:
+ * na téže stránce není co přednačítat.
  *
  * Vědomě tu **není** zvýrazňování právě čtené sekce. Vyžadovalo by pozorovatel
  * v prohlížeči a u stránky, kde jsou sekce různě vysoké, se plete víc, než
@@ -32,12 +36,12 @@ export function SectionNav({ sections }: { sections: SectionLink[] }) {
       <ul className="flex scrollbar-none gap-x-5 overflow-x-auto py-3 text-sm whitespace-nowrap">
         {sections.map((section) => (
           <li key={section.id}>
-            <Link
+            <a
               href={`#${section.id}`}
               className="hover:text-accent underline-offset-4 hover:underline"
             >
               {section.label}
-            </Link>
+            </a>
           </li>
         ))}
       </ul>

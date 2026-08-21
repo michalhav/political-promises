@@ -96,6 +96,94 @@ test.describe("přístupnost v tmavém režimu", () => {
     // Kontrast se u tmavého režimu rozbíjí nejčastěji, protože se ladí ten světlý.
     await expectAccessible(page, `/promises/${PUBLISHED_SLUG}`);
   });
+
+  test("přehled a zapnutý filtr ve tmě", async ({ page }) => {
+    // Barevné plochy stavů a zapnutého filtru vznikly při redesignu, takže
+    // právě ony jsou nejčerstvější kandidát na propadlý kontrast.
+    await expectAccessible(page, "/promises");
+    await expectAccessible(page, "/promises?topic=HOUSING");
+  });
+});
+
+/**
+ * Přizpůsobení obsahu (WCAG 1.4.10) a rozestupy textu (1.4.12).
+ *
+ * Obojí axe nezměří — jsou to vlastnosti rozvržení, ne DOM. Přitom právě
+ * tady se redesign rozbíjí nejčastěji: stačí jedna neodřádkovatelná lišta
+ * nebo pevná výška a stránka začne ujíždět do strany.
+ */
+const PUBLIC_PATHS = [
+  "/",
+  "/promises",
+  "/promises?topic=HOUSING",
+  `/promises/${PUBLISHED_SLUG}`,
+  "/compare",
+  "/methodology",
+];
+
+/** Vodorovné ujíždění celé stránky. Vlastní posuvné kontejnery se nepočítají. */
+async function horizontalOverflow(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    const root = document.documentElement;
+    return root.scrollWidth - root.clientWidth;
+  });
+}
+
+test.describe("kotvy na téže stránce", () => {
+  test("po skoku na sekci pokračuje tabulátor v ní, ne zpátky v liště", async ({ page }) => {
+    await page.goto(`/promises/${PUBLISHED_SLUG}`);
+
+    const listaSekci = page.getByRole("navigation", { name: "Části stránky" });
+    await listaSekci.getByRole("link", { name: "Důkazy" }).click();
+    await page.keyboard.press("Tab");
+
+    const kdeJsme = await page.evaluate(() => {
+      const el = document.activeElement;
+      return el?.closest("section")?.getAttribute("aria-labelledby") ?? null;
+    });
+
+    // Kdyby kotvu odbavoval router místo prohlížeče, skončil by fokus na další
+    // položce lišty a čtenář by se ke skočené sekci klávesnicí nedostal.
+    expect(kdeJsme).toBe("dukazy");
+  });
+});
+
+test.describe("přizpůsobení obsahu", () => {
+  // 320 px je spodní hranice, kterou WCAG 1.4.10 předpokládá.
+  test.use({ viewport: { width: 320, height: 640 } });
+
+  for (const path of PUBLIC_PATHS) {
+    test(`na 320 px neujíždí do strany: ${path}`, async ({ page }) => {
+      await page.goto(path);
+      await page.waitForLoadState("networkidle");
+
+      const overflow = await horizontalOverflow(page);
+      expect(overflow, `${path} přetéká o ${overflow} px`).toBeLessThanOrEqual(1);
+    });
+  }
+
+  test("zvětšené rozestupy textu nic neuříznou", async ({ page }) => {
+    await page.goto(`/promises/${PUBLISHED_SLUG}`);
+    await page.waitForLoadState("networkidle");
+
+    // Hodnoty předepisuje přímo WCAG 1.4.12.
+    await page.addStyleTag({
+      content: `* { line-height: 1.5 !important; letter-spacing: 0.12em !important;
+        word-spacing: 0.16em !important; }
+        p, li, h1, h2, h3 { margin-bottom: 2em !important; }`,
+    });
+    await page.waitForTimeout(200);
+
+    const overflow = await horizontalOverflow(page);
+    expect(overflow, `Detail přetéká o ${overflow} px`).toBeLessThanOrEqual(1);
+
+    const violations = await analyse(page);
+    expect(
+      violations,
+      `Přístupnost s rozestupy:
+${describe(violations)}`,
+    ).toEqual([]);
+  });
 });
 
 test.describe("přístupnost na mobilu", () => {

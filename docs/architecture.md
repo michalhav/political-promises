@@ -124,6 +124,20 @@ Stránky, které čtou z databáze, mají `dynamic = "force-dynamic"`. Důvod je
 
 Filtry v přehledu slibů jsou odkazy, ne klientský stav — jsou sdílitelné, fungují bez JavaScriptu a nevyžadují do prohlížeče posílat interaktivní komponentu.
 
+Jediný klientský kód ve veřejné části je zásuvka s filtry na mobilu. Je psaná jako **progresivní vylepšení**: server vykreslí panel rozbalený a teprve po připojení Reactu se na úzké obrazovce složí. Kdyby se skript nenačetl, filtry zůstanou použitelné.
+
+## Přístupnost
+
+Laťku hlídá `e2e/accessibility.e2e.ts` proti WCAG 2.1 A/AA. Automatická kontrola pokrývá zhruba třetinu problémů, takže zelený běh znamená jen „nezhoršilo se to v tom, co stroj měří" — ne přístupnou aplikaci.
+
+Tři pravidla, která se dají porušit, aniž si toho někdo všimne, a proto mají vlastní test:
+
+**Stav se nikdy nekóduje jen barvou.** Význam nese text a znak před ním, výplň je až třetí signál. Platí to i pro zapnutý filtr.
+
+**Kotva na téže stránce je nativní `<a>`, ne `next/link`.** Router odbaví hash sám a tím obejde chování prohlížeče: stránka odscrolluje, ale místo pro další tabulátor zůstane v navigaci. Kdo se pohybuje klávesnicí, skočí na sekci a dalším tabem se vrátí zpátky do lišty, aniž by se k obsahu dostal.
+
+**Stránka se nesmí dát do vodorovného pohybu na 320 px** ani po zvětšení rozestupů textu podle WCAG 1.4.12. Vlastní posuvné kontejnery (lišta se sekcemi) jsou výjimka, celý dokument ne.
+
 ## Text dokumentů
 
 Řetězec doložitelnosti končí u konkrétního místa v konkrétním dokumentu, takže text musí být adresovatelný a neměnný:

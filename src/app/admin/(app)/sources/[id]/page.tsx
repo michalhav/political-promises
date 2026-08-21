@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { Suggestions } from "@/app/admin/(app)/sources/[id]/_components/Suggestions";
 import { db } from "@/db/client";
-import { getAdminSource } from "@/modules/review/adminQueries";
+import { getAdminSource, listElectoralListChoices } from "@/modules/review/adminQueries";
+import { listSuggestions } from "@/modules/review/suggestions";
 import { SOURCE_TYPE_LABELS } from "@/modules/sources/labels";
 import { formatDate, formatTimestamp } from "@/shared/format";
 
@@ -14,6 +16,11 @@ export default async function AdminSourceDetailPage({ params }: PageProps<"/admi
   const source = await getAdminSource(db, id);
 
   if (!source) notFound();
+
+  const [suggestions, lists] = await Promise.all([
+    listSuggestions(db, id),
+    listElectoralListChoices(db),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -96,6 +103,13 @@ export default async function AdminSourceDetailPage({ params }: PageProps<"/admi
           </>
         )}
       </section>
+
+      <Suggestions
+        sourceDocumentId={id}
+        suggestions={suggestions}
+        lists={lists}
+        canExtract={source.rawText !== null && lists.length > 0}
+      />
     </div>
   );
 }

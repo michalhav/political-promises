@@ -5,7 +5,11 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/db/client";
 import { requireEditorialUser } from "@/modules/accounts/auth";
+import { extractPromises } from "@/modules/ai/extraction";
+import { getAIProvider } from "@/modules/ai/factory";
+import { AIProviderError } from "@/modules/ai/provider";
 import { createElectoralList, createParty } from "@/modules/review/registry";
+import { acceptSuggestion, rejectSuggestion } from "@/modules/review/suggestions";
 import {
   attachEvidence,
   createAssessmentDraft,
@@ -84,6 +88,60 @@ export const createSourceAction: Action = async (formData) =>
     revalidatePath("/admin");
     revalidatePath("/admin/sources");
     redirect(`/admin/sources/${id}`);
+  });
+
+export const extractPromisesAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const sourceDocumentId = text(formData, "sourceDocumentId");
+
+    let provider;
+    try {
+      provider = getAIProvider();
+    } catch (error) {
+      if (error instanceof AIProviderError) return { ok: false, errors: [error.message] };
+      throw error;
+    }
+
+    const result = await extractPromises(db, actor, provider, sourceDocumentId);
+
+    revalidatePath(`/admin/sources/${sourceDocumentId}`);
+    return {
+      ok: true,
+      message:
+        result.rejected > 0
+          ? `Návrhů k revizi: ${result.accepted}. Zahozeno kvůli neověřitelné citaci: ${result.rejected}.`
+          : `Návrhů k revizi: ${result.accepted}.`,
+    };
+  });
+
+export const acceptSuggestionAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+
+    const promiseSlug = text(formData, "slug");
+    await acceptSuggestion(db, actor, {
+      suggestionId: text(formData, "suggestionId"),
+      electoralListId: text(formData, "electoralListId"),
+      slug: promiseSlug,
+      title: optionalText(formData, "title"),
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/promises");
+    redirect(`/admin/promises/${promiseSlug}`);
+  });
+
+export const rejectSuggestionAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+
+    await rejectSuggestion(db, actor, {
+      suggestionId: text(formData, "suggestionId"),
+      note: text(formData, "note"),
+    });
+
+    return { ok: true, message: "Návrh odmítnut." };
   });
 
 export const createPartyAction: Action = async (formData) =>

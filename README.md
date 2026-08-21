@@ -224,14 +224,24 @@ Seed na produkci nespouštěj — smaže obsah.
 
 ## AI
 
-AI zatím není implementovaná (fáze 4). Až bude, platí:
+Vytěžování kandidátů na slib se spouští z detailu zdrojového dokumentu tlačítkem **Vytěžit kandidáty**. Platí:
 
 - běží **dávkově v adminu**, nikdy v request path veřejné aplikace
-- výstup se validuje Zodem, nikdy se nedůvěřuje surové odpovědi modelu
-- žádný návrh se nezveřejní bez lidské revize
-- u každého návrhu se ukládá poskytovatel, model, verze promptu a čas (tabulky `ai_run` a `ai_suggestion`)
+- výstup se validuje Zodem (`messages.parse` + `zodOutputFormat`), surové odpovědi se nedůvěřuje
+- **citace musí doslova stát ve zdroji**, jinak se návrh zahodí ještě před uložením; důvody zahození zůstávají u běhu
+- žádný návrh se nezveřejní bez lidské revize — přijetí zakládá *nepublikovaného kandidáta* toutéž cestou jako ruční zápis
+- u každého běhu se ukládá poskytovatel, model, verze promptu, otisk vstupu, tokeny a cena (`ai_run`, `ai_suggestion`)
+- stejný dokument se stejnou verzí promptu neproběhne dvakrát — otisk vstupu to zachytí
 
-Ve vývoji a v testech běží `FixtureAIProvider` a nestojí nic.
+Text dokumentu je pro model **data, ne instrukce**. Systémový prompt to říká, ale skutečnou pojistkou proti prompt injection je ověření citace: věta „ignoruj předchozí pokyny" v nahraném PDF může model zmást, do systému se ale nedostane, protože se v dokumentu nenajde jako doložitelná citace.
+
+| `AI_PROVIDER` | Co běží | Cena |
+| --- | --- | --- |
+| `fixture` (výchozí) | Deterministická heuristika `HeuristicPromiseExtractor` — laťka, kterou má model překonávat | 0 |
+| `anthropic` | Claude přes oficiální SDK; vyžaduje `ANTHROPIC_API_KEY` | podle ceníku, ukládá se u běhu |
+| `local` | Zatím nenapojeno, skončí srozumitelnou chybou | — |
+
+Výchozí je heuristika schválně: běh, který stojí peníze, se musí zapnout vědomě.
 
 ---
 

@@ -224,6 +224,7 @@ test.describe("přístupnost redakční konzole", () => {
     await expectAccessible(page, "/admin");
     await expectAccessible(page, "/admin/sources");
     await expectAccessible(page, "/admin/promises");
+    await expectAccessible(page, "/admin/lists");
     await expectAccessible(page, "/admin/promises/new");
     await expectAccessible(page, `/admin/promises/${PUBLISHED_SLUG}`);
   });

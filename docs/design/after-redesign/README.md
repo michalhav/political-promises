@@ -15,6 +15,7 @@ daty (`CAPTURE_SCREENSHOTS=1 npx playwright test screenshots`).
 | `31-tma-detail.png` | detail v tmavém režimu | nové významové povrchy |
 | `11-prehled.png` | redakční přehled | fronty místo dlaždic s čísly, další akce a stáří u položky |
 | `14-sliby.png` | seznam slibů v redakci | řazení podle poslední práce, revident a stáří místo samostatných sloupců |
+| `16-kandidatky.png` | evidence kandidátek a stran | nová stránka — bez ní nešel do systému dostat skutečný subjekt |
 
 Ostatní snímky (`01`, `06`, `07`, `10`, `12`, `13`, `15`, `20`, `30`) zachycují
 části, kterých se redesign zatím nedotkl: homepage, *Program vs. koalice*,

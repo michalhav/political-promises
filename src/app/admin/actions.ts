@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/db/client";
 import { requireEditorialUser } from "@/modules/accounts/auth";
+import { createElectoralList, createParty } from "@/modules/review/registry";
 import {
   attachEvidence,
   createAssessmentDraft,
@@ -83,6 +84,43 @@ export const createSourceAction: Action = async (formData) =>
     revalidatePath("/admin");
     revalidatePath("/admin/sources");
     redirect(`/admin/sources/${id}`);
+  });
+
+export const createPartyAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+
+    await createParty(db, actor, {
+      name: text(formData, "name"),
+      shortName: text(formData, "shortName"),
+      slug: text(formData, "slug"),
+      registrationId: optionalText(formData, "registrationId"),
+      isDemo: formData.get("isDemo") === "on",
+    });
+
+    revalidatePath("/admin/lists");
+    return { ok: true, message: "Strana založena." };
+  });
+
+export const createElectoralListAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+
+    await createElectoralList(db, actor, {
+      electionId: text(formData, "electionId"),
+      name: text(formData, "name"),
+      shortName: text(formData, "shortName"),
+      slug: text(formData, "slug"),
+      ballotNumber: optionalText(formData, "ballotNumber"),
+      seatsWon: optionalText(formData, "seatsWon"),
+      // Vícenásobný výběr chodí jako opakovaný klíč, ne jako jedna hodnota.
+      partyIds: formData.getAll("partyIds").filter((value) => typeof value === "string"),
+    });
+
+    revalidatePath("/admin/lists");
+    // Nová kandidátka se hned nabízí ve formuláři kandidáta na slib.
+    revalidatePath("/admin/promises/new");
+    return { ok: true, message: "Kandidátka založena." };
   });
 
 export const createPromiseAction: Action = async (formData) =>

@@ -76,6 +76,7 @@ test.describe("redakce", () => {
     await shoot(page, "12-zdroje", "/admin/sources");
     await shoot(page, "13-novy-kandidat", "/admin/promises/new");
     await shoot(page, "14-sliby", "/admin/promises");
+    await shoot(page, "16-kandidatky", "/admin/lists");
     await shoot(page, "15-detail-slibu", `/admin/promises/${PUBLISHED_SLUG}`);
   });
 });

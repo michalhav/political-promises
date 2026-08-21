@@ -19,6 +19,7 @@ const NAV = [
   { href: "/admin", label: "Přehled" },
   { href: "/admin/promises", label: "Sliby" },
   { href: "/admin/sources", label: "Zdroje" },
+  { href: "/admin/lists", label: "Kandidátky" },
 ] as const;
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {

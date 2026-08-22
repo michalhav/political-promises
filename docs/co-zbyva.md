@@ -101,7 +101,7 @@ chybí jména stanic, u bytů jsou synonyma příliš obecná.
 
 ## 3. Obsah
 
-### 3.1 Programy kandidátek — zachráněno pět ze šesti
+### 3.1 Programy kandidátek — použitelné čtyři ze šesti
 
 Stav k 22. 8. 2026 po záchranné akci:
 

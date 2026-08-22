@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/db/client";
 import { requireEditorialUser } from "@/modules/accounts/auth";
 import { matchEvidence } from "@/modules/ai/evidenceMatching";
+import { scanSourceForEvidence } from "@/modules/ai/evidenceScanService";
 import { extractPromises } from "@/modules/ai/extraction";
 import { getAIProvider } from "@/modules/ai/factory";
 import { AIProviderError } from "@/modules/ai/provider";
@@ -143,6 +144,23 @@ export const matchEvidenceAction: Action = async (formData) =>
         result.rejected > 0
           ? `Návrhů důkazů k revizi: ${result.accepted}. Zahozeno kvůli neověřitelné citaci nebo neznámému slibu: ${result.rejected}.`
           : `Návrhů důkazů k revizi: ${result.accepted}.`,
+    };
+  });
+
+export const scanEvidenceAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const sourceDocumentId = text(formData, "sourceDocumentId");
+
+    const result = await scanSourceForEvidence(db, actor, sourceDocumentId);
+
+    revalidatePath(`/admin/sources/${sourceDocumentId}`);
+    return {
+      ok: true,
+      message:
+        result.suggestions === 0
+          ? `Prošlo ${result.scannedLines} řádků proti ${result.scannedPromises} slibům. Nic nesedělo.`
+          : `Prošlo ${result.scannedLines} řádků proti ${result.scannedPromises} slibům: ${result.suggestions} návrhů u ${result.promisesWithMatches} slibů.`,
     };
   });
 

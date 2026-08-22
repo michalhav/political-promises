@@ -2,6 +2,7 @@ import {
   acceptEvidenceSuggestionAction,
   matchEvidenceAction,
   rejectSuggestionAction,
+  scanEvidenceAction,
 } from "@/app/admin/actions";
 import { AdminForm } from "@/app/admin/_components/AdminForm";
 import { Field, Select, TextInput } from "@/app/admin/_components/fields";
@@ -38,15 +39,24 @@ export function EvidenceSuggestions({
           Návrhy důkazů
         </h2>
         {canRun ? (
-          <AdminForm action={matchEvidenceAction} submitLabel="Hledat důkazy k slibům">
-            <input type="hidden" name="sourceDocumentId" value={sourceDocumentId} />
-          </AdminForm>
+          <div className="flex flex-wrap gap-2">
+            {/* Lexikální průchod je zdarma a okamžitý, proto stojí první. Model
+                se vyplatí až tam, kde shoda slov nestačí. */}
+            <AdminForm action={scanEvidenceAction} submitLabel="Projít všechny sliby">
+              <input type="hidden" name="sourceDocumentId" value={sourceDocumentId} />
+            </AdminForm>
+            <AdminForm action={matchEvidenceAction} submitLabel="Hledat modelem">
+              <input type="hidden" name="sourceDocumentId" value={sourceDocumentId} />
+            </AdminForm>
+          </div>
         ) : null}
       </div>
 
       <p className="text-muted text-sm">
-        Stroj porovná dokument se sliby, které v systému jsou, a navrhne místa, která k nim něco
-        dokládají. Návrh na slib mimo seznam nebo s citací, která v dokumentu nestojí, se zahodí.
+        <strong>Projít všechny sliby</strong> porovná dokument se všemi sliby podle výrazů z jejich
+        citací — je to okamžité, zdarma a u každého nálezu je vidět, kvůli kterým slovům prošel.{" "}
+        <strong>Hledat modelem</strong> pošle dokument jazykovému modelu; ten pozná i souvislost bez
+        shody slov, ale stojí peníze. Obojí končí jako návrh, který připojí až člověk.
       </p>
 
       {pending.length === 0 ? (

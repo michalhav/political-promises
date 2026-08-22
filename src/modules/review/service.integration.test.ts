@@ -199,7 +199,11 @@ describe("hodnocení a revize", () => {
 
   it("autor nesmí schválit vlastní práci (pravidlo čtyř očí)", async () => {
     await expect(
-      transitionAssessment(handle.db, editor, { assessmentId, action: "APPROVE" }),
+      transitionAssessment(handle.db, editor, {
+        assessmentId,
+        action: "APPROVE",
+        conflictFree: true,
+      }),
     ).rejects.toThrow(/vlastní autor/);
   });
 
@@ -244,7 +248,11 @@ describe("hodnocení a revize", () => {
   });
 
   it("recenzent schválí a publikuje", async () => {
-    await transitionAssessment(handle.db, reviewer, { assessmentId, action: "APPROVE" });
+    await transitionAssessment(handle.db, reviewer, {
+      assessmentId,
+      action: "APPROVE",
+      conflictFree: true,
+    });
 
     const approved = await currentAssessment(promiseId);
     expect(approved?.workflowState).toBe("APPROVED");
@@ -315,7 +323,11 @@ describe("podmínky publikace", () => {
     });
 
     await transitionAssessment(handle.db, editor, { assessmentId: draftId, action: "SUBMIT" });
-    await transitionAssessment(handle.db, reviewer, { assessmentId: draftId, action: "APPROVE" });
+    await transitionAssessment(handle.db, reviewer, {
+      assessmentId: draftId,
+      action: "APPROVE",
+      conflictFree: true,
+    });
 
     // Konkrétní důvody jsou v `issues`, aby je šlo vypsat u formuláře.
     await expect(publishAssessment(handle.db, reviewer, draftId)).rejects.toMatchObject({
@@ -353,6 +365,7 @@ describe("podmínky publikace", () => {
     await transitionAssessment(handle.db, reviewer, {
       assessmentId: notStartedId,
       action: "APPROVE",
+      conflictFree: true,
     });
 
     await expect(publishAssessment(handle.db, reviewer, notStartedId)).rejects.toMatchObject({
@@ -427,6 +440,7 @@ describe("nová verze a korekce", () => {
     await transitionAssessment(handle.db, reviewer, {
       assessmentId: draft.id,
       action: "APPROVE",
+      conflictFree: true,
     });
     await publishAssessment(handle.db, reviewer, draft.id);
 

@@ -57,6 +57,13 @@
       "when": 1787384056882,
       "tag": "0007_lively_giant_man",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1787385058729,
+      "tag": "0008_tired_carmella_unuscione",
+      "breakpoints": true
     }
   ]
 }

@@ -172,10 +172,18 @@ describe("skutečný volební program v redakčním řetězci", () => {
 
     // Vlastní hodnocení si autor schválit nesmí.
     await expect(
-      transitionAssessment(handle.db, editor, { assessmentId, action: "APPROVE" }),
+      transitionAssessment(handle.db, editor, {
+        assessmentId,
+        action: "APPROVE",
+        conflictFree: true,
+      }),
     ).rejects.toBeInstanceOf(EditorialError);
 
-    await transitionAssessment(handle.db, reviewer, { assessmentId, action: "APPROVE" });
+    await transitionAssessment(handle.db, reviewer, {
+      assessmentId,
+      action: "APPROVE",
+      conflictFree: true,
+    });
     await publishAssessment(handle.db, reviewer, assessmentId);
   });
 

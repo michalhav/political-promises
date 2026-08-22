@@ -355,6 +355,7 @@ export const transitionAssessmentAction: Action = async (formData) =>
       assessmentId: text(formData, "assessmentId"),
       action,
       note: optionalText(formData, "note"),
+      conflictFree: formData.get("conflictFree") === "on",
     });
 
     revalidatePath("/admin");

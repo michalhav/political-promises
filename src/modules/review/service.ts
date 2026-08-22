@@ -558,7 +558,13 @@ const REVIEW_DECISION_BY_ACTION = {
 export async function transitionAssessment(
   db: AppDatabase,
   actor: Actor,
-  input: { assessmentId: string; action: Exclude<WorkflowAction, "PUBLISH">; note?: string },
+  input: {
+    assessmentId: string;
+    action: Exclude<WorkflowAction, "PUBLISH">;
+    note?: string;
+    /** Prohlášení recenzenta ke střetu zájmů. Povinné u schválení (B3). */
+    conflictFree?: boolean;
+  },
 ): Promise<void> {
   const assessment = await loadAssessment(db, input.assessmentId);
 
@@ -568,6 +574,18 @@ export async function transitionAssessment(
     actorId: actor.id,
   });
   if (problem) throw new EditorialError(problem);
+
+  /**
+   * Pravidlo čtyř očí hlídá, že neschvaluje autor. Nehlídá ale, jestli
+   * recenzent není z téže kandidátky, o které slib je — a to je přesně ten
+   * střet, na který se dá zaútočit. Prohlášení se proto vyžaduje výslovně
+   * a zapisuje se k rozhodnutí.
+   */
+  if (input.action === "APPROVE" && input.conflictFree !== true) {
+    throw new EditorialError(
+      "Ke schválení patří prohlášení, že ke slibu ani ke kandidátce nemáš vztah, který by ti bránil rozhodovat. Bez něj schválit nejde.",
+    );
+  }
 
   const note = input.note?.trim();
   if (input.action === "REQUEST_CHANGES" && !note) {
@@ -593,6 +611,7 @@ export async function transitionAssessment(
       entityType: "promise_assessment",
       entityId: input.assessmentId,
       decision: REVIEW_DECISION_BY_ACTION[input.action],
+      conflictDeclared: input.action === "APPROVE" ? true : null,
       note: note ?? null,
     });
 

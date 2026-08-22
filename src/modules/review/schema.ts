@@ -7,6 +7,7 @@
  */
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
   char,
   check,
   index,
@@ -34,6 +35,18 @@ export const reviewDecisions = pgTable(
     entityType: varchar("entity_type", { length: 60 }).notNull(),
     entityId: uuid("entity_id").notNull(),
     decision: reviewDecisionTypeEnum("decision").notNull(),
+    /**
+     * Prohlášení recenzenta, že ke slibu nemá vztah, který by mu bránil
+     * rozhodovat (B3).
+     *
+     * Pravidlo čtyř očí říká jen „schvaluje někdo jiný". To je málo: jiný
+     * člověk z téže kandidátky je pořád jiný člověk. Zapisuje se proto
+     * výslovné prohlášení, ne jen kliknutí — a zůstává u rozhodnutí, aby šlo
+     * později doložit, kdo co tvrdil.
+     *
+     * Prázdné u akcí, kde se nic neschvaluje.
+     */
+    conflictDeclared: boolean("conflict_declared"),
     note: text("note"),
     createdAt: createdAt(),
   },

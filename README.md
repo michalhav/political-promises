@@ -54,9 +54,19 @@ Bez Dockeru stačí jakýkoli Postgres 17 — jen uprav `DATABASE_URL`.
 Kdo Docker ani Postgres nemá, spustí aplikaci proti PGlite:
 
 ```bash
-npm run dev:pglite                                  # http://localhost:3000
+npm run dev:pglite                                     # http://localhost:3000
 npm run dev:pglite -- --corpus corpus/nazev-dokumentu  # navíc nahraje dokument z korpusu
+npm run dev:pglite -- --praha --zakazky corpus/zakazky-mosty  # skutečná data 2022–2026
 ```
+
+`--praha` naplní databázi **skutečnými** daty: doslovné sliby z programu Praha
+Sobě, kandidátka, která není označená jako smyšlená, a — pokud existuje výřez
+zakázek z `--zakazky` — doklad k tomu, co město zadalo. Všechno projde stejným
+redakčním postupem včetně pravidla čtyř očí.
+
+Není to publikovatelný obsah: hodnocení tam nepíše redakce, ale skript, a stavy
+jsou proto nejopatrnější, jaké pravidla dovolí. Kde není doklad, stojí „bez
+doloženého postupu".
 
 Databáze je v paměti a se zastavením procesu mizí. Je to náhrada pro rychlý
 pohled na aplikaci, ne pro průběžnou práci.

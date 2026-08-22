@@ -356,6 +356,15 @@ export default async function AdminPromiseDetailPage({
                   <input type="hidden" name="assessmentId" value={working.id} />
                   <input type="hidden" name="slug" value={promise.slug} />
                   <input type="hidden" name="action" value="APPROVE" />
+                  {/* B3: čtyři oči hlídají, že neschvaluje autor. Že recenzent
+                      není z téže kandidátky, nehlídá nic — proto prohlášení. */}
+                  <label className="flex items-start gap-2 text-sm">
+                    <input type="checkbox" name="conflictFree" required className="mt-1 size-4" />
+                    <span>
+                      Prohlašuji, že k tomuto slibu ani ke kandidátce nemám vztah, který by mi
+                      bránil rozhodovat.
+                    </span>
+                  </label>
                 </AdminForm>
               ) : null}
 

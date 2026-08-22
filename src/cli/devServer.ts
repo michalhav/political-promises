@@ -23,6 +23,7 @@ import * as schema from "@/db/schema";
 import { reseed } from "@/db/seed/applySeed";
 import { appUsers } from "@/modules/accounts/schema";
 import { importCorpusDocument } from "@/modules/sources/importCorpus";
+import { seedRealPraha } from "@/db/seed/realPraha";
 
 const DB_PORT = Number(process.env.DEV_PGLITE_PORT ?? 55_433);
 const APP_PORT = process.env.PORT ?? "3000";
@@ -52,6 +53,19 @@ async function main(): Promise<void> {
 
     const imported = await importCorpusDocument(db, actor, corpus);
     console.log(`[dev] Korpus ${corpus} nahrán: ${imported.title} (${imported.pageCount} stran).`);
+  }
+
+  // Skutečná data volebního období 2022–2026. Program je v repozitáři, doklady
+  // ze zakázek jsou volitelné — bez nich zůstanou sliby poctivě nedoložené.
+  if (process.argv.includes("--praha")) {
+    const result = await seedRealPraha(db, {
+      tenderDirectory: argValue(process.argv.slice(2), "--zakazky"),
+    });
+    console.log(
+      `[dev] Praha Sobě: publikováno ${result.published.length} slibů, ` +
+        `z toho ${result.withEvidence} s dokladem ze zakázek.` +
+        (result.skipped.length > 0 ? ` Přeskočeno: ${result.skipped.join(", ")}.` : ""),
+    );
   }
 
   const server = new PGLiteSocketServer({ db: client, port: DB_PORT, host: "127.0.0.1" });

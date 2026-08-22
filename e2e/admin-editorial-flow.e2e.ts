@@ -142,6 +142,8 @@ test.describe("redakční průchod", () => {
       await login(page, REVIEWER);
       await page.goto(`/admin/promises/${SLUG}`);
 
+      // B3: bez prohlášení o střetu zájmů schválit nejde.
+      await page.getByLabel(/Prohlašuji, že k tomuto slibu/).check();
       await page.getByRole("button", { name: "Schválit" }).click();
       await expect(page.getByText("Podmínky publikace jsou splněné.")).toBeVisible();
 

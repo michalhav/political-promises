@@ -1,0 +1,1 @@
+ALTER TABLE "review_decision" ADD COLUMN "conflict_declared" boolean;

@@ -34,6 +34,7 @@ import { createElectoralList, createParty } from "@/modules/review/registry";
 import { computeMeasurementsFromTable, defineMetric } from "@/modules/review/metrics";
 import { importCorpusDocument } from "@/modules/sources/importCorpus";
 import { sourceDocuments } from "@/modules/sources/schema";
+import type { ExecutionStatus } from "@/modules/assessments/statusRules";
 import type { Topic } from "@/modules/promises/labels";
 
 const PROGRAM_DIRECTORY = "corpus/praha-sobe-2022";
@@ -55,6 +56,26 @@ interface PromiseSpec {
     /** Událost na časovou ose, kterou tenhle doklad dokládá. */
     event?: { type: EventType; date: string; title: string; description?: string };
   }[];
+  /**
+   * Doklad o dokončení.
+   *
+   * Musí přijít z jiného dokumentu než ze zakázek: zakázka dokládá **zadání**
+   * stavby, ne že stojí a slouží. U Dvoreckého mostu je ten rozdíl vidět
+   * v číslech — uhrazeno bylo 17 z 1 075 mil. Kč a most přitom stál.
+   *
+   * Stav plnění je tu vypsaný schválně, ne odvozený. Kolik z toho, co slib
+   * slibuje, jeden doklad pokrývá, je redakční úsudek — program jmenuje tři
+   * mosty a otevřel se jeden.
+   */
+  completion?: {
+    /** Doslovný úryvek, který musí ve zdroji stát znak po znaku. */
+    excerpt: string;
+    note: string;
+    limitation: string;
+    executionStatus: ExecutionStatus;
+    summary: string;
+    event: { type: EventType; date: string; title: string; description?: string };
+  };
 }
 
 type EventType = (typeof eventTypeEnum.enumValues)[number];
@@ -95,6 +116,24 @@ const PROMISES: PromiseSpec[] = [
         },
       },
     ],
+    completion: {
+      excerpt:
+        "V pátek 17. dubna 2026 proběhlo slavnostní otevření Dvoreckého mostu, nové významné dopravní stavby hlavního města Prahy.",
+      note: "Dopravní podnik potvrzuje, že most byl otevřen a od 18. 4. 2026 po něm jezdí linky městské hromadné dopravy.",
+      limitation:
+        "Doklad se týká jednoho ze tří mostů, které program jmenuje, a neříká nic o zásluze Prahy Sobě — stavbu vedla koalice, ve které tato kandidátka není.",
+      // Program jmenuje tři mosty; doložený je jeden.
+      executionStatus: "PARTIALLY_COMPLETED",
+      summary:
+        "Doložena zadaná zakázka i otevření Dvoreckého mostu 17. 4. 2026. Program jmenuje tři mosty, doložený je zatím jeden.",
+      event: {
+        type: "COMPLETED",
+        date: "2026-04-17",
+        title: "Dvorecký most otevřen",
+        description:
+          "Od 18. 4. 2026 po mostě jezdí dvě tramvajové, čtyři denní a dvě noční autobusové linky.",
+      },
+    },
   },
   {
     slug: "praha-sobe-vystaviste-a-prumyslovy-palac",
@@ -215,9 +254,30 @@ export interface RealDataResult {
   measurements: number;
 }
 
+/**
+ * Stav plnění podle toho, co je doložené.
+ *
+ * Bez dokladu se netvrdí nic než to, že jsme doklad nenašli — proto
+ * NO_VERIFIED_PROGRESS, který mluví o našich zdrojích, ne o městě. Zadaná
+ * zakázka unese jen IN_PROGRESS. Teprve doklad o dokončení pustí stav, který
+ * o stavbě tvrdí, že stojí.
+ */
+function completedStatus(
+  spec: PromiseSpec,
+  completed: boolean,
+  hasEvidence: boolean,
+): ExecutionStatus {
+  if (completed && spec.completion) return spec.completion.executionStatus;
+  return hasEvidence ? "IN_PROGRESS" : "NO_VERIFIED_PROGRESS";
+}
+
 export async function seedRealPraha(
   db: AppDatabase,
-  options: { tenderDirectory?: string; budgetDirectory?: string } = {},
+  options: {
+    tenderDirectory?: string;
+    budgetDirectory?: string;
+    completionDirectory?: string;
+  } = {},
 ): Promise<RealDataResult> {
   const editor: Actor = { id: seedId("user:redaktor-1"), displayName: "Demo redaktor 1" };
   const reviewer: Actor = { id: seedId("user:redaktor-2"), displayName: "Demo redaktor 2" };
@@ -259,6 +319,13 @@ export async function seedRealPraha(
       .from(sourceDocuments)
       .where(eq(sourceDocuments.id, tenders.sourceDocumentId));
     tenderText = tenderRow?.rawText ?? "";
+  }
+
+  // Doklad o dokončení je samostatný dokument, ne řádek v tabulce zakázek.
+  let completionSourceId: string | null = null;
+  if (options.completionDirectory && existsSync(`${options.completionDirectory}/provenance.json`)) {
+    const completion = await importCorpusDocument(db, editor, options.completionDirectory);
+    completionSourceId = completion.sourceDocumentId;
   }
 
   const result: RealDataResult = {
@@ -328,6 +395,37 @@ export async function seedRealPraha(
       }
     }
 
+    // Doklad o dokončení. Až sem řetěz končil u zadané zakázky, tedy v roce
+    // 2022 — o tom, jestli stavba stojí a slouží, z ní neplyne nic.
+    let completed = false;
+    if (spec.completion && completionSourceId) {
+      const linkId = await attachEvidence(db, editor, {
+        promiseId,
+        sourceDocumentId: completionSourceId,
+        excerpt: spec.completion.excerpt,
+        relationType: "IMPLEMENTATION",
+        note: spec.completion.note,
+        limitationNote: spec.completion.limitation,
+      });
+      completed = true;
+      result.withEvidence += 1;
+
+      const [link] = await db
+        .select({ evidenceId: promiseEvidence.evidenceId })
+        .from(promiseEvidence)
+        .where(eq(promiseEvidence.id, linkId));
+
+      await addPromiseEvent(db, editor, {
+        promiseId,
+        eventType: spec.completion.event.type,
+        eventDate: spec.completion.event.date,
+        title: spec.completion.event.title,
+        description: spec.completion.event.description,
+        evidenceIds: link ? [link.evidenceId] : [],
+      });
+      result.events += 1;
+    }
+
     const assessmentId = await createAssessmentDraft(db, editor, {
       promiseId,
       specificityScore: 2,
@@ -336,11 +434,14 @@ export async function seedRealPraha(
       jurisdictionScore: 4,
       outcomeDefinitionScore: 2,
       // Bez dokladu se netvrdí nic než to, že jsme doklad nenašli.
-      executionStatus: hasEvidence ? "IN_PROGRESS" : "NO_VERIFIED_PROGRESS",
+      executionStatus: completedStatus(spec, completed, hasEvidence),
       outcomeStatus: "NOT_MEASURABLE_YET",
-      summary: hasEvidence
-        ? "Doložena zadaná zakázka města. O dokončení tím není řečeno nic."
-        : "Rešerši k tomuhle slibu jsme neprováděli; žádný doklad zatím nemáme.",
+      summary:
+        completed && spec.completion
+          ? spec.completion.summary
+          : hasEvidence
+            ? "Doložena zadaná zakázka města. O dokončení tím není řečeno nic."
+            : "Rešerši k tomuhle slibu jsme neprováděli; žádný doklad zatím nemáme.",
       sourcesReviewedUpTo: new Date().toISOString().slice(0, 10),
     });
 

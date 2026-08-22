@@ -57,7 +57,7 @@ Kdo Docker ani Postgres nemá, spustí aplikaci proti PGlite:
 ```bash
 npm run dev:pglite                                     # http://localhost:3000
 npm run dev:pglite -- --corpus corpus/nazev-dokumentu  # navíc nahraje dokument z korpusu
-npm run dev:pglite -- --praha --zakazky corpus/zakazky-mosty  # skutečná data 2022–2026
+npm run dev:pglite -- --praha --zakazky corpus/zakazky-mosty \n  --dokonceni corpus/dvorecky-most-provoz              # skutečná data 2022–2026
 ```
 
 `--praha` naplní databázi **skutečnými** daty: doslovné sliby z programu Praha

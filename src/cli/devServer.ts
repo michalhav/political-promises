@@ -61,6 +61,7 @@ async function main(): Promise<void> {
     const result = await seedRealPraha(db, {
       tenderDirectory: argValue(process.argv.slice(2), "--zakazky"),
       budgetDirectory: argValue(process.argv.slice(2), "--rozpocet"),
+      completionDirectory: argValue(process.argv.slice(2), "--dokonceni"),
     });
     console.log(
       `[dev] Praha Sobě: publikováno ${result.published.length} slibů, ` +

@@ -64,6 +64,16 @@ export class LocalProvider implements AIProvider {
       // Odpověď se vynutí schématem, ne prosbou v promptu.
       format: z.toJSONSchema(request.schema),
       stream: false,
+      /**
+       * Uvažování vypnuté.
+       *
+       * Modely řady qwen3 přemýšlejí nahlas, než odpovědí. U vytěžování jmen
+       * z jedné věty to nic nepřidá a měřitelně škodí: první běh nad slibem
+       * o mostech trval 159 s a vrátil prázdné seznamy — model spotřeboval
+       * budget na úvahy a na odpověď zbylo minimum. U modelu bez uvažování
+       * je pole ignorované.
+       */
+      think: false,
       // Nulová teplota: u vytěžování a slovníku je rozmanitost na škodu.
       options: { temperature: 0, num_predict: request.maxTokens },
     };

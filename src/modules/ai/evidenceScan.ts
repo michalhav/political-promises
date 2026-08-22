@@ -233,15 +233,33 @@ export function termsFromProfile(profile: { names: string[]; synonyms: string[] 
   const terms = new Map<string, SearchTerm>();
 
   const add = (label: string, weight: number): void => {
-    const keys = label.trim().split(/\s+/).filter(Boolean).map(stem);
+    /**
+     * Pomlčky a interpunkci z názvu zahodit.
+     *
+     * Model vrátil synonymum „Lávka Holešovice – Karlín" a shoda na něm nikdy
+     * nenastala: pomlčka se rozdělila jako samostatné slovo a jeho „kmen" se
+     * v žádném řádku nevyskytl. Klíčem smí být jen slovo.
+     */
+    const keys = label
+      .split(/[^\p{L}\p{N}]+/u)
+      .filter((word) => word.length >= 2)
+      .map(stem);
     if (keys.length === 0) return;
     const id = keys.join("+");
     if (!terms.has(id)) terms.set(id, { keys, label: label.trim(), weight });
   };
 
-  // Vlastní jméno identifikuje stavbu, synonymum ji jen připomíná.
+  /**
+   * Váha podle určitosti, ne podle pole, ze kterého výraz přišel.
+   *
+   * „Lávka Holešovice – Karlín" je synonymum, ale identifikuje jednu konkrétní
+   * stavbu stejně přesně jako vlastní jméno — víceslovný název dvě různé věci
+   * netrefí. Jednoslovné synonymum („lávka") naopak sedí na desítky zakázek.
+   */
   for (const name of profile.names) add(name, 3);
-  for (const synonym of profile.synonyms) add(synonym, 2);
+  for (const synonym of profile.synonyms) {
+    add(synonym, synonym.trim().split(/\s+/).length > 1 ? 3 : 2);
+  }
 
   return [...terms.values()];
 }
@@ -284,7 +302,15 @@ export function scanLines(
   options: ScanOptions = {},
 ): ScanMatch[] {
   const limit = options.limit ?? 5;
-  const minimumScore = options.minimumScore ?? 4;
+  /**
+   * Práh 3 = jedno přesné vlastní jméno stačí.
+   *
+   * S prahem 4 slib o mostech nevrátil **nic**, přestože profil obsahoval
+   * „Štvanická lávka" a v datech ta zakázka je: jediná trefa vlastního jména
+   * měla váhu 3 a spadla pod hranici. Tichý nulový výsledek je horší než pár
+   * nálezů navíc — ty redaktor odmítne, chybějící doklad nikdo nenajde.
+   */
+  const minimumScore = options.minimumScore ?? 3;
   const strong = terms.filter((term) => term.weight >= 2);
   if (strong.length === 0) return [];
 

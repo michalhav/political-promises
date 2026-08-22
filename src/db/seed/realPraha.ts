@@ -62,7 +62,10 @@ const PROMISES: PromiseSpec[] = [
     slug: "praha-sobe-nove-mosty-pres-vltavu",
     title: "Nové mosty přes Vltavu",
     originalText: "Postavíme nové mosty přes Vltavu",
-    excerptEndsWith: "čtvrtí.",
+    // Citace musí dosáhnout až tam, kde program jmenuje konkrétní mosty.
+    // Kratší výřez končil u „rozvíjejících se čtvrtí" a jména staveb, podle
+    // kterých se doklad pozná, v něm vůbec nebyla.
+    excerptEndsWith: "u vytížené zastávky Lihovar.",
     page: 33,
     topic: "TRANSPORT",
     evidence: [

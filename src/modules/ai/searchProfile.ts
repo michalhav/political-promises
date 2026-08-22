@@ -27,6 +27,7 @@ import { extractSearchTerms } from "@/modules/ai/evidenceScan";
 import { AIProviderError, type AIProvider } from "@/modules/ai/provider";
 import { electoralLists } from "@/modules/parties/schema";
 import { promiseSearchProfiles, promiseSources, promises } from "@/modules/promises/schema";
+import { sourceDocuments } from "@/modules/sources/schema";
 import { auditLogs } from "@/modules/review/schema";
 import { EditorialError, type Actor } from "@/modules/review/service";
 
@@ -89,6 +90,17 @@ export async function loadSearchProfile(
   };
 }
 
+/**
+ * Kolik textu kolem citace se přidá do zadání pro model.
+ *
+ * Citace je krátká schválně — publikuje se a má obsahovat slib, ne tři
+ * odstavce. Jenže konkrétní jména leží často **hned za jejím koncem**: u slibu
+ * o bezbariérovém metru má citace 91 znaků a stanice Opatov a Karlovo náměstí
+ * začínají o větu dál. Profil se proto staví z širšího okolí ve zdroji, aniž by
+ * se citace jakkoli měnila.
+ */
+const CONTEXT_CHARS = 900;
+
 async function loadPromiseTexts(db: AppDatabase, promiseId: string) {
   const [row] = await db
     .select({
@@ -97,15 +109,27 @@ async function loadPromiseTexts(db: AppDatabase, promiseId: string) {
       normalizedStatement: promises.normalizedStatement,
       excerpt: promiseSources.excerpt,
       listName: electoralLists.name,
+      sourceText: sourceDocuments.rawText,
     })
     .from(promises)
     .innerJoin(electoralLists, eq(promises.electoralListId, electoralLists.id))
     .leftJoin(promiseSources, eq(promiseSources.promiseId, promises.id))
+    .leftJoin(sourceDocuments, eq(promiseSources.sourceDocumentId, sourceDocuments.id))
     .where(eq(promises.id, promiseId))
     .limit(1);
 
   if (!row) throw new EditorialError("Slib neexistuje.");
-  return row;
+
+  // Okolí citace ve zdrojovém dokumentu. Jen pro hledání — ven se nikdy nedostane.
+  let context: string | null = null;
+  if (row.excerpt && row.sourceText) {
+    const start = row.sourceText.indexOf(row.excerpt);
+    if (start >= 0) {
+      context = row.sourceText.slice(start, start + row.excerpt.length + CONTEXT_CHARS);
+    }
+  }
+
+  return { ...row, context };
 }
 
 /** Uložení profilu. Používá ho model i ruční oprava — liší se jen `generatedBy`. */
@@ -191,7 +215,7 @@ export async function generateSearchProfile(
 
     // Záložní profil z textu slibu: vlastní jména, která v něm stojí.
     profile = {
-      names: extractSearchTerms(texts.excerpt, texts.originalText)
+      names: extractSearchTerms(texts.context ?? texts.excerpt, texts.originalText)
         .filter((term) => term.weight >= 2)
         .slice(0, MAX_TERMS)
         .map((term) => term.label),

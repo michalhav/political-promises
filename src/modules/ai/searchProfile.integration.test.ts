@@ -130,6 +130,22 @@ describe("hledání podle profilu", () => {
     expect(found.some((line) => line.includes("Lávka Holešovice-Karlín"))).toBe(true);
   });
 
+  it("název s pomlčkou se hledá po slovech, ne jako celek", () => {
+    // Model vrací úřední názvy včetně pomlček; klíčem smí být jen slovo,
+    // jinak shoda nikdy nenastane.
+    const terms = termsFromProfile({ names: [], synonyms: ["Lávka Holešovice – Karlín"] });
+
+    const found = scanLines(ROWS, terms).map((match) => match.line);
+    expect(found.some((line) => line.includes("Lávka Holešovice-Karlín"))).toBe(true);
+  });
+
+  it("jedno přesné vlastní jméno stačí, aby nález prošel", () => {
+    // S přísnějším prahem slib o mostech tiše nevracel nic.
+    const terms = termsFromProfile({ names: ["Štvanická lávka"], synonyms: [] });
+
+    expect(scanLines(ROWS, terms).length).toBeGreaterThan(0);
+  });
+
   it("vyloučená slova nález zahodí, i když jinak sedí", () => {
     expect(isExcluded(ROWS[1]!, ["propagace"])).toBe(true);
     expect(isExcluded(ROWS[0]!, ["propagace"])).toBe(false);

@@ -183,17 +183,27 @@ podsouvá, což je přesně to, čemu se produkt snaží vyhnout.
 Souvisí s tím i modul `coalition`: u opozičního programu má vracet doložené
 „nepřevzato", ne prázdno. Prázdno vypadá jako chybějící rešerše.
 
-### 4.3 Bezpečnostní nálezy z revize
+### 4.3 Bezpečnostní nálezy z revize — opraveno 22. 8. 2026
 
-- **Nesolený otisk IP** — viz 1.1, blokuje právní vrstvu.
-- **User enumeration přes časování.** Komentář u `signIn` slibuje, že se heslo
-  ověřuje i u neexistujícího účtu, aby se rozdíl neprozradil dobou odpovědi.
-  `verifyPassword` ale u neexistujícího účtu skončí hned a scrypt neproběhne;
-  rozdíl je řádový. Zmírňuje to limit na e-mail, deklarovaná ochrana ale chybí.
-- **`verifyPassword` čte zpět jen `cost`**, `r` a `p` bere z konstant. Slib, že
-  parametry jde zvýšit bez znehodnocení účtů, u nich neplatí.
-- **Limity počtu podání jsou check-then-insert mimo transakci** (podněty
-  i přihlášení). Souběžné požadavky projdou přes strop.
+Všechny čtyři nálezy měly společné to, že **kód i dokumentace tvrdily, že
+ochrana funguje**, a ona nefungovala. To je horší než ji nemít, protože se
+podle ní rozhoduje.
+
+- **Otisk IP** — prostý SHA-256 nad adresou nebyl otisk; naměřeno 592 tisíc
+  otisků za sekundu na jednom jádru, tedy celý prostor IPv4 za dvě hodiny.
+  Nově HMAC se serverovým klíčem (`IP_HASH_SECRET`, povinný).
+- **Prozrazení redakce dobou odpovědi** — 71 ms u existujícího účtu proti
+  jednotkám ms u neexistujícího. Nově se počítá proti atrapě; rozdíl klesl
+  na 77,0 vs 72,1 ms.
+- **`verifyPassword` četl zpět jen `cost`** — `r` a `p` bral z konstant, takže
+  slib o zvýšení parametrů bez znehodnocení účtů neplatil.
+- **Limity počtu podání** — počítání a zápis mimo transakci. Nově poradní zámek
+  v jedné transakci; u přihlášení se pokus započítává dopředu, protože zámek
+  nejde držet přes scrypt.
+
+Co zbývá: **skutečný souběh není otestovaný.** PGlite jede na jediném spojení,
+takže se transakce v testech stejně seřadí. Ověřit to jde až proti Postgresu
+s víc spojeními — patří to k prvnímu nasazení (1.3).
 
 ### 4.4 Občas padající test
 

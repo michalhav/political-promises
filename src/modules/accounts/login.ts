@@ -13,7 +13,7 @@
  * takže čítač v paměti procesu by po prvním cold startu nechránil nic.
  */
 import { createHmac } from "node:crypto";
-import { and, count, eq, gte, lt } from "drizzle-orm";
+import { and, count, eq, gte, lt, sql } from "drizzle-orm";
 
 import type { AppDatabase } from "@/db/types";
 import { loginAttempts } from "@/modules/accounts/schema";
@@ -78,12 +78,34 @@ export async function attemptLogin(db: AppDatabase, request: LoginRequest): Prom
   const emailKey = request.email.trim().toLowerCase();
   const ipHash = hashClientIp(request.clientIp);
 
-  const [emailAttempts, ipAttempts] = await Promise.all([
-    countAttempts(db, "emailKey", emailKey),
-    ipHash ? countAttempts(db, "ipHash", ipHash) : Promise.resolve(0),
-  ]);
+  /**
+   * Pokus se započítá **dopředu**, v jedné transakci se spočítáním.
+   *
+   * Dřív se nejdřív počítalo, pak ověřovalo heslo a teprve při neúspěchu
+   * zapisovalo. Souběžné požadavky tak všechny viděly stejný počet a všechny
+   * limitem prošly. Zámek nejde držet přes ověření hesla — scrypt trvá
+   * desítky milisekund a spojení by se blokovalo na celou tu dobu.
+   *
+   * Zápis předem to řeší: pokus je započítaný dřív, než se cokoli ověřuje,
+   * a při úspěšném přihlášení se okno stejně maže celé.
+   */
+  const limited = await db.transaction(async (tx) => {
+    // Zámek na e-mail. Limit na adresu je druhotný a dá se podvrhnout, takže
+    // se serializuje podle toho, co je hlavní ochranou.
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${emailKey})::bigint)`);
 
-  if (emailAttempts >= MAX_ATTEMPTS_PER_EMAIL || ipAttempts >= MAX_ATTEMPTS_PER_IP) {
+    const [emailAttempts, ipAttempts] = await Promise.all([
+      countAttempts(tx, "emailKey", emailKey),
+      ipHash ? countAttempts(tx, "ipHash", ipHash) : Promise.resolve(0),
+    ]);
+
+    if (emailAttempts >= MAX_ATTEMPTS_PER_EMAIL || ipAttempts >= MAX_ATTEMPTS_PER_IP) return true;
+
+    await tx.insert(loginAttempts).values({ emailKey, ipHash });
+    return false;
+  });
+
+  if (limited) {
     // Heslo se vědomě neověřuje. Scrypt je drahý schválně a bez tohohle
     // zkratu by byl přihlašovací formulář sám o sobě nástroj na vytížení CPU.
     return { status: "RATE_LIMITED", retryAfterMinutes: Math.ceil(ATTEMPT_WINDOW_MS / 60_000) };
@@ -91,10 +113,7 @@ export async function attemptLogin(db: AppDatabase, request: LoginRequest): Prom
 
   const session = await signIn(db, emailKey, request.password);
 
-  if (!session) {
-    await db.insert(loginAttempts).values({ emailKey, ipHash });
-    return { status: "INVALID_CREDENTIALS" };
-  }
+  if (!session) return { status: "INVALID_CREDENTIALS" };
 
   // Úspěch okno vynuluje, aby překlepy nezablokovaly toho, kdo heslo zná.
   await db.delete(loginAttempts).where(eq(loginAttempts.emailKey, emailKey));

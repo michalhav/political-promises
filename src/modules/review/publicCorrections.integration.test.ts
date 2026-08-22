@@ -135,6 +135,38 @@ describe("podání zvenčí", () => {
     ).rejects.toThrow(/příliš mnoho/);
   });
 
+  it("limit drží i při souběžných podáních", async () => {
+    // Počítání a zápis jsou v jedné transakci s poradním zámkem na otisk
+    // adresy. Bez toho stihly souběžné požadavky spočítat dřív, než kterýkoli
+    // zapsal, a všechny prošly.
+    //
+    // POZOR na to, co tenhle test dokazuje: PGlite jede na jediném spojení,
+    // takže se transakce stejně seřadí za sebou. Skutečný souběh ověří až
+    // Postgres s víc spojeními. Tady jde o to, že souběžné volání nespadne,
+    // nezablokuje se a limit z něj vyjde správně.
+    const ip = "d".repeat(64);
+    const podani = Array.from({ length: MAX_SUBMISSIONS_PER_IP + 4 }, () =>
+      submitPublicCorrection(
+        handle.db,
+        { promiseSlug: PUBLISHED_SLUG, kind: "PUBLIC_CORRECTION", body: BODY },
+        ip,
+      ).then(
+        () => "ok" as const,
+        () => "odmitnuto" as const,
+      ),
+    );
+
+    const vysledky = await Promise.all(podani);
+
+    expect(vysledky.filter((v) => v === "ok")).toHaveLength(MAX_SUBMISSIONS_PER_IP);
+
+    const ulozene = await handle.db
+      .select()
+      .from(corrections)
+      .where(eq(corrections.submitterIpHash, ip));
+    expect(ulozene).toHaveLength(MAX_SUBMISSIONS_PER_IP);
+  });
+
   it("limit platí na adresu, ne na celý web", async () => {
     // Jinak by jeden robot umlčel všechny ostatní.
     const id = await submitPublicCorrection(

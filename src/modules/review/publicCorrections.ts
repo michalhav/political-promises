@@ -65,21 +65,34 @@ export async function submitPublicCorrection(
 
   if (!promise) throw new EditorialError("Takový zveřejněný slib neexistuje.");
 
-  if (ipHash) {
-    const since = new Date(Date.now() - SUBMISSION_WINDOW_MS);
-    const [recent] = await db
-      .select({ value: sql<number>`count(*)`.mapWith(Number) })
-      .from(corrections)
-      .where(and(eq(corrections.submitterIpHash, ipHash), gte(corrections.createdAt, since)));
-
-    if ((recent?.value ?? 0) >= MAX_SUBMISSIONS_PER_IP) {
-      throw new EditorialError(
-        "Z tohoto místa přišlo za poslední hodinu příliš mnoho podnětů. Zkus to později.",
-      );
-    }
-  }
-
   return db.transaction(async (tx) => {
+    /**
+     * Počítání a zápis musí být nedělitelné.
+     *
+     * Dřív se nejdřív spočítalo a teprve pak zapisovalo, mimo transakci. Deset
+     * požadavků naráz stihlo spočítat dřív, než kterýkoli zapsal — všechny
+     * viděly nulu a všechny prošly. Limit tak platil jen pro toho, kdo posílá
+     * podněty popořadě.
+     *
+     * Zámek je vázaný na otisk adresy, takže se serializují jen podání z téhož
+     * místa. Drží do konce transakce a uvolní se sám i při chybě.
+     */
+    if (ipHash) {
+      await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${ipHash})::bigint)`);
+
+      const since = new Date(Date.now() - SUBMISSION_WINDOW_MS);
+      const [recent] = await tx
+        .select({ value: sql<number>`count(*)`.mapWith(Number) })
+        .from(corrections)
+        .where(and(eq(corrections.submitterIpHash, ipHash), gte(corrections.createdAt, since)));
+
+      if ((recent?.value ?? 0) >= MAX_SUBMISSIONS_PER_IP) {
+        throw new EditorialError(
+          "Z tohoto místa přišlo za poslední hodinu příliš mnoho podnětů. Zkus to později.",
+        );
+      }
+    }
+
     const [created] = await tx
       .insert(corrections)
       .values({

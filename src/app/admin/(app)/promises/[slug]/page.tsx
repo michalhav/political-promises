@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import {
+  addPromiseEventAction,
   attachEvidenceAction,
   createAssessmentAction,
   createCorrectionAction,
@@ -16,7 +17,13 @@ import {
 import { AdminForm } from "@/app/admin/_components/AdminForm";
 import { Field, ScoreInput, Select, TextArea, TextInput } from "@/app/admin/_components/fields";
 import { db } from "@/db/client";
-import { executionStatusEnum, outcomeStatusEnum, relationTypeEnum, topicEnum } from "@/db/enums";
+import {
+  eventTypeEnum,
+  executionStatusEnum,
+  outcomeStatusEnum,
+  relationTypeEnum,
+  topicEnum,
+} from "@/db/enums";
 import { requireEditorialUser } from "@/modules/accounts/auth";
 import { ASSESSABILITY_DIMENSIONS } from "@/modules/assessments/dimensions";
 import {
@@ -24,7 +31,7 @@ import {
   EXECUTION_STATUS_LABELS,
   OUTCOME_STATUS_LABELS,
 } from "@/modules/assessments/labels";
-import { TOPIC_LABELS } from "@/modules/promises/labels";
+import { EVENT_TYPE_LABELS, TOPIC_LABELS } from "@/modules/promises/labels";
 import {
   getAdminPromiseDetail,
   listSourceChoices,
@@ -244,6 +251,68 @@ export default async function AdminPromiseDetailPage({
             ))}
           </ul>
         )}
+
+        <details className="border-border rounded-lg border p-4">
+          <summary className="cursor-pointer text-sm font-medium">Přidat na časovou osu</summary>
+          <div className="mt-4 space-y-3">
+            <p className="text-muted text-sm">
+              Časová osa odpovídá na otázku, co se se slibem od voleb dělo. Připojit jde jen důkaz,
+              který u slibu už visí — bez něj je událost jen tvrzení redakce.
+            </p>
+            <AdminForm action={addPromiseEventAction} submitLabel="Přidat událost">
+              <input type="hidden" name="promiseId" value={promise.id} />
+              <input type="hidden" name="slug" value={promise.slug} />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Co se stalo" required>
+                  <Select
+                    name="eventType"
+                    required
+                    options={eventTypeEnum.enumValues.map((value) => ({
+                      value,
+                      label: EVENT_TYPE_LABELS[value],
+                    }))}
+                  />
+                </Field>
+                <Field label="Kdy" required>
+                  <TextInput type="date" name="eventDate" required />
+                </Field>
+              </div>
+
+              <Field label="Popis události" hint="Krátce a věcně, bez hodnocení." required>
+                <TextInput name="title" required maxLength={300} />
+              </Field>
+
+              <Field label="Podrobnosti">
+                <TextArea name="description" maxLength={4000} />
+              </Field>
+
+              {promise.evidence.length > 0 ? (
+                <Field
+                  label="Doloženo důkazem"
+                  hint="Bez doloženého zdroje je událost jen tvrzení."
+                >
+                  <select
+                    name="evidenceIds"
+                    multiple
+                    size={Math.min(promise.evidence.length, 4)}
+                    className="border-border bg-background w-full rounded-md border px-3 py-2"
+                  >
+                    {promise.evidence.map((item) => (
+                      <option key={item.linkId} value={item.evidenceId}>
+                        {item.sourceTitle} — {item.excerpt.slice(0, 70)}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              ) : (
+                <p className="text-muted text-sm">
+                  U slibu zatím není žádný důkaz, takže událost nepůjde doložit.
+                </p>
+              )}
+            </AdminForm>
+          </div>
+        </details>
 
         <details className="border-border rounded-lg border p-4">
           <summary className="cursor-pointer text-sm font-medium">Připojit důkaz</summary>

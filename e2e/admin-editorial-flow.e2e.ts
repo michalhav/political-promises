@@ -103,7 +103,9 @@ test.describe("redakční průchod", () => {
       await form.getByLabel("Vztah ke slibu").selectOption({ label: "Dokládá realizaci" });
       await form.getByRole("button", { name: "Připojit důkaz" }).click();
 
-      await expect(page.getByText(EVIDENCE_TEXT)).toBeVisible();
+      // Text důkazu je na stránce dvakrát: v seznamu důkazů a v nabídce
+      // formuláře časové osy. Ptáme se na citaci, ne na nabídku.
+      await expect(page.locator("blockquote", { hasText: EVIDENCE_TEXT })).toBeVisible();
     });
 
     await test.step("napíše hodnocení a předá ho k revizi", async () => {

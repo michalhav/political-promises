@@ -326,6 +326,8 @@ export async function listAdminPromises(db: AppDatabase): Promise<AdminPromiseRo
 
 export interface AdminEvidenceRow {
   linkId: string;
+  /** Samotný důkaz, ne vazba na slib. Potřebuje ho časová osa. */
+  evidenceId: string;
   excerpt: string;
   pageNumber: number | null;
   locator: string | null;
@@ -439,6 +441,7 @@ export async function getAdminPromiseDetail(
       db
         .select({
           linkId: promiseEvidence.id,
+          evidenceId: evidence.id,
           excerpt: evidence.excerpt,
           pageNumber: evidence.pageNumber,
           locator: evidence.locator,

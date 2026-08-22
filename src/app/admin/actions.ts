@@ -16,6 +16,7 @@ import {
   rejectSuggestion,
 } from "@/modules/review/suggestions";
 import {
+  addPromiseEvent,
   attachEvidence,
   createAssessmentDraft,
   createCandidatePromise,
@@ -185,6 +186,26 @@ export const rejectSuggestionAction: Action = async (formData) =>
     });
 
     return { ok: true, message: "Návrh odmítnut." };
+  });
+
+export const addPromiseEventAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const slug = text(formData, "slug");
+
+    await addPromiseEvent(db, actor, {
+      promiseId: text(formData, "promiseId"),
+      eventType: text(formData, "eventType") as never,
+      eventDate: text(formData, "eventDate"),
+      title: text(formData, "title"),
+      description: optionalText(formData, "description"),
+      // Vícenásobný výběr chodí jako opakovaný klíč.
+      evidenceIds: formData.getAll("evidenceIds").filter((value) => typeof value === "string"),
+    });
+
+    revalidatePath(`/admin/promises/${slug}`);
+    revalidatePath(`/promises/${slug}`);
+    return { ok: true, message: "Událost přidána na časovou osu." };
   });
 
 export const createPartyAction: Action = async (formData) =>

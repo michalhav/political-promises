@@ -16,9 +16,12 @@ import { eq } from "drizzle-orm";
 import { existsSync } from "node:fs";
 
 import type { AppDatabase } from "@/db/types";
+import { eventTypeEnum } from "@/db/enums";
 import { seedId } from "@/db/seed/ids";
+import { promiseEvidence } from "@/modules/evidence/schema";
 import { electoralLists } from "@/modules/parties/schema";
 import {
+  addPromiseEvent,
   attachEvidence,
   createAssessmentDraft,
   createCandidatePromise,
@@ -42,11 +45,17 @@ interface PromiseSpec {
   excerptEndsWith: string;
   page: number;
   topic: Topic;
-  /** Podle čeho se v zakázkách hledá doklad. Bez shody zůstane slib nedoložený. */
-  evidenceContains?: string;
-  evidenceNote?: string;
-  evidenceLimitation?: string;
+  /** Doklady ze zakázek. Bez shody zůstane slib nedoložený. */
+  evidence?: {
+    contains: string;
+    note: string;
+    limitation: string;
+    /** Událost na časovou ose, kterou tenhle doklad dokládá. */
+    event?: { type: EventType; date: string; title: string; description?: string };
+  }[];
 }
+
+type EventType = (typeof eventTypeEnum.enumValues)[number];
 
 const PROMISES: PromiseSpec[] = [
   {
@@ -56,9 +65,31 @@ const PROMISES: PromiseSpec[] = [
     excerptEndsWith: "čtvrtí.",
     page: 33,
     topic: "TRANSPORT",
-    evidenceContains: 'Dvorecký most; stavební práce"',
-    evidenceNote: "Město zadalo stavební práce na novém mostě přes Vltavu.",
-    evidenceLimitation: "Ze zadané zakázky neplyne, že je most dokončený a otevřený.",
+    evidence: [
+      {
+        contains: 'Lávka Holešovice - Karlín"',
+        note: "Město zadalo stavbu lávky mezi Holešovicemi a Karlínem za 298 mil. Kč bez DPH.",
+        limitation: "Zakázka dokládá zadání stavby, ne její dokončení ani otevření pro veřejnost.",
+        event: {
+          type: "CONTRACT_SIGNED",
+          date: "2021-09-29",
+          title: "Podepsána smlouva na stavbu Lávky Holešovice – Karlín",
+          description:
+            "Zakázka č. 42822 v hodnotě 298 mil. Kč bez DPH. Jde o jeden ze tří mostů, které program jmenuje.",
+        },
+      },
+      {
+        contains: 'Dvorecký most; stavební práce"',
+        note: "Město zadalo stavební práce na Dvoreckém mostě za 1,07 mld. Kč bez DPH.",
+        limitation: "Ze zadané zakázky neplyne, že je most dokončený a otevřený.",
+        event: {
+          type: "CONTRACT_SIGNED",
+          date: "2022-06-21",
+          title: "Podepsána smlouva na stavební práce Dvoreckého mostu",
+          description: "Zakázka č. 42821 v hodnotě 1 074 965 748 Kč bez DPH.",
+        },
+      },
+    ],
   },
   {
     slug: "praha-sobe-vystaviste-a-prumyslovy-palac",
@@ -67,9 +98,18 @@ const PROMISES: PromiseSpec[] = [
     excerptEndsWith: "pro Pražany.",
     page: 59,
     topic: "URBAN_DEVELOPMENT",
-    evidenceContains: "Rek. a dost. Průmyslového paláce",
-    evidenceNote: "Město zadalo práce na rekonstrukci a dostavbě Průmyslového paláce.",
-    evidenceLimitation: "Zakázka se týká jedné budovy, ne celého areálu, a o dokončení nevypovídá.",
+    evidence: [
+      {
+        contains: "Rek. a dost. Průmyslového paláce",
+        note: "Město zadalo práce na rekonstrukci a dostavbě Průmyslového paláce.",
+        limitation: "Zakázka se týká jedné budovy, ne celého areálu, a o dokončení nevypovídá.",
+        event: {
+          type: "CONTRACT_SIGNED",
+          date: "2022-05-10",
+          title: "Zadány práce na rekonstrukci Průmyslového paláce",
+        },
+      },
+    ],
   },
   {
     slug: "praha-sobe-nove-tramvajove-trate",
@@ -166,6 +206,7 @@ export interface RealDataResult {
   published: string[];
   skipped: string[];
   withEvidence: number;
+  events: number;
 }
 
 export async function seedRealPraha(
@@ -211,7 +252,7 @@ export async function seedRealPraha(
     tenderText = tenderRow?.rawText ?? "";
   }
 
-  const result: RealDataResult = { published: [], skipped: [], withEvidence: 0 };
+  const result: RealDataResult = { published: [], skipped: [], withEvidence: 0, events: 0 };
 
   for (const spec of PROMISES) {
     const start = programText.indexOf(spec.originalText);
@@ -235,22 +276,40 @@ export async function seedRealPraha(
     });
 
     let hasEvidence = false;
-    if (spec.evidenceContains && tenderSourceId) {
-      const line = tenderText
-        .split("\n")
-        .find((candidate) => candidate.includes(spec.evidenceContains!));
+    for (const wanted of spec.evidence ?? []) {
+      if (!tenderSourceId) break;
 
-      if (line) {
-        await attachEvidence(db, editor, {
+      const line = tenderText.split("\n").find((candidate) => candidate.includes(wanted.contains));
+      if (!line) continue;
+
+      const linkId = await attachEvidence(db, editor, {
+        promiseId,
+        sourceDocumentId: tenderSourceId,
+        excerpt: line,
+        relationType: "IMPLEMENTATION",
+        note: wanted.note,
+        limitationNote: wanted.limitation,
+      });
+      hasEvidence = true;
+      result.withEvidence += 1;
+
+      // Časová osa je narativní páteř: bez ní stránka říká, co je doložené,
+      // ale ne co se kdy stalo.
+      if (wanted.event) {
+        const [link] = await db
+          .select({ evidenceId: promiseEvidence.evidenceId })
+          .from(promiseEvidence)
+          .where(eq(promiseEvidence.id, linkId));
+
+        await addPromiseEvent(db, editor, {
           promiseId,
-          sourceDocumentId: tenderSourceId,
-          excerpt: line,
-          relationType: "IMPLEMENTATION",
-          note: spec.evidenceNote,
-          limitationNote: spec.evidenceLimitation,
+          eventType: wanted.event.type,
+          eventDate: wanted.event.date,
+          title: wanted.event.title,
+          description: wanted.event.description,
+          evidenceIds: link ? [link.evidenceId] : [],
         });
-        hasEvidence = true;
-        result.withEvidence += 1;
+        result.events += 1;
       }
     }
 

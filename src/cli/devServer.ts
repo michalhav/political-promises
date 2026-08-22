@@ -63,7 +63,7 @@ async function main(): Promise<void> {
     });
     console.log(
       `[dev] Praha Sobě: publikováno ${result.published.length} slibů, ` +
-        `z toho ${result.withEvidence} s dokladem ze zakázek.` +
+        `${result.withEvidence} dokladů ze zakázek, ${result.events} událostí na časové ose.` +
         (result.skipped.length > 0 ? ` Přeskočeno: ${result.skipped.join(", ")}.` : ""),
     );
   }

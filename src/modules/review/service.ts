@@ -10,10 +10,11 @@
  * Databáze zůstává poslední pojistkou. Kontroly tady jsou proto, aby redaktor
  * dostal srozumitelnou hlášku místo chyby z constraintu — ne aby ho nahradily.
  */
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import {
+  eventTypeEnum,
   executionStatusEnum,
   licenseModeEnum,
   outcomeStatusEnum,
@@ -25,8 +26,8 @@ import type { AppDatabase } from "@/db/types";
 import { deriveAssessability } from "@/modules/assessments/assessability";
 import { promiseAssessments } from "@/modules/assessments/schema";
 import { validateReadyForPublication } from "@/modules/assessments/statusRules";
-import { evidence, promiseEvidence } from "@/modules/evidence/schema";
-import { promises, promiseSources } from "@/modules/promises/schema";
+import { evidence, promiseEventEvidence, promiseEvidence } from "@/modules/evidence/schema";
+import { promiseEvents, promises, promiseSources } from "@/modules/promises/schema";
 import { auditLogs, corrections, reviewDecisions } from "@/modules/review/schema";
 import {
   checkTransition,
@@ -351,6 +352,84 @@ export async function attachEvidence(
     });
 
     return link.id;
+  });
+}
+
+/**
+ * Událost na časové ose slibu.
+ *
+ * Časová osa je podle briefu hlavní narativní páteř: odpovídá na otázku „co se
+ * s tím od voleb dělo". Do teď se dala naplnit **jedině seedem**, takže
+ * u každého skutečného slibu zůstávala prázdná — produkt uměl říct, co bylo
+ * slíbeno a co je doložené, ale ne příběh mezi tím.
+ *
+ * Událost bez doloženého zdroje je jen tvrzení redakce. Připojit se proto dá
+ * jen důkaz, který už u téhož slibu visí — cizí důkaz by na časové ose vytvořil
+ * zdánlivou souvislost tam, kde žádná není.
+ */
+export const promiseEventInputSchema = z.object({
+  promiseId: z.uuid(),
+  eventType: z.enum(eventTypeEnum.enumValues),
+  eventDate: z.iso.date(),
+  title: trimmed(300),
+  description: z.string().trim().max(4000).optional(),
+  evidenceIds: z.array(z.uuid()).default([]),
+});
+
+export type PromiseEventInput = z.input<typeof promiseEventInputSchema>;
+
+export async function addPromiseEvent(
+  db: AppDatabase,
+  actor: Actor,
+  rawInput: PromiseEventInput,
+): Promise<string> {
+  const input = parse(promiseEventInputSchema, rawInput);
+  await loadPromise(db, input.promiseId);
+
+  const evidenceIds = [...new Set(input.evidenceIds)];
+  if (evidenceIds.length > 0) {
+    const linked = await db
+      .select({ evidenceId: promiseEvidence.evidenceId })
+      .from(promiseEvidence)
+      .where(
+        and(
+          eq(promiseEvidence.promiseId, input.promiseId),
+          inArray(promiseEvidence.evidenceId, evidenceIds),
+        ),
+      );
+
+    if (linked.length !== evidenceIds.length) {
+      throw new EditorialError(
+        "Na časovou osu jde připojit jen důkaz, který už u tohoto slibu je. Nejdřív ho připoj jako důkaz.",
+      );
+    }
+  }
+
+  return db.transaction(async (tx) => {
+    const [created] = await tx
+      .insert(promiseEvents)
+      .values({
+        promiseId: input.promiseId,
+        eventType: input.eventType,
+        eventDate: input.eventDate,
+        title: input.title,
+        description: input.description?.trim() || null,
+      })
+      .returning({ id: promiseEvents.id });
+
+    if (!created) throw new EditorialError("Událost se nepodařilo uložit.");
+
+    if (evidenceIds.length > 0) {
+      await tx
+        .insert(promiseEventEvidence)
+        .values(evidenceIds.map((evidenceId) => ({ eventId: created.id, evidenceId })));
+    }
+
+    await recordAudit(tx, actor, "event.add", "promise_event", created.id, {
+      after: { promiseId: input.promiseId, eventType: input.eventType, date: input.eventDate },
+    });
+
+    return created.id;
   });
 }
 

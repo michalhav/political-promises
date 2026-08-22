@@ -68,8 +68,69 @@
       "license": "FULL_TEXT_STORED",
       "publishedAt": "2022-09-24",
       "match": "554782",
-      "columns": ["OBEC", "KSTRANA", "HLASY", "MANDATY"],
+      "columns": [
+        "OBEC",
+        "KSTRANA",
+        "HLASY",
+        "MANDATY"
+      ],
       "blockedBy": "corpus:table čte CSV, ne ZIP archiv, a ČSÚ publikuje kv2022 jen jako ZIP. Adresa navíc nese datum vydání (20260328), takže není stabilní a při další aktualizaci se změní."
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/pirati-praha-2022",
+      "chainLink": "PROMISE",
+      "why": "Program druhé nejsilnější koaliční strany. Bez programů vládnoucích stran jde hodnotit jen opozice, což je opačně, než produkt slibuje.",
+      "url": "http://web.archive.org/web/20220629005413/https://praha.pirati.cz/volby/2022-komunalni.html",
+      "title": "Komunální volby 2022 — program Pirátů pro Prahu",
+      "publisher": "Česká pirátská strana",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED",
+      "blockedBy": "Původní adresa vrací 404 — program je dostupný jen ze snímku Internet Archive z 29. 6. 2022. Navíc je to HTML a corpus:extract umí jen PDF."
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů) a strany primátora. Chybí-li, nejde hodnotit ten, kdo město skutečně vede.",
+      "title": "Volební program SPOLU pro Prahu 2022",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED",
+      "blockedBy": "Kampaňová doména spolupraha.cz se už nepřekládá na IP a Internet Archive k ní nemá snímek. Platná adresa programu není známa — je potřeba dohledat u strany nebo v archivu médií."
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/ano-praha-2022",
+      "chainLink": "PROMISE",
+      "why": "Program druhé nejsilnější kandidátky (14 mandátů), dnes v opozici. Potřebný ke srovnání slibů napříč stranami.",
+      "title": "Volební program ANO 2011 pro Prahu 2022",
+      "publisher": "ANO 2011",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED",
+      "blockedBy": "Adresa programu se zatím nepodařila dohledat a Internet Archive nemá snímek u odhadované domény. Nutná rešerše."
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/stan-praha-2022",
+      "chainLink": "PROMISE",
+      "why": "Program třetího koaličního partnera (5 mandátů). Bez něj je koaliční trojice pokrytá jen ze dvou třetin.",
+      "title": "Volební program STAN pro Prahu 2022",
+      "publisher": "STAROSTOVÉ A NEZÁVISLÍ",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED",
+      "blockedBy": "Adresa programu zatím nedohledána. Nutná rešerše, případně snímek z Internet Archive."
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spd-praha-2022",
+      "chainLink": "PROMISE",
+      "why": "Program poslední kandidátky, která se dostala do zastupitelstva (3 mandáty). Pro úplnost pokrytí voleb 2022.",
+      "title": "Volební program SPD, Trikolora, Hnutí PES a nezávislí pro Prahu 2022",
+      "publisher": "SPD, Trikolora, Hnutí PES a nezávislí",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED",
+      "blockedBy": "Adresa programu zatím nedohledána. Nutná rešerše, případně snímek z Internet Archive."
     }
   ]
 }

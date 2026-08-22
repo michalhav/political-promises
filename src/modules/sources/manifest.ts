@@ -50,7 +50,12 @@ const baseEntry = z.object({
   chainLink: chainLinkSchema,
   /** Proč ho potřebujeme. Bez odpovědi zdroj do manifestu nepatří. */
   why: z.string().min(10),
-  url: z.url(),
+  /**
+   * Adresa dokumentu. Volitelná **jen** u zablokovaného zdroje — u některých
+   * programů z roku 2022 už dnes žádná platná adresa neexistuje a zapsat
+   * „potřebujeme ho, ale nevíme odkud" je poctivější než zdroj zamlčet.
+   */
+  url: z.url().optional(),
   title: z.string().min(1),
   publisher: z.string().min(1),
   sourceType: z.enum(sourceTypeEnum.enumValues),
@@ -77,7 +82,20 @@ const tableEntry = baseEntry.extend({
   limit: z.number().int().min(1).max(50_000).optional(),
 });
 
-export const manifestEntrySchema = z.discriminatedUnion("kind", [documentEntry, tableEntry]);
+/**
+ * Zdroj bez adresy musí říct, proč ji nemá.
+ *
+ * Jinak by chybějící `url` znamenalo dvě různé věci — „ještě jsme ji
+ * nedohledali" a „zapomněli jsme ji vyplnit" — a manifest by přestal být
+ * důvěryhodný soupis toho, co nám chybí.
+ */
+export const manifestEntrySchema = z
+  .discriminatedUnion("kind", [documentEntry, tableEntry])
+  .refine(
+    (entry) => Boolean(entry.url) || Boolean(entry.blockedBy),
+    "zdroj bez url musí mít blockedBy s vysvětlením, proč adresa chybí",
+  );
+
 export type ManifestEntry = z.infer<typeof manifestEntrySchema>;
 
 export const manifestSchema = z.object({
@@ -148,6 +166,12 @@ export function reconcile(manifest: Manifest, present: readonly string[]): Recon
  * korpusu, u kterého se rozhoduje licence, a to má zůstat vědomý krok člověka.
  */
 export function acquisitionCommand(entry: ManifestEntry): string {
+  // Zdroj bez adresy se pořídit nedá. Schéma to hlídá u nezablokovaných
+  // záznamů, takže sem se dostane jen chyba volajícího.
+  if (!entry.url) {
+    throw new Error(`${entry.dir}: zdroj nemá adresu, nejde pořídit příkazem.`);
+  }
+
   const parts = [
     entry.kind === "TABLE" ? "npm run corpus:table --" : "npm run corpus:add --",
     quote(entry.url),

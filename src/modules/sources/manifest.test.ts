@@ -48,6 +48,25 @@ describe("parseManifest", () => {
     expect(() => manifestOf({ ...program, dir: "../mimo" })).toThrow(/corpus\//);
   });
 
+  it("odmítne zdroj bez adresy, který nevysvětlí, proč ji nemá", () => {
+    const { url: _url, ...bezAdresy } = program;
+
+    expect(() => manifestOf(bezAdresy)).toThrow(/blockedBy/);
+  });
+
+  it("připustí zdroj bez adresy, když je zablokovaný", () => {
+    // Program, který zmizel z webu a není ani v archivu, potřebujeme dál —
+    // zamlčet ho by předstíralo, že pokrytí voleb je úplné.
+    const { url: _url, ...bezAdresy } = program;
+
+    const manifest = manifestOf({
+      ...bezAdresy,
+      blockedBy: "Doména strany se už nepřekládá a v archivu není snímek.",
+    });
+
+    expect(manifest.sources[0]?.url).toBeUndefined();
+  });
+
   it("vyžaduje u tabulky filtr i sloupce", () => {
     // Výřez bez filtru není výřez, ale celý dataset vydávaný za výběr.
     expect(() => manifestOf({ ...program, kind: "TABLE" })).toThrow();

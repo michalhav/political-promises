@@ -19,13 +19,33 @@ export function DemoBadge() {
   );
 }
 
-export function DemoDatasetNotice() {
+/**
+ * Upozornění na ukázková data.
+ *
+ * Text se liší podle toho, jestli jsou v datech i skutečné záznamy. Věta
+ * „sliby na těchto stránkách jsou smyšlené" nad skutečným volebním programem
+ * není neškodná nepřesnost — je to nepravda na produktu, jehož jediná hodnota
+ * je, že se mu dá věřit. U smíšených dat proto rozlišuje značka `demo`
+ * u jednotlivých záznamů, ne plošné tvrzení.
+ */
+export function DemoDatasetNotice({ mixed = false }: { mixed?: boolean }) {
   return (
     <aside className="border-border bg-surface rounded-lg border p-4 text-sm" role="note">
-      <p className="font-semibold">Ukázková data</p>
+      <p className="font-semibold">{mixed ? "Část dat je ukázková" : "Ukázková data"}</p>
       <p className="text-muted mt-1">
-        Kandidátky, dokumenty i sliby na těchto stránkách jsou smyšlené a slouží k předvedení
-        aplikace. Neodpovídají žádné skutečné politické straně ani skutečnému veřejnému dokumentu.
+        {mixed ? (
+          <>
+            Záznamy označené značkou <span className="font-semibold">demo</span> jsou smyšlené a
+            slouží k předvedení aplikace. Neodpovídají žádné skutečné politické straně ani
+            skutečnému veřejnému dokumentu. Ostatní záznamy pocházejí ze skutečných zdrojů.
+          </>
+        ) : (
+          <>
+            Kandidátky, dokumenty i sliby na těchto stránkách jsou smyšlené a slouží k předvedení
+            aplikace. Neodpovídají žádné skutečné politické straně ani skutečnému veřejnému
+            dokumentu.
+          </>
+        )}
       </p>
     </aside>
   );

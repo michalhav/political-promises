@@ -29,6 +29,8 @@ export default async function HomePage() {
   const { items, total } = await listPublishedPromises(db, promiseFiltersSchema.parse({ page: 1 }));
   const examples = items.slice(0, 3);
   const hasDemoData = items.some((item) => item.electoralList.isDemo);
+  // Smíšená data: plošné „všechno je smyšlené" by nad skutečným programem lhalo.
+  const hasRealData = items.some((item) => !item.electoralList.isDemo);
 
   return (
     <div className="mx-auto max-w-5xl space-y-16 px-4 py-16">
@@ -58,7 +60,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {hasDemoData ? <DemoDatasetNotice /> : null}
+      {hasDemoData ? <DemoDatasetNotice mixed={hasRealData} /> : null}
 
       <section aria-labelledby="retezec" className="space-y-4">
         <h2 id="retezec" className="text-xl font-semibold">

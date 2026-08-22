@@ -29,6 +29,8 @@ export default async function PromisesPage({ searchParams }: PageProps<"/promise
     listElectoralListOptions(db),
   ]);
   const hasDemoData = lists.some((list) => list.isDemo);
+  // Smíšená data: plošné „všechno je smyšlené" by nad skutečným programem lhalo.
+  const hasRealData = lists.some((list) => !list.isDemo);
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-12">
@@ -40,7 +42,7 @@ export default async function PromisesPage({ searchParams }: PageProps<"/promise
         </p>
       </header>
 
-      {hasDemoData ? <DemoDatasetNotice /> : null}
+      {hasDemoData ? <DemoDatasetNotice mixed={hasRealData} /> : null}
 
       <FilterBar filters={filters} lists={lists} />
 

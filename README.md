@@ -144,6 +144,25 @@ Přihlášení je omezené počtem pokusů: 5 na e-mail a 20 na IP adresu za 15 
 
 ---
 
+## Licence
+
+| Co                                          | Licence                                                                 |
+| ------------------------------------------- | ----------------------------------------------------------------------- |
+| Kód                                         | [Apache 2.0](./LICENSE)                                                 |
+| Data, hodnocení a texty metodiky            | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.cs)  |
+| Zdrojové dokumenty v `corpus/`              | patří svým vydavatelům — viz `provenance.json` u každého               |
+
+Rozdělení je záměrné. U kódu jde o to, aby ho mohlo převzít jiné město nebo
+nezisková organizace bez konzultace s právníkem; Apache 2.0 to umožňuje a nese
+i patentovou doložku. U dat jde o opak — kdo je použije, má uvést zdroj a nechat
+je otevřená, což CC BY-SA vynucuje.
+
+**Zdrojové dokumenty nejsou naše dílo.** Repozitář drží jejich vytěžený text jako
+podklad pro doložitelnost; autorská práva zůstávají vydavatelům a každý dokument
+si v `provenance.json` nese, odkud pochází a s jakou licencí se s ním pracuje.
+
+---
+
 ## Testy a kontroly
 
 ```bash

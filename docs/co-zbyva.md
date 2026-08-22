@@ -101,26 +101,32 @@ chybí jména stanic, u bytů jsou synonyma příliš obecná.
 
 ## 3. Obsah
 
-### 3.1 Programy pěti ze šesti kandidátek — a čas na to už nezbývá
+### 3.1 Programy kandidátek — zachráněno pět ze šesti
 
-Do zastupitelstva se v roce 2022 dostalo šest kandidátek. **Máme program jedné**
-— a je to Praha Sobě, tedy strana, která je celé období v opozici. Dnes tak jde
-hodnotit jen ten, kdo město nevede. To je opak toho, co produkt slibuje.
+Stav k 22. 8. 2026 po záchranné akci:
 
-| Kandidátka | Mandáty | Stav programu |
+| Kandidátka | Mandáty | Program |
 | --- | ---: | --- |
-| SPOLU pro Prahu | 19 | doména `spolupraha.cz` se nepřekládá na IP, v archivu nic |
-| ANO 2011 | 14 | adresa nedohledána |
-| Piráti | 13 | původní adresa 404, jen snímek Internet Archive z 29. 6. 2022 |
-| Praha Sobě | 11 | zmrazeno |
-| STAN | 5 | adresa nedohledána |
-| SPD a spol. | 3 | adresa nedohledána |
+| SPOLU pro Prahu | 19 | ✅ 10 kapitol z archivu, ~49 tis. znaků |
+| ANO 2011 | 14 | ✅ 1 článek z archivu, 20 tis. znaků |
+| Piráti | 13 | ⚠️ jen volební stránka, položkový program se nedochoval |
+| Praha Sobě | 11 | ✅ PDF, 218 slibů |
+| STAN | 5 | ✅ 3 kapitoly z archivu, ~30 tis. znaků |
+| SPD a spol. | 3 | ❌ nedohledáno |
 
-Není to riziko do budoucna, rozpad už proběhl. Komunální volby jsou navíc na
-podzim 2026, takže si strany weby přepíšou na novou kampaň a zbytek zmizí taky.
+Čtyři z šesti mají použitelný program a poprvé jsou mezi nimi **všechny tři
+strany vládnoucí koalice**. Do teď šlo hodnotit jen opozici.
 
-Všech pět chybějících programů je v `corpus/sources.json` i s důvodem. Práce je
-rešeršní, ne programátorská.
+Co zbývá:
+
+- **SPD** — index Internet Archive pro `spd.cz` za rok 2022 obsahuje jen
+  zpravodajství, `praha.spd.cz` nemá záznam. Zbývají tištěné materiály nebo
+  archivy médií.
+- **Piráti** — program se načítal JavaScriptem a archiv uložil, co poslal
+  server, ne co viděl člověk. Ze snímku jde vytěžit jen úvodní text kampaně.
+
+Poučení, které platí dál: **archiv zachytí jen to, co server odeslal.** U SPA
+webů je snímek prázdná skořápka. Kampaňové weby přitom SPA bývají.
 
 ### 3.2 Vytěžit celý program a odbavit sliby
 

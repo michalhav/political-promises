@@ -88,39 +88,6 @@
     },
     {
       "kind": "DOCUMENT",
-      "dir": "corpus/spolu-praha-2022",
-      "chainLink": "PROMISE",
-      "why": "Program nejsilnější kandidátky (19 z 65 mandátů) a strany primátora. Chybí-li, nejde hodnotit ten, kdo město skutečně vede.",
-      "title": "Volební program SPOLU pro Prahu 2022",
-      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
-      "sourceType": "ELECTION_PROGRAM",
-      "license": "FULL_TEXT_STORED",
-      "blockedBy": "Kampaňová doména spolupraha.cz se už nepřekládá na IP a Internet Archive k ní nemá snímek. Platná adresa programu není známa — je potřeba dohledat u strany nebo v archivu médií."
-    },
-    {
-      "kind": "DOCUMENT",
-      "dir": "corpus/ano-praha-2022",
-      "chainLink": "PROMISE",
-      "why": "Program druhé nejsilnější kandidátky (14 mandátů), dnes v opozici. Potřebný ke srovnání slibů napříč stranami.",
-      "title": "Volební program ANO 2011 pro Prahu 2022",
-      "publisher": "ANO 2011",
-      "sourceType": "ELECTION_PROGRAM",
-      "license": "FULL_TEXT_STORED",
-      "blockedBy": "Adresa programu se zatím nepodařila dohledat a Internet Archive nemá snímek u odhadované domény. Nutná rešerše."
-    },
-    {
-      "kind": "DOCUMENT",
-      "dir": "corpus/stan-praha-2022",
-      "chainLink": "PROMISE",
-      "why": "Program třetího koaličního partnera (5 mandátů). Bez něj je koaliční trojice pokrytá jen ze dvou třetin.",
-      "title": "Volební program STAN pro Prahu 2022",
-      "publisher": "STAROSTOVÉ A NEZÁVISLÍ",
-      "sourceType": "ELECTION_PROGRAM",
-      "license": "FULL_TEXT_STORED",
-      "blockedBy": "Adresa programu zatím nedohledána. Nutná rešerše, případně snímek z Internet Archive."
-    },
-    {
-      "kind": "DOCUMENT",
       "dir": "corpus/spd-praha-2022",
       "chainLink": "PROMISE",
       "why": "Program poslední kandidátky, která se dostala do zastupitelstva (3 mandáty). Pro úplnost pokrytí voleb 2022.",
@@ -128,7 +95,7 @@
       "publisher": "SPD, Trikolora, Hnutí PES a nezávislí",
       "sourceType": "ELECTION_PROGRAM",
       "license": "FULL_TEXT_STORED",
-      "blockedBy": "Adresa programu zatím nedohledána. Nutná rešerše, případně snímek z Internet Archive."
+      "blockedBy": "Samostatny prazsky program se nepodarilo dohledat. Index Internet Archive pro spd.cz za rok 2022 obsahuje jen zpravodajstvi, praha.spd.cz nema zadny zaznam. Zbyva hledat v tistenych materialech nebo v archivech medii."
     },
     {
       "kind": "DOCUMENT",
@@ -141,6 +108,160 @@
       "sourceType": "OFFICIAL_REPORT",
       "license": "FULL_TEXT_STORED",
       "publishedAt": "2026-04-16"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-bezpecnost-a-poradek-ve-meste",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Bezpečnost a pořádek ve městě\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220818160314/https://spoluproprahu22.cz/program/bezpecnost-a-poradek-ve-meste",
+      "title": "Volební program SPOLU pro Prahu 2022 — Bezpečnost a pořádek ve městě",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-bytovou-vystavbu-dostupne-bydleni",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Bytová výstavba a dostupné bydlení\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220828073307/https://spoluproprahu22.cz/program/bytovou-vystavbu-dostupne-bydleni",
+      "title": "Volební program SPOLU pro Prahu 2022 — Bytová výstavba a dostupné bydlení",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-cistotu-ve-meste-peci-o-zelen",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Čistota ve městě a péče o zeleň\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220720150357/https://spoluproprahu22.cz/program/cistotu-ve-meste-peci-o-zelen",
+      "title": "Volební program SPOLU pro Prahu 2022 — Čistota ve městě a péče o zeleň",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-digitalizaci-podporu-podnikani",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Digitalizace a podpora podnikání\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220701120740/https://spoluproprahu22.cz/program/digitalizaci-podporu-podnikani",
+      "title": "Volební program SPOLU pro Prahu 2022 — Digitalizace a podpora podnikání",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-energeticky-sobestacne-mesto",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Energeticky soběstačné město\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20221219085149/https://spoluproprahu22.cz/program/energeticky-sobestacne-mesto",
+      "title": "Volební program SPOLU pro Prahu 2022 — Energeticky soběstačné město",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-fungujici-a-kvalitni-dopravu",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Fungující a kvalitní doprava\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220608133518/https://spoluproprahu22.cz/program/fungujici-a-kvalitni-dopravu",
+      "title": "Volební program SPOLU pro Prahu 2022 — Fungující a kvalitní doprava",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-kvalitni-vzdelavani-a-sportovani",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Kvalitní vzdělávání a sportování\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220815080939/https://spoluproprahu22.cz/program/kvalitni-vzdelavani-a-sportovani",
+      "title": "Volební program SPOLU pro Prahu 2022 — Kvalitní vzdělávání a sportování",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-prazskou-kulturu-pamatkovou-peci",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Pražská kultura a památková péče\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220630100134/https://spoluproprahu22.cz/program/prazskou-kulturu-pamatkovou-peci",
+      "title": "Volební program SPOLU pro Prahu 2022 — Pražská kultura a památková péče",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-rodinu",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Rodina\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220806035618/https://spoluproprahu22.cz/program/rodinu",
+      "title": "Volební program SPOLU pro Prahu 2022 — Rodina",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/spolu-praha-2022-zdrave-mestske-finance",
+      "chainLink": "PROMISE",
+      "why": "Program nejsilnější kandidátky (19 z 65 mandátů), kapitola „Zdravé městské finance\". Kampaňová doména už neexistuje; program se dochoval jen po tematických stránkách v archivu.",
+      "url": "http://web.archive.org/web/20220926022134/https://spoluproprahu22.cz/program/zdrave-mestske-finance",
+      "title": "Volební program SPOLU pro Prahu 2022 — Zdravé městské finance",
+      "publisher": "SPOLU pro Prahu (ODS, TOP 09, KDU-ČSL)",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/ano-praha-2022",
+      "chainLink": "PROMISE",
+      "why": "Program druhé nejsilnější kandidátky (14 mandátů), dnes v opozici. Živá stránka odmítá stahování (403), dochoval se snímek v archivu.",
+      "url": "http://web.archive.org/web/20251006134452/https://www.anobudelip.cz/cs/zpravy/program-do-zastupitelstva-prahy",
+      "title": "Program do Zastupitelstva hl. m. Prahy 2022 (ANO)",
+      "publisher": "ANO 2011",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/stan-praha-2022-plan-pro-mesto-kde-se-dobre-zije",
+      "chainLink": "PROMISE",
+      "why": "Program třetího koaličního partnera (5 mandátů), kapitola „Plán pro město, kde se dobře žije\". Bez něj je vládnoucí koalice pokrytá jen ze dvou třetin.",
+      "url": "http://web.archive.org/web/20230601021721/https://www.stan-praha.cz/program/plan-pro-mesto-kde-se-dobre-zije",
+      "title": "Volební program STAN pro Prahu 2022 — Plán pro město, kde se dobře žije",
+      "publisher": "STAROSTOVÉ A NEZÁVISLÍ",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/stan-praha-2022-plan-pro-mesto-v-pohybu",
+      "chainLink": "PROMISE",
+      "why": "Program třetího koaličního partnera (5 mandátů), kapitola „Plán pro město v pohybu\". Bez něj je vládnoucí koalice pokrytá jen ze dvou třetin.",
+      "url": "http://web.archive.org/web/20221006202025/https://www.stan-praha.cz/program/plan-pro-mesto-v-pohybu",
+      "title": "Volební program STAN pro Prahu 2022 — Plán pro město v pohybu",
+      "publisher": "STAROSTOVÉ A NEZÁVISLÍ",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/stan-praha-2022-plan-pro-skutecne-svetovou-metropoli",
+      "chainLink": "PROMISE",
+      "why": "Program třetího koaličního partnera (5 mandátů), kapitola „Plán pro skutečně světovou metropoli\". Bez něj je vládnoucí koalice pokrytá jen ze dvou třetin.",
+      "url": "http://web.archive.org/web/20230126231104/https://www.stan-praha.cz/program/plan-pro-skutecne-svetovou-metropoli",
+      "title": "Volební program STAN pro Prahu 2022 — Plán pro skutečně světovou metropoli",
+      "publisher": "STAROSTOVÉ A NEZÁVISLÍ",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED"
     }
   ]
 }

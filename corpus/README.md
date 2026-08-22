@@ -10,6 +10,23 @@ corpus/nazev-dokumentu/
   evaluation.json   poslední výsledek měření
 ```
 
+## Manifest
+
+`sources.json` deklaruje, **jaké dokumenty projekt potřebuje** — včetně těch, které
+ještě nemáme. Stav se v něm neukládá; ten se vždy odvozuje z toho, co na disku leží.
+
+```bash
+npm run corpus:sync            # co chybí, co je navíc, čím to pořídit
+npm run corpus:sync -- --check # skončí chybou, když se korpus rozešel (CI)
+```
+
+Nový zdroj patří **nejdřív do manifestu**, teprve potom se stahuje. Dokument, který
+se nikdy nestáhl, jinak nezanechá žádnou stopu a nikdo se nedozví, že chybí — přesně
+tak zmizel `corpus/zakazky-mosty`.
+
+Zdroj, který potřebujeme, ale zatím neumíme pořídit, dostane `blockedBy` s důvodem.
+Chybějící nástroj je taky nález; vynechat ho z manifestu by předstíralo úplné pokrytí.
+
 ## Postup
 
 ```bash

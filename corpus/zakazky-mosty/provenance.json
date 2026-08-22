@@ -1,0 +1,29 @@
+{
+  "sourceType": "PUBLIC_PROCUREMENT",
+  "title": "Veřejné zakázky MHMP — mosty a Průmyslový palác (výřez)",
+  "publisher": "Hlavní město Praha",
+  "url": "https://storage.golemio.cz/ckan/tendersystems/verejne_zakazky.csv",
+  "retrievedAt": "2026-08-22T12:27:18.279Z",
+  "contentHash": "0a97a4b97f6e613e3e01990aa7481474c795bdd28b523bc5957d963825497d77",
+  "byteSize": 118690,
+  "mimeType": "text/plain",
+  "licenseMode": "FULL_TEXT_STORED",
+  "isDemo": false,
+  "fileName": "tabulka.txt",
+  "derivedFrom": {
+    "kind": "tabular",
+    "originalContentHash": "498597b3a2dc423552ae7d74d155a2fd25f0f5655b56feae6084b71cc4d64d30",
+    "originalByteSize": 12803213,
+    "delimiter": ",",
+    "totalRows": 24629,
+    "selectedRows": 389,
+    "match": "most|průmyslov",
+    "columns": [
+      "nazev_zakazky",
+      "faze_zakazky",
+      "nazev_smluvniho_partnera",
+      "smluvni_cena_bez_dph_kc",
+      "datum_uzavreni_smlouvy"
+    ]
+  }
+}

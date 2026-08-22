@@ -89,8 +89,8 @@ beforeAll(async () => {
     slug: "praha-sobe-2022",
     name: "Praha Sobě",
     shortName: "Praha Sobě",
-    ballotNumber: 25,
-    seatsWon: 13,
+    ballotNumber: 4,
+    seatsWon: 11,
   });
   await handle.db.insert(electoralListParties).values({
     electoralListId: LIST_ID,

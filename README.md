@@ -189,6 +189,7 @@ Nejsou to snapshot testy. Porovnávat pixely u stránky, která se mění s obsa
 Než se napojí jazykový model, musí být na čem měřit, jestli něco přidává.
 
 ```bash
+npm run corpus:sync                                        # co manifest chce vs. co v korpusu je
 npm run corpus:add -- <url> --dir corpus/nazev --title "…" --publisher "…"   # reálný dokument z webu
 npm run corpus:table -- <url|csv> --dir corpus/nazev --match "most" --columns a,b # výřez tabulky jako dokument
 npm run corpus:demo                                        # vyrobí ukázkové PDF
@@ -197,6 +198,11 @@ npm run corpus:scaffold -- corpus/demo-program/extracted.json --annotator "Jmén
 npm run corpus:evaluate -- corpus/demo-program             # metriky proti anotacím
 npm run corpus:import   -- corpus/demo-program             # vloží dokument do databáze
 ```
+
+Jaké dokumenty projekt potřebuje, deklaruje `corpus/sources.json`. `corpus:sync` ho
+porovná s tím, co v korpusu opravdu leží, a u chybějícího zdroje vypíše příkaz,
+kterým se pořídí. CI pouští `corpus:sync -- --check`, takže chybějící doklad je
+chyba sestavení, ne informace v něčí hlavě.
 
 `corpus:import` čte `provenance.json` a `extracted.json` a zakládá zdrojový dokument
 stejnou cestou jako redakční konzole — se stejnou kontrolou otisku i licenčního režimu.

@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/praha-sobe-2022",
+      "chainLink": "PROMISE",
+      "why": "Doslovné znění slibů, na kterých stojí celý řetěz. Bez programu není co hodnotit.",
+      "url": "https://prahasobe.cz/wp-content/uploads/2022/04/Plan-pro-Prahu-2022-web.pdf",
+      "title": "Plán pro Prahu — Naše vize a 218 konkrétních zlepšení",
+      "publisher": "Praha Sobě",
+      "sourceType": "ELECTION_PROGRAM",
+      "license": "FULL_TEXT_STORED",
+      "publishedAt": "2022-04-13"
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/koalicni-smlouva-2023",
+      "chainLink": "COALITION",
+      "why": "Doklad o tom, že Praha Sobě je v období 2022–2026 v opozici. Bez něj vypadá nenaplněný článek KOALIČNÍ SMLOUVA jako chybějící rešerše, ne jako doložený fakt.",
+      "url": "https://praha.eu/documents/d/praha/koalicni_smlouva_2023_3558236",
+      "title": "Koaliční smlouva o spolupráci v Zastupitelstvu hlavního města Prahy",
+      "publisher": "Hlavní město Praha",
+      "sourceType": "COALITION_AGREEMENT",
+      "license": "FULL_TEXT_STORED",
+      "publishedAt": "2023-02-15"
+    },
+    {
+      "kind": "TABLE",
+      "dir": "corpus/zakazky-mosty",
+      "chainLink": "CONTRACT",
+      "why": "Doklady k zadání staveb, které program jmenuje. Filtr pokrývá tři zakázky, na které se odkazuje reálný dataset: Lávku Holešovice–Karlín, Dvorecký most a Průmyslový palác.",
+      "url": "https://storage.golemio.cz/ckan/tendersystems/verejne_zakazky.csv",
+      "title": "Veřejné zakázky MHMP — mosty a Průmyslový palác (výřez)",
+      "publisher": "Hlavní město Praha",
+      "sourceType": "PUBLIC_PROCUREMENT",
+      "license": "FULL_TEXT_STORED",
+      "match": "most|průmyslov",
+      "columns": [
+        "nazev_zakazky",
+        "faze_zakazky",
+        "nazev_smluvniho_partnera",
+        "smluvni_cena_bez_dph_kc",
+        "datum_uzavreni_smlouvy"
+      ]
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/dvorecky-most-otevreni",
+      "chainLink": "OUTCOME",
+      "why": "Jediný doklad o tom, že stavba je hotová a slouží. Zakázka dokládá zadání, ne dokončení — bez tohohle dokumentu končí časová osa v roce 2022.",
+      "url": "https://praha.eu/dvorecky-most",
+      "title": "Dvorecký most",
+      "publisher": "Hlavní město Praha",
+      "sourceType": "OFFICIAL_REPORT",
+      "license": "FULL_TEXT_STORED",
+      "blockedBy": "corpus:extract umí jen PDF. Tohle je HTML stránka a extrakce kanonického textu z HTML zatím neexistuje."
+    },
+    {
+      "kind": "TABLE",
+      "dir": "corpus/vysledky-kv2022",
+      "chainLink": "MANDATE",
+      "why": "Čísla kandidátek a rozdělení mandátů od ČSÚ. Dnes jsou tahle čísla natvrdo v seedu, takže je nic neověřuje — a právě tam vznikla chyba (číslo 25 a 13 mandátů místo 4 a 11).",
+      "url": "https://volby.gov.cz/pls/kv2022/KV2022_data_20260328_csv.zip",
+      "title": "Výsledky voleb do Zastupitelstva hl. m. Prahy 2022",
+      "publisher": "Český statistický úřad",
+      "sourceType": "OFFICIAL_REPORT",
+      "license": "FULL_TEXT_STORED",
+      "publishedAt": "2022-09-24",
+      "match": "554782",
+      "columns": ["OBEC", "KSTRANA", "HLASY", "MANDATY"],
+      "blockedBy": "corpus:table čte CSV, ne ZIP archiv, a ČSÚ publikuje kv2022 jen jako ZIP. Adresa navíc nese datum vydání (20260328), takže není stabilní a při další aktualizaci se změní."
+    }
+  ]
+}

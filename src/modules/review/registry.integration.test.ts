@@ -81,8 +81,8 @@ describe("createElectoralList", () => {
       name: "Praha Sobě",
       shortName: "Praha Sobě",
       slug: "praha-sobe-2022",
-      ballotNumber: 25,
-      seatsWon: 13,
+      ballotNumber: 4,
+      seatsWon: 11,
       partyIds: [partyId],
     });
 
@@ -90,7 +90,7 @@ describe("createElectoralList", () => {
     const created = lists.find((list) => list.id === listId);
 
     expect(created?.partyNames).toBe("Praha Sobě");
-    expect(created?.seatsWon).toBe(13);
+    expect(created?.seatsWon).toBe(11);
     // Nová kandidátka nemá slib — a čtecí model to musí ukázat jako nulu.
     expect(created?.promiseCount).toBe(0);
   });

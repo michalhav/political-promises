@@ -35,6 +35,12 @@ jobs:
       - name: Formát, lint, typy a testy
         run: npm run check
 
+      - name: Korpus odpovídá manifestu
+        # Bez síťového přístupu: porovnává jen deklaraci v corpus/sources.json
+        # proti tomu, co v repozitáři opravdu leží. Chybějící doklad je tím
+        # pádem chyba sestavení, ne informace v něčí hlavě.
+        run: npm run corpus:sync -- --check
+
       - name: Produkční build
         # Schválně **bez jediné proměnné prostředí**. Build k databázi sahat
         # nesmí a tenhle krok je to jediné, co to vynutí: dokud se sem

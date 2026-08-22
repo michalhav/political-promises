@@ -234,8 +234,11 @@ export async function seedRealPraha(
     name: "Praha Sobě",
     shortName: "Praha Sobě",
     slug: "praha-sobe-2022",
-    ballotNumber: 25,
-    seatsWon: 13,
+    // Číslo kandidátky i počet mandátů podle ČSÚ, volby do ZHMP 2022:
+    // https://volby.gov.cz/pls/kv2022/kv1111?xjazyk=CZ&xid=1&xdz=1&xnumnuts=1100&xobec=554782
+    // Praha Sobě: číslo 4, 14,72 % hlasů, 11 z 65 mandátů.
+    ballotNumber: 4,
+    seatsWon: 11,
     partyIds: [partyId],
   });
 

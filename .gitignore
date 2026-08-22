@@ -55,4 +55,17 @@ test-results
 /e2e/screenshots
 
 # korpus: zdrojové dokumenty do repozitáře nepatří, odvozené artefakty ano
-/corpus/**/*.pdf
+#
+# Je to seznam povolených, ne zakázaných. Nový formát zdroje tak zůstane venku
+# sám od sebe — opačně by stačilo zapomenout na příponu a cizí dokument by se
+# ticho ocitl v repozitáři. Přesně to se stalo s .html, když seznam uměl jen .pdf.
+/corpus/*/*
+!/corpus/*/provenance.json
+!/corpus/*/extracted.json
+!/corpus/*/golden.json
+!/corpus/*/golden.draft.json
+!/corpus/*/evaluation.json
+!/corpus/*/diagnostics.json
+!/corpus/*/tabulka.txt
+!/corpus/*/*.md
+!/corpus/*/qa/

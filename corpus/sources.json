@@ -130,6 +130,18 @@
       "sourceType": "ELECTION_PROGRAM",
       "license": "FULL_TEXT_STORED",
       "blockedBy": "Adresa programu zatím nedohledána. Nutná rešerše, případně snímek z Internet Archive."
+    },
+    {
+      "kind": "DOCUMENT",
+      "dir": "corpus/dvorecky-most-provoz",
+      "chainLink": "OUTCOME",
+      "why": "Zprava psana po otevreni, tedy doklad o dokoncení, ne o ohlasenem terminu. Bez ni konci casova osa slibu v roce 2022 u podpisu smlouvy.",
+      "url": "https://www.dpp.cz/spolecnost/aktuality/detail/66_3297-slavnostni-otevreni-dvoreckeho-mostu",
+      "title": "Dvorecký most slavnostně otevřen",
+      "publisher": "Dopravní podnik hl. m. Prahy",
+      "sourceType": "OFFICIAL_REPORT",
+      "license": "FULL_TEXT_STORED",
+      "publishedAt": "2026-04-16"
     }
   ]
 }

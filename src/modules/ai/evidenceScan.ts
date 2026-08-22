@@ -222,6 +222,40 @@ export function extractSearchTerms(...texts: (string | null | undefined)[]): Sea
   return [...found.values()];
 }
 
+/**
+ * Výrazy z uloženého profilu.
+ *
+ * Profil má přednost před hádáním z textu: obsahuje i to, co ze slibu vyčíst
+ * nejde — úřední název stavby a slova, po kterých nález nesouvisí. Když profil
+ * není, hledá se dál podle textu, jen hůř.
+ */
+export function termsFromProfile(profile: { names: string[]; synonyms: string[] }): SearchTerm[] {
+  const terms = new Map<string, SearchTerm>();
+
+  const add = (label: string, weight: number): void => {
+    const keys = label.trim().split(/\s+/).filter(Boolean).map(stem);
+    if (keys.length === 0) return;
+    const id = keys.join("+");
+    if (!terms.has(id)) terms.set(id, { keys, label: label.trim(), weight });
+  };
+
+  // Vlastní jméno identifikuje stavbu, synonymum ji jen připomíná.
+  for (const name of profile.names) add(name, 3);
+  for (const synonym of profile.synonyms) add(synonym, 2);
+
+  return [...terms.values()];
+}
+
+/** Nález, který obsahuje vyloučené slovo, se zahodí — i kdyby jinak seděl. */
+export function isExcluded(line: string, excluded: string[]): boolean {
+  if (excluded.length === 0) return false;
+  const haystack = normalise(line);
+  return excluded.some((word) => {
+    const key = stem(word);
+    return key.length >= 4 && haystack.includes(key);
+  });
+}
+
 export interface ScanMatch {
   /** Řádek zdroje tak, jak v něm doslova stojí. */
   line: string;

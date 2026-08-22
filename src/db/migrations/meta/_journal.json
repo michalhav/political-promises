@@ -64,6 +64,13 @@
       "when": 1787385058729,
       "tag": "0008_tired_carmella_unuscione",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1787388991808,
+      "tag": "0009_loose_deathstrike",
+      "breakpoints": true
     }
   ]
 }

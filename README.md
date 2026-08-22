@@ -252,6 +252,23 @@ Vytěžování kandidátů na slib se spouští z detailu zdrojového dokumentu 
 - u každého běhu se ukládá poskytovatel, model, verze promptu, otisk vstupu, tokeny a cena (`ai_run`, `ai_suggestion`)
 - stejný dokument se stejnou verzí promptu neproběhne dvakrát — otisk vstupu to zachytí
 
+### Profil hledání
+
+Ke každému slibu patří **profil hledání** — uložený seznam výrazů, podle kterých se v úředních datech pozná doklad. Řeší dvě věci, na které samotné hledání slov nestačí:
+
+- **skloňování** — ve slibu „mezi Holešovicemi a Karlínem", v zakázce „Lávka Holešovice – Karlín",
+- **jiné pojmenování téže věci** — program říká „Štvanická lávka", úřad „Lávka Holešovice – Karlín". Tady žádný algoritmus nepomůže; ta slova spolu nesouvisejí.
+
+Profil navrhne model (jednou na slib, ne při každém průchodu daty) a **analytik ho opraví**. Tím se jeho znalost města uloží jednou a platí napořád, místo aby ji vypisoval do vyhledávacího políčka pokaždé znovu. Profil je vidět, dá se opravit a obhájit — na rozdíl od odpovědi, kterou by model dával pokaždé trochu jinak.
+
+Bez profilu se hledá podle textu slibu, jen s horším výsledkem.
+
+| Pole | K čemu |
+| --- | --- |
+| Vlastní jména | „Dvorecký most", „Průmyslový palác" — podle nich se stavba pozná |
+| Jiná pojmenování | úřední názvy téhož |
+| Vyloučit | slova, po kterých nález skoro jistě nesouvisí („propagace", „dort") |
+
 Druhá úloha, **hledání důkazů**, běží tlačítkem *Hledat důkazy k slibům* na témž místě. Model dostane očíslovaný seznam slibů a vrací číslo, ne identifikátor — číslo mimo seznam se zahodí, takže nemá jak navěsit důkaz na slib, který mu nikdo nedal. Přijetí návrhu zakládá vazbu **ověřenou člověkem**, pod jménem toho, kdo ji vzal; nepotvrzené vazby v datech nevznikají. Roli důkazu (dokládá průběh / výsledek / je v rozporu…) navrhuje model, ale přepsat ji může redaktor — na téhle rozvaze stojí hodnocení.
 
 Text dokumentu je pro model **data, ne instrukce**. Systémový prompt to říká, ale skutečnou pojistkou proti prompt injection je ověření citace: věta „ignoruj předchozí pokyny" v nahraném PDF může model zmást, do systému se ale nedostane, protože se v dokumentu nenajde jako doložitelná citace.

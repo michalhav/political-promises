@@ -15,7 +15,13 @@ import { and, eq, isNull } from "drizzle-orm";
 
 import { contentHash } from "@/db/seed/ids";
 import type { AppDatabase } from "@/db/types";
-import { extractSearchTerms, scanLines } from "@/modules/ai/evidenceScan";
+import {
+  extractSearchTerms,
+  isExcluded,
+  scanLines,
+  termsFromProfile,
+} from "@/modules/ai/evidenceScan";
+import { loadSearchProfile } from "@/modules/ai/searchProfile";
 import { aiRuns, aiSuggestions } from "@/modules/ai/schema";
 import { electoralLists } from "@/modules/parties/schema";
 import { promiseSources, promises } from "@/modules/promises/schema";
@@ -118,12 +124,28 @@ export async function scanSourceForEvidence(
     let promisesWithMatches = 0;
 
     for (const candidate of candidates) {
-      const terms = extractSearchTerms(
-        candidate.excerpt,
-        candidate.originalText,
-        candidate.normalizedStatement,
+      /**
+       * Profil má přednost před hádáním z textu slibu.
+       *
+       * Obsahuje i to, co ze slibu vyčíst nejde — úřední název stavby a slova,
+       * po kterých nález nesouvisí. Bez profilu se hledá dál podle textu, jen
+       * s horším výsledkem; nástroj má fungovat i pro slib, který zatím nikdo
+       * neprošel.
+       */
+      const profile = await loadSearchProfile(db, candidate.id);
+      const terms = profile
+        ? termsFromProfile(profile)
+        : extractSearchTerms(
+            candidate.excerpt,
+            candidate.originalText,
+            candidate.normalizedStatement,
+          );
+      if (terms.length === 0) continue;
+
+      const excluded = profile?.excluded ?? [];
+      const matches = scanLines(lines, terms, { limit: options.perPromise ?? 3 }).filter(
+        (match) => !isExcluded(match.line, excluded),
       );
-      const matches = scanLines(lines, terms, { limit: options.perPromise ?? 3 });
       if (matches.length === 0) continue;
 
       promisesWithMatches += 1;

@@ -6,6 +6,7 @@ import {
   foreignKey,
   index,
   integer,
+  jsonb,
   numeric,
   pgTable,
   text,
@@ -17,6 +18,7 @@ import {
 
 import { createdAt, pk, slug, updatedAt } from "@/db/columns";
 import { eventTypeEnum, metricDirectionEnum, topicEnum } from "@/db/enums";
+import { appUsers } from "@/modules/accounts/schema";
 import { aiSuggestions } from "@/modules/ai/schema";
 import { electoralLists } from "@/modules/parties/schema";
 import { sourceDocuments } from "@/modules/sources/schema";
@@ -99,6 +101,37 @@ export const promiseSources = pgTable(
       .where(sql`${t.isPrimary}`),
   ],
 );
+
+/**
+ * Podle čeho se ke slibu hledají doklady.
+ *
+ * Vyhledávání podle slov ze slibu naráží na češtinu i na to, že dokument
+ * pojmenovává tutéž věc jinak: v programu „Štvanická lávka", v zakázce „Lávka
+ * Holešovice – Karlín". Žádné skloňování ty dva výrazy nespojí.
+ *
+ * Profil je proto **uložený artefakt, ne chování kódu**: model ho navrhne,
+ * analytik opraví a od té chvíle se hledá podle něj. Drahé porozumění češtině
+ * se tak zaplatí jednou za slib, ne při každém průchodu daty — a hlavně je
+ * vidět, dá se opravit a obhájit. Agent, kterého by se pipeline pokaždé ptala,
+ * by tuhle vlastnost neměl.
+ */
+export const promiseSearchProfiles = pgTable("promise_search_profile", {
+  /** Jeden profil na slib; proto primární klíč, ne vlastní id. */
+  promiseId: uuid("promise_id")
+    .primaryKey()
+    .references(() => promises.id, { onDelete: "cascade" }),
+  /** Vlastní jména, podle kterých se stavba pozná: „Dvorecký most". */
+  names: jsonb("names").$type<string[]>().notNull().default([]),
+  /** Jiná pojmenování téhož: „lávka", „přemostění". */
+  synonyms: jsonb("synonyms").$type<string[]>().notNull().default([]),
+  /** Slova, po kterých nález skoro jistě nesouvisí: „dort", „propagace". */
+  excluded: jsonb("excluded").$type<string[]>().notNull().default([]),
+  /** Kdo profil naposledy psal. Návrh modelu a ruční oprava se nesmí splést. */
+  generatedBy: varchar("generated_by", { length: 20 }).notNull().default("model"),
+  updatedById: uuid("updated_by_id").references(() => appUsers.id, { onDelete: "set null" }),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
 
 /**
  * A2 — bez metriky je "ACHIEVED" jen názor redaktora.

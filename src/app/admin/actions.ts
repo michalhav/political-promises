@@ -7,6 +7,7 @@ import { db } from "@/db/client";
 import { requireEditorialUser } from "@/modules/accounts/auth";
 import { matchEvidence } from "@/modules/ai/evidenceMatching";
 import { scanSourceForEvidence } from "@/modules/ai/evidenceScanService";
+import { generateSearchProfile, saveSearchProfile } from "@/modules/ai/searchProfile";
 import { extractPromises } from "@/modules/ai/extraction";
 import { getAIProvider } from "@/modules/ai/factory";
 import { AIProviderError } from "@/modules/ai/provider";
@@ -204,6 +205,54 @@ export const rejectSuggestionAction: Action = async (formData) =>
     });
 
     return { ok: true, message: "Návrh odmítnut." };
+  });
+
+/** Řádky z textarey. Prázdný řádek je běžná věc, ne chyba. */
+function lines(formData: FormData, key: string): string[] {
+  return text(formData, key)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+export const saveSearchProfileAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const slug = text(formData, "slug");
+
+    await saveSearchProfile(
+      db,
+      actor,
+      text(formData, "promiseId"),
+      {
+        names: lines(formData, "names"),
+        synonyms: lines(formData, "synonyms"),
+        excluded: lines(formData, "excluded"),
+      },
+      "human",
+    );
+
+    revalidatePath(`/admin/promises/${slug}`);
+    return { ok: true, message: "Profil hledání uložen." };
+  });
+
+export const generateSearchProfileAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const slug = text(formData, "slug");
+
+    let provider;
+    try {
+      provider = getAIProvider();
+    } catch (error) {
+      if (error instanceof AIProviderError) return { ok: false, errors: [error.message] };
+      throw error;
+    }
+
+    await generateSearchProfile(db, actor, provider, text(formData, "promiseId"));
+
+    revalidatePath(`/admin/promises/${slug}`);
+    return { ok: true, message: "Návrh profilu vytvořen. Projdi ho a oprav, co stroj neví." };
   });
 
 export const addPromiseEventAction: Action = async (formData) =>

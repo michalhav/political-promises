@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 
 import {
   addPromiseEventAction,
+  generateSearchProfileAction,
+  saveSearchProfileAction,
   attachEvidenceAction,
   createAssessmentAction,
   createCorrectionAction,
@@ -31,6 +33,7 @@ import {
   EXECUTION_STATUS_LABELS,
   OUTCOME_STATUS_LABELS,
 } from "@/modules/assessments/labels";
+import { loadSearchProfile } from "@/modules/ai/searchProfile";
 import { EVENT_TYPE_LABELS, TOPIC_LABELS } from "@/modules/promises/labels";
 import {
   getAdminPromiseDetail,
@@ -66,6 +69,10 @@ export default async function AdminPromiseDetailPage({
   ]);
 
   if (!promise) notFound();
+
+  const searchProfile = await loadSearchProfile(db, promise.id);
+  /** Profil se edituje jako text: jeden výraz na řádek. */
+  const asLines = (values: string[] | undefined): string => (values ?? []).join("\n");
 
   const latest = promise.assessments[0] ?? null;
   const working = latest && latest.workflowState !== "PUBLISHED" ? latest : null;
@@ -251,6 +258,48 @@ export default async function AdminPromiseDetailPage({
             ))}
           </ul>
         )}
+
+        <details className="border-border rounded-lg border p-4">
+          <summary className="cursor-pointer text-sm font-medium">
+            Profil hledání {searchProfile ? "" : "(zatím nevyplněný)"}
+          </summary>
+          <div className="mt-4 space-y-3">
+            <p className="text-muted text-sm">
+              Podle čeho se k tomuhle slibu hledají doklady v úředních datech. Úřad pojmenovává
+              stavby jinak než volební program — &bdquo;Štvanická lávka&ldquo; je v zakázkách
+              &bdquo;Lávka Holešovice – Karlín&ldquo;. Co sem napíšeš jednou, platí při každém
+              dalším průchodu daty.
+            </p>
+            {searchProfile ? (
+              <p className="text-muted text-xs">
+                Naposledy upravil: {searchProfile.generatedBy === "human" ? "člověk" : "stroj"}.
+              </p>
+            ) : null}
+
+            <AdminForm action={saveSearchProfileAction} submitLabel="Uložit profil">
+              <input type="hidden" name="promiseId" value={promise.id} />
+              <input type="hidden" name="slug" value={promise.slug} />
+
+              <Field label="Vlastní jména" hint="Jedno na řádek. Stavby, místa, projekty.">
+                <TextArea name="names" defaultValue={asLines(searchProfile?.names)} />
+              </Field>
+              <Field
+                label="Jiná pojmenování"
+                hint="Hlavně úřední názvy téhož — podle nich dokument mluví."
+              >
+                <TextArea name="synonyms" defaultValue={asLines(searchProfile?.synonyms)} />
+              </Field>
+              <Field label="Vyloučit" hint="Slova, po kterých nález skoro jistě nesouvisí.">
+                <TextArea name="excluded" defaultValue={asLines(searchProfile?.excluded)} />
+              </Field>
+            </AdminForm>
+
+            <AdminForm action={generateSearchProfileAction} submitLabel="Navrhnout strojem">
+              <input type="hidden" name="promiseId" value={promise.id} />
+              <input type="hidden" name="slug" value={promise.slug} />
+            </AdminForm>
+          </div>
+        </details>
 
         <details className="border-border rounded-lg border p-4">
           <summary className="cursor-pointer text-sm font-medium">Přidat na časovou osu</summary>

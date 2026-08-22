@@ -770,9 +770,19 @@ async function loadCorrections(db: AppDatabase, promiseId: string): Promise<Corr
     .where(eq(corrections.promiseId, promiseId))
     .orderBy(desc(corrections.createdAt));
 
-  // Interní revize je pracovní poznámka redakce, ne veřejný podnět.
+  /**
+   * Ven jde jen to, co redakce viděla.
+   *
+   * `OPEN` znamená „přišlo a nikdo to zatím nečetl". Zveřejňovat takový text
+   * u jmenovaného politika by z formuláře udělalo nástroj, jak mu na stránku
+   * napsat cokoli. Podnět se zveřejní tím, že ho redakce vezme na vědomí —
+   * i když ho odmítne, protože odmítnutý podnět je taky doklad o tom, že
+   * se někdo ozval.
+   *
+   * Interní revize je pracovní poznámka redakce, ne veřejný podnět.
+   */
   return rows
-    .filter((row) => row.kind !== "INTERNAL_REVISION")
+    .filter((row) => row.kind !== "INTERNAL_REVISION" && row.status !== "OPEN")
     .map((row) => ({
       kind: row.kind,
       status: row.status,

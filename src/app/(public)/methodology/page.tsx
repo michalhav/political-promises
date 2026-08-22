@@ -233,6 +233,11 @@ export default function MethodologyPage() {
           Kandidátka, které se hodnocení týká, může poslat reakci. Zveřejňujeme ji i tehdy, když s
           ní nesouhlasíme — čtenář má vidět obě strany a rozhodnout se sám.
         </p>
+        <p>
+          Ozvat se jde přímo u slibu, formulářem pod hodnocením; přihlášení k tomu není potřeba.
+          Podnět se na stránce objeví teprve poté, co ho redakce projde — jinak by šlo formulářem
+          napsat komukoli na jeho stránku cokoli. Že jsme podnět odmítli, zveřejňujeme také.
+        </p>
       </Section>
 
       <Section id="limity" title="Co tahle metodika neumí">

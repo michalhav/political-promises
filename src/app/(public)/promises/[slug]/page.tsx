@@ -23,6 +23,8 @@ import { COALITION_CLASSIFICATION_LABELS } from "@/modules/coalition/labels";
 import { TOPIC_LABELS } from "@/modules/promises/labels";
 import { getPublishedPromiseDetail, type PromiseDetail } from "@/modules/promises/queries";
 import { formatDate, formatDateLong, formatTimestamp } from "@/shared/format";
+import { submitCorrectionAction } from "@/app/(public)/promises/actions";
+import { CorrectionForm } from "@/app/(public)/promises/_components/CorrectionForm";
 
 /**
  * Stránka čte z databáze, proto se vykresluje až při požadavku.
@@ -242,6 +244,8 @@ export default async function PromiseDetailPage({ params }: PageProps<"/promises
           {promise.assessmentHistory.length > 0 ? <AssessmentHistory promise={promise} /> : null}
         </Section>
       ) : null}
+
+      <CorrectionForm promiseSlug={promise.slug} action={submitCorrectionAction} />
 
       <footer className="border-border text-muted prose-measure border-t pt-6 text-sm">
         <p>

@@ -6,7 +6,17 @@
  * ztratil právě ten záznam, kvůli kterému audit existuje.
  */
 import { relations, sql } from "drizzle-orm";
-import { check, index, jsonb, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  char,
+  check,
+  index,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 import { createdAt, pk, updatedAt } from "@/db/columns";
 import { correctionKindEnum, correctionStatusEnum, reviewDecisionTypeEnum } from "@/db/enums";
@@ -68,6 +78,14 @@ export const corrections = pgTable(
     submitterName: varchar("submitter_name", { length: 200 }),
     submitterEmail: varchar("submitter_email", { length: 320 }),
     submitterOrganization: varchar("submitter_organization", { length: 200 }),
+    /**
+     * Otisk adresy odesílatele u veřejného podání, nikdy adresa sama.
+     *
+     * Slouží k omezení počtu podání z jednoho místa a k dohledání zneužití.
+     * Stejný postup jako u přihlašování: otisk stačí na obojí a neuchovává
+     * osobní údaj, který k ničemu dalšímu nepotřebujeme.
+     */
+    submitterIpHash: char("submitter_ip_hash", { length: 64 }),
     body: text("body").notNull(),
     /** Veřejná redakční odpověď. Zobrazuje se u slibu spolu s podnětem. */
     response: text("response"),
@@ -82,6 +100,7 @@ export const corrections = pgTable(
   },
   (t) => [
     index("correction_promise_idx").on(t.promiseId),
+    index("correction_ip_idx").on(t.submitterIpHash, t.createdAt),
     index("correction_status_idx").on(t.status),
     check(
       "correction_resolved_has_timestamp",

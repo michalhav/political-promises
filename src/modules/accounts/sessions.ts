@@ -40,7 +40,7 @@ export interface SignInResult {
  * Při neúspěchu vrací `null` bez rozlišení, jestli účet neexistuje, nebo
  * nesedí heslo — jinak by šlo přes přihlašovací formulář zjišťovat, kdo
  * v redakci pracuje. Heslo se ověřuje i u neexistujícího účtu, aby se rozdíl
- * neprozradil dobou odpovědi.
+ * neprozradil dobou odpovědi; drží to `verifyPassword` ověřením proti atrapě.
  */
 export async function signIn(
   db: AppDatabase,

@@ -48,6 +48,54 @@ describe("heslo", () => {
   it("účet bez nastaveného hesla se přihlásit nedá", async () => {
     await expect(verifyPassword("cokoli", null)).resolves.toBe(false);
   });
+
+  it("neexistující účet trvá stejně dlouho jako existující", async () => {
+    // Přihlašovací formulář odpovídá vždy stejně, ale dřív odpovídal různě
+    // rychle: u existujícího účtu proběhl scrypt, u neexistujícího se hned
+    // vrátilo false. Ten rozdíl šlo přes síť změřit a zjistit, kdo v redakci
+    // pracuje. Měří se poměr, ne absolutní čas — ten závisí na stroji.
+    const hash = await hashPassword("tajné-heslo");
+    await verifyPassword("zahřívací", hash);
+
+    const trvani = async (stored: string | null): Promise<number> => {
+      const start = process.hrtime.bigint();
+      for (let i = 0; i < 3; i += 1) await verifyPassword("špatné-heslo", stored);
+      return Number(process.hrtime.bigint() - start) / 3e6;
+    };
+
+    const existujici = await trvani(hash);
+    const chybejici = await trvani(null);
+
+    // Před opravou byl rozdíl sedmdesátinásobný. Mez je volná schválně —
+    // test má chytit návrat té chyby, ne kolísání zatížení stroje.
+    expect(chybejici).toBeGreaterThan(existujici / 3);
+  });
+
+  it("otisk s jinými parametry se pořád dá ověřit", async () => {
+    // Parametry se ukládají vedle otisku právě proto, aby šly do budoucna
+    // zvýšit. Kdyby je ověřování bralo z konstant, změna by znehodnotila
+    // všechny existující účty.
+    const { scryptSync, randomBytes } = await import("node:crypto");
+    const sul = randomBytes(16);
+    const cost = 16_384;
+    const blockSize = 4;
+    const klic = scryptSync("heslo", sul, 64, {
+      N: cost,
+      r: blockSize,
+      p: 1,
+      maxmem: 128 * cost * blockSize * 2,
+    });
+    const otisk = [cost, blockSize, 1, sul.toString("hex"), klic.toString("hex")].join("$");
+
+    await expect(verifyPassword("heslo", otisk)).resolves.toBe(true);
+    await expect(verifyPassword("jiné", otisk)).resolves.toBe(false);
+  });
+
+  it("poškozený otisk neprojde a nespadne", async () => {
+    for (const otisk of ["", "nesmysl", "1$2$3", "0$8$1$aa$bb", "99999999$8$1$aa$bb"]) {
+      await expect(verifyPassword("heslo", otisk)).resolves.toBe(false);
+    }
+  });
 });
 
 describe("přihlášení", () => {

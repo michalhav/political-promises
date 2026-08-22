@@ -38,7 +38,13 @@ function fileNameFrom(url: URL, contentType: string): string {
   const fromPath = path.basename(url.pathname);
   if (fromPath && path.extname(fromPath)) return fromPath;
 
-  const extension = contentType.includes("pdf") ? ".pdf" : ".bin";
+  // Přípona rozhoduje, čím se dokument vytěží. `.bin` u webové stránky by
+  // znamenalo, že extrakce nepozná, že jde o HTML.
+  const extension = contentType.includes("pdf")
+    ? ".pdf"
+    : contentType.includes("html")
+      ? ".html"
+      : ".bin";
   return `dokument${extension}`;
 }
 

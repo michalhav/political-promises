@@ -193,7 +193,7 @@ npm run corpus:sync                                        # co manifest chce vs
 npm run corpus:add -- <url> --dir corpus/nazev --title "…" --publisher "…"   # reálný dokument z webu
 npm run corpus:table -- <url|csv> --dir corpus/nazev --match "most" --columns a,b # výřez tabulky jako dokument
 npm run corpus:demo                                        # vyrobí ukázkové PDF
-npm run corpus:extract  -- corpus/demo-program/program.pdf # PDF → kanonický text
+npm run corpus:extract  -- corpus/demo-program/program.pdf # PDF nebo HTML → kanonický text
 npm run corpus:scaffold -- corpus/demo-program/extracted.json --annotator "Jméno"
 npm run corpus:evaluate -- corpus/demo-program             # metriky proti anotacím
 npm run corpus:import   -- corpus/demo-program             # vloží dokument do databáze

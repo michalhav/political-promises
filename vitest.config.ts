@@ -6,6 +6,17 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    /**
+     * Výchozích 5 s / 10 s je kalibrovaných na jednotkové testy. Tady každý
+     * integrační soubor pouští skutečné migrace proti Postgresu ve WASM a
+     * hesla se otiskují scryptem — nejpomalejší testy trvají přes 2,5 s a do
+     * limitu nezbývá ani dvojnásobek. Při souběhu víc pracantů na vytíženém
+     * stroji z toho vzniká chyba, která po opakování zmizí.
+     *
+     * Timeout má chytat zaseknutí, ne pomalý, ale funkční test.
+     */
+    testTimeout: 20_000,
+    hookTimeout: 30_000,
   },
   resolve: {
     alias: {

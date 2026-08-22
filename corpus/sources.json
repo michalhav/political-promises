@@ -48,13 +48,12 @@
       "kind": "DOCUMENT",
       "dir": "corpus/dvorecky-most-otevreni",
       "chainLink": "OUTCOME",
-      "why": "Jediný doklad o tom, že stavba je hotová a slouží. Zakázka dokládá zadání, ne dokončení — bez tohohle dokumentu končí časová osa v roce 2022.",
+      "why": "Doklad k otevření mostu. Pozor: stránka mluví budoucím časem („otevření se uskuteční v pátek 17. dubna 2026\"), takže dokládá ohlášený termín, ne potvrzené dokončení. K události COMPLETED je potřeba zpráva psaná po otevření.",
       "url": "https://praha.eu/dvorecky-most",
       "title": "Dvorecký most",
       "publisher": "Hlavní město Praha",
       "sourceType": "OFFICIAL_REPORT",
-      "license": "FULL_TEXT_STORED",
-      "blockedBy": "corpus:extract umí jen PDF. Tohle je HTML stránka a extrakce kanonického textu z HTML zatím neexistuje."
+      "license": "FULL_TEXT_STORED"
     },
     {
       "kind": "TABLE",
@@ -86,7 +85,7 @@
       "publisher": "Česká pirátská strana",
       "sourceType": "ELECTION_PROGRAM",
       "license": "FULL_TEXT_STORED",
-      "blockedBy": "Původní adresa vrací 404 — program je dostupný jen ze snímku Internet Archive z 29. 6. 2022. Navíc je to HTML a corpus:extract umí jen PDF."
+      "blockedBy": "Původní adresa vrací 404, program je jen ve snímku Internet Archive z 29. 6. 2022. Provenience zatím neumí odlišit archivní kopii od dokumentu od vydavatele; stáhnout ho dřív by zamlčelo, odkud pochází."
     },
     {
       "kind": "DOCUMENT",

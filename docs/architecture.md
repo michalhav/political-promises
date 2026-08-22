@@ -143,8 +143,19 @@ Tři pravidla, která se dají porušit, aniž si toho někdo všimne, a proto m
 Řetězec doložitelnosti končí u konkrétního místa v konkrétním dokumentu, takže text musí být adresovatelný a neměnný:
 
 ```text
-PDF → kanonický text (stránky, znakové posuny) → normalizovaná vrstva (odvozená)
+PDF | HTML → kanonický text (stránky, znakové posuny) → normalizovaná vrstva (odvozená)
 ```
+
+Vytěžit jde obojí a `corpus:extract` se rozhoduje podle obsahu souboru, ne podle
+přípony. HTML má dvě zvláštnosti: **stránka je jedna**, protože web stránkování
+nemá a vymýšlet ho by znamenalo citaci na místo, které v dokumentu neexistuje;
+a **bílé znaky se slučují**, protože posloupnost mezer je v HTML podle
+specifikace vykreslena jako jedna — zachovat odsazení zdrojáku by dalo text,
+který nikdo nikdy neviděl. Uvnitř `<pre>` jsou bílé znaky významové a zůstávají.
+
+Extrakce mlčky neuspěje: stránka bez textu (obsah dokreslovaný v prohlížeči)
+i stránka hlásící jiné kódování než UTF-8 skončí varováním, ne tichým uložením
+poškozeného kanonického textu.
 
 - **Kanonický text se nikdy nemění.** Citace se cituje odsud.
 - **Normalizace nikdy nevkládá znaky**, jen nahrazuje 1:1 nebo maže. Díky tomu si každý znak pamatuje svůj původ a nález jde převést zpět na rozsah v originále. Kdyby vkládala, mapování zpět by přestalo být jednoznačné.

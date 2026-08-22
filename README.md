@@ -145,6 +145,38 @@ Přihlášení je omezené počtem pokusů: 5 na e-mail a 20 na IP adresu za 15 
 
 ---
 
+## Otevřená data
+
+Publikovaná data jsou dostupná strojově. Adresy nesou verzi kontraktu — nekompatibilní
+změna dostane novou, ne tiše jiný tvar.
+
+```bash
+GET /api/v1/promises              # seznam, stránkovaný, tytéž filtry jako web
+GET /api/v1/promises/<slug>       # jeden slib s doklady a časovou osou
+GET /api/v1/export                # celý dataset v JSON
+GET /api/v1/export?format=csv     # plochá tabulka, slib na řádek
+```
+
+Filtry se sdílejí s veřejným přehledem (`list`, `topic`, `execution`,
+`assessability`, `q`, `page`), takže se API a stránka nemůžou rozejít v tom, co
+která považuje za platný filtr.
+
+Každá odpověď nese blok `licence`. Data se přeposílají dál a musí být poznat
+i z odpojeného souboru, za jakých podmínek platí.
+
+Dvě věci, které stojí za pozornost při zpracování:
+
+- **`isDemo`** — slib patří ke smyšlené kandidátce z ukázkového datasetu. Než
+  budou data z Prahy kompletní, jsou v odpovědi obojí a je potřeba je odlišit.
+- **`limitationNote`** u dokladu říká, co ze zdroje **ne**vyplývá. Je to
+  samostatné pole schválně; bez něj vypadá zadaná zakázka jako doklad dokončení.
+
+Ven jde jen to, co je publikované a redakčně ověřené — stejná čtecí vrstva jako
+pro web. Nepotvrzený návrh modelu ani rozpracované hodnocení se do vývozu
+nedostanou a hlídá to test.
+
+---
+
 ## Licence
 
 | Co                                          | Licence                                                                 |

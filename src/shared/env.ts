@@ -15,6 +15,10 @@ const envSchema = z.object({
    */
   DATABASE_POOL_MAX: z.coerce.number().int().min(1).max(100).default(10),
   ANTHROPIC_API_KEY: z.string().optional(),
+  /** Adresa lokálního modelu (Ollama). Výchozí hodnota odpovídá běžné instalaci. */
+  AI_LOCAL_URL: z.string().url().default("http://localhost:11434"),
+  /** Model, který se má použít. Musí být stažený (`ollama pull`). */
+  AI_LOCAL_MODEL: z.string().min(1).default("qwen3:8b"),
 });
 
 export type Env = z.infer<typeof envSchema>;

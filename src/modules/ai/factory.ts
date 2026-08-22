@@ -6,6 +6,7 @@
  */
 import { AnthropicProvider } from "@/modules/ai/anthropicProvider";
 import { HeuristicProvider } from "@/modules/ai/heuristicProvider";
+import { LocalProvider } from "@/modules/ai/localProvider";
 import { AIProviderError, type AIProvider } from "@/modules/ai/provider";
 import { getEnv } from "@/shared/env";
 
@@ -22,9 +23,8 @@ export function getAIProvider(): AIProvider {
       return new AnthropicProvider({ apiKey: env.ANTHROPIC_API_KEY });
     }
     case "local":
-      throw new AIProviderError(
-        "Lokální model zatím napojený není. Použij fixture (heuristika) nebo anthropic.",
-      );
+      // Vlastní hardware: zdarma a bez odesílání cizích dokumentů ven.
+      return new LocalProvider({ baseUrl: env.AI_LOCAL_URL, model: env.AI_LOCAL_MODEL });
     case "fixture":
     default:
       return new HeuristicProvider();

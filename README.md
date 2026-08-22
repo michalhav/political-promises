@@ -82,6 +82,8 @@ Validují se při startu v `src/shared/env.ts`. Chybějící hodnota shodí apli
 | `DATABASE_URL`      | ano     | —           | Připojení k Postgresu.                                                    |
 | `AI_PROVIDER`       | ne      | `fixture`   | `fixture` \| `local` \| `anthropic`. Ve vývoji a testech vždy `fixture`.  |
 | `ANTHROPIC_API_KEY` | ne      | —           | Jen když `AI_PROVIDER=anthropic`.                                         |
+| `AI_LOCAL_URL`      | ne      | `http://localhost:11434` | Kde poslouchá Ollama. Jen když `AI_PROVIDER=local`.          |
+| `AI_LOCAL_MODEL`    | ne      | `qwen3:8b`  | Lokální model. Musí být stažený (`ollama pull`).                          |
 | `DB_ALLOW_REMOTE`   | ne      | —           | `1` povolí `db:reset` a `db:seed` proti nelokálnímu hostu. Bez toho odmítnou běžet. |
 | `DATABASE_POOL_MAX` | ne      | `10`        | Velikost poolu. E2E běh proti PGlite ji snižuje na 1.                     |
 | `SEED_EDITOR_PASSWORD` | ne   | `demo-redakce` | Heslo demo redakčních účtů. Jen pro lokální vývoj.                     |
@@ -277,9 +279,28 @@ Text dokumentu je pro model **data, ne instrukce**. Systémový prompt to řík�
 | --- | --- | --- |
 | `fixture` (výchozí) | Deterministická heuristika `HeuristicPromiseExtractor` — laťka, kterou má model překonávat. Umí jen vytěžování kandidátů; u hledání důkazů to řekne a skončí | 0 |
 | `anthropic` | Claude přes oficiální SDK; vyžaduje `ANTHROPIC_API_KEY` | podle ceníku, ukládá se u běhu |
-| `local` | Zatím nenapojeno, skončí srozumitelnou chybou | — |
+| `local` | Model na vlastním stroji přes [Ollamu](https://ollama.com) | 0 |
 
 Výchozí je heuristika schválně: běh, který stojí peníze, se musí zapnout vědomě.
+
+### Lokální model
+
+```bash
+ollama pull qwen3:8b
+ollama serve
+AI_PROVIDER=local npm run dev:pglite
+```
+
+Mluví se nativním rozhraním Ollamy (`/api/chat`), protože její `format` bere přímo JSON Schema — pošle se to, co vygeneruje Zod, a odpověď se týmž schématem ověří. Výstupu se nevěří o nic víc než u placeného modelu; menší model chybuje víc, ne míň.
+
+| Proměnná | Výchozí | K čemu |
+| --- | --- | --- |
+| `AI_LOCAL_URL` | `http://localhost:11434` | Kde Ollama poslouchá |
+| `AI_LOCAL_MODEL` | `qwen3:8b` | Model, musí být stažený |
+
+Na sestavení **profilu hledání** osmimiliardový model stačí — je to sběr slovníku, ne úsudek. U vytěžování kandidátů čekej horší výsledek než od placeného modelu; než se na něj spolehneš, změř ho přes `corpus:evaluate`.
+
+Vedlejší efekt, který stojí za zmínku: dokumenty z korpusu takhle neopustí stroj.
 
 ---
 

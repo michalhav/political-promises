@@ -68,6 +68,10 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: E2E testy
+        # Aplikace při přihlášení počítá otisk adresy a klíč k tomu je povinný.
+        # Tenhle je jen pro běh v CI; nic jím není chráněno.
+        env:
+          IP_HASH_SECRET: ci-only-ip-hash-secret-nikdy-v-provozu
         run: npm run test:e2e
 
       - name: Záznam z neúspěšného běhu

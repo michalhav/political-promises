@@ -68,6 +68,21 @@ describe("běžné přihlášení", () => {
     expect(row?.ipHash).not.toBe(IP);
     expect(row?.ipHash).toBe(hashClientIp(IP));
   });
+
+  it("otisk závisí na tajném klíči, ne jen na adrese", async () => {
+    // Bez klíče to není pseudonymizace: adres IPv4 je konečný počet, takže
+    // prostý SHA-256 jde obrátit projitím všech. Kdyby se klíč z výpočtu
+    // někdy vytratil, tenhle test to zachytí — samotná shoda otisku ne.
+    const { createHash } = await import("node:crypto");
+
+    expect(hashClientIp(IP)).not.toBe(createHash("sha256").update(IP).digest("hex"));
+  });
+
+  it("různé adresy dají různý otisk a táž adresa vždy stejný", async () => {
+    expect(hashClientIp("10.0.0.1")).not.toBe(hashClientIp("10.0.0.2"));
+    expect(hashClientIp("10.0.0.1")).toBe(hashClientIp("10.0.0.1"));
+    expect(hashClientIp(null)).toBeNull();
+  });
 });
 
 describe("limit na e-mail", () => {

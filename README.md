@@ -85,6 +85,7 @@ Validují se při startu v `src/shared/env.ts`. Chybějící hodnota shodí apli
 | `ANTHROPIC_API_KEY` | ne      | —           | Jen když `AI_PROVIDER=anthropic`.                                         |
 | `AI_LOCAL_URL`      | ne      | `http://localhost:11434` | Kde poslouchá Ollama. Jen když `AI_PROVIDER=local`.          |
 | `AI_LOCAL_MODEL`    | ne      | `qwen3:8b`  | Lokální model. Musí být stažený (`ollama pull`).                          |
+| `IP_HASH_SECRET`    | **ano** | —           | Tajný klíč pro otisky IP adres. Bez něj otisk není otisk — adres IPv4 je konečný počet a všechny se dají projít. Vygeneruj: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
 | `DB_ALLOW_REMOTE`   | ne      | —           | `1` povolí `db:reset` a `db:seed` proti nelokálnímu hostu. Bez toho odmítnou běžet. |
 | `DATABASE_POOL_MAX` | ne      | `10`        | Velikost poolu. E2E běh proti PGlite ji snižuje na 1.                     |
 | `SEED_EDITOR_PASSWORD` | ne   | `demo-redakce` | Heslo demo redakčních účtů. Jen pro lokální vývoj.                     |

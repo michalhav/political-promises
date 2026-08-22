@@ -12,12 +12,13 @@
  * Čítač musí být v databázi. Na Vercelu obsluhuje požadavky víc instancí,
  * takže čítač v paměti procesu by po prvním cold startu nechránil nic.
  */
-import { createHash } from "node:crypto";
+import { createHmac } from "node:crypto";
 import { and, count, eq, gte, lt } from "drizzle-orm";
 
 import type { AppDatabase } from "@/db/types";
 import { loginAttempts } from "@/modules/accounts/schema";
 import { purgeExpiredSessions, signIn, type SignInResult } from "@/modules/accounts/sessions";
+import { getIpHashSecret } from "@/shared/env";
 
 /** Okno, ve kterém se pokusy počítají. */
 export const ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
@@ -36,8 +37,19 @@ export interface LoginRequest {
   clientIp?: string | null;
 }
 
+/**
+ * Otisk IP adresy pro počítadla.
+ *
+ * HMAC, ne prostý hash. Prostý SHA-256 nad IP adresou není pseudonymizace:
+ * adres je konečný počet, takže se dají projít všechny a otisky porovnat —
+ * naměřeno 592 tisíc otisků za sekundu na jednom jádru v Node, tedy celý
+ * prostor IPv4 za dvě hodiny. Na grafické kartě sekundy.
+ *
+ * S tajným klíčem to nejde: kdo nemá klíč, nemá co porovnávat.
+ */
 export function hashClientIp(ip: string | null | undefined): string | null {
-  return ip ? createHash("sha256").update(ip).digest("hex") : null;
+  if (!ip) return null;
+  return createHmac("sha256", getIpHashSecret()).update(ip).digest("hex");
 }
 
 function windowStart(): Date {

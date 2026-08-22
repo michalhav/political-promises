@@ -36,6 +36,17 @@ const provenanceSchema = z.object({
   publishedAt: z.iso.date().optional(),
   licenseMode: z.enum(licenseModeEnum.enumValues),
   isDemo: z.boolean().default(false),
+  /**
+   * Zapisuje `corpus:add`, když rozpozná adresu webového archivu. Ručně se
+   * nevyplňuje — archivní původ se pozná z adresy, ne z dobré vůle.
+   */
+  archive: z
+    .object({
+      service: z.string().trim().min(1).max(120),
+      originalUrl: z.string().url().max(2000),
+      snapshotAt: z.iso.datetime(),
+    })
+    .optional(),
 });
 
 export type CorpusProvenance = z.infer<typeof provenanceSchema>;
@@ -101,6 +112,13 @@ export async function importCorpusDocument(
     rawText: storesText ? text : undefined,
     pageCount: extracted.pageCount,
     isDemo: provenance.isDemo,
+    archive: provenance.archive
+      ? {
+          service: provenance.archive.service,
+          originalUrl: provenance.archive.originalUrl,
+          snapshotAt: new Date(provenance.archive.snapshotAt),
+        }
+      : undefined,
   });
 
   return {

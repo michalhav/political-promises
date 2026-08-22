@@ -28,6 +28,48 @@ afterAll(async () => {
   await handle?.close();
 });
 
+describe("archivní kopie", () => {
+  it("projde od provenience až do databáze", async () => {
+    // Program Pirátů z webu strany zmizel; zbyl jen snímek v archivu.
+    // Uložit ho jako běžný dokument by kopii vydávalo za originál.
+    const result = await importCorpusDocument(handle.db, editor, "corpus/pirati-praha-2022");
+
+    const [row] = await handle.db
+      .select({
+        service: sourceDocuments.archiveService,
+        originalUrl: sourceDocuments.archiveOriginalUrl,
+        snapshotAt: sourceDocuments.archiveSnapshotAt,
+        url: sourceDocuments.url,
+      })
+      .from(sourceDocuments)
+      .where(eq(sourceDocuments.id, result.sourceDocumentId));
+
+    expect(row?.service).toBe("Internet Archive");
+    expect(row?.originalUrl).toBe(
+      "https://praha.pirati.cz/volby/2022-komunalni.html?pohled=program",
+    );
+    expect(row?.snapshotAt?.toISOString()).toBe("2022-12-21T20:37:40.000Z");
+    // `url` zůstává tím, odkud jsme opravdu stahovali — tedy snímkem.
+    expect(row?.url).toContain("web.archive.org");
+  });
+
+  it("nepustí do databáze půlku archivního původu", async () => {
+    // Dokument, který tvrdí „jsem z archivu", ale neřekne z jakého a odkdy,
+    // je horší než dokument bez té informace. Drží to CHECK v databázi.
+    await expect(
+      handle.db.insert(sourceDocuments).values({
+        sourceType: "OTHER",
+        title: "Neúplný archivní původ",
+        publisher: "Test",
+        retrievedAt: new Date(),
+        contentHash: "f".repeat(64),
+        licenseMode: "QUOTE_ONLY",
+        archiveService: "Internet Archive",
+      }),
+    ).rejects.toThrow();
+  });
+});
+
 describe("importCorpusDocument", () => {
   it("vloží skutečný program včetně provenience a počtu stran", async () => {
     const result = await importCorpusDocument(handle.db, editor, DIRECTORY);

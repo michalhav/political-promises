@@ -79,13 +79,12 @@
       "kind": "DOCUMENT",
       "dir": "corpus/pirati-praha-2022",
       "chainLink": "PROMISE",
-      "why": "Program druhé nejsilnější koaliční strany. Bez programů vládnoucích stran jde hodnotit jen opozice, což je opačně, než produkt slibuje.",
-      "url": "http://web.archive.org/web/20220629005413/https://praha.pirati.cz/volby/2022-komunalni.html",
-      "title": "Komunální volby 2022 — program Pirátů pro Prahu",
+      "why": "Puvodni adresa vraci 404, dokument je jen ve snimku Internet Archive. POZOR: snimek nese jen uvodni stranku kampane, ne polozkovy program — ten se nacital az v prohlizeci a v archivu neni. Sliby Piratu z nej vytezit nejdou; hodi se jako doklad tvrzeni z kampane.",
+      "url": "http://web.archive.org/web/20221221203740/https://praha.pirati.cz/volby/2022-komunalni.html?pohled=program",
+      "title": "Komunální volby 2022 — volební stránka Pirátů pro Prahu (archivní snímek)",
       "publisher": "Česká pirátská strana",
       "sourceType": "ELECTION_PROGRAM",
-      "license": "FULL_TEXT_STORED",
-      "blockedBy": "Původní adresa vrací 404, program je jen ve snímku Internet Archive z 29. 6. 2022. Provenience zatím neumí odlišit archivní kopii od dokumentu od vydavatele; stáhnout ho dřív by zamlčelo, odkud pochází."
+      "license": "FULL_TEXT_STORED"
     },
     {
       "kind": "DOCUMENT",

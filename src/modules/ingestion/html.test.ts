@@ -86,6 +86,12 @@ describe("extractHtml", () => {
     expect(sliceSpan(report.document, span!)).toBe("nové mosty");
   });
 
+  it("nepustí deklaraci typu dokumentu do textu", () => {
+    // Parser ji vrací jako textový uzel v kořeni. U stránky bez <body> —
+    // archivované stránky takové bývají — by se stala první větou dokumentu.
+    expect(textOf("<!DOCTYPE html><p>Slib</p>")).toBe("Slib");
+  });
+
   it("přečte název stránky", () => {
     expect(extract("<head><title>Dvorecký most</title></head><body>x</body>").title).toBe(
       "Dvorecký most",

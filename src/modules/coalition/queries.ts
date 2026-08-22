@@ -79,6 +79,9 @@ export async function getCoalitionComparison(
       agreementRetrievedAt: sourceDocuments.retrievedAt,
       agreementType: sourceDocuments.sourceType,
       agreementIsDemo: sourceDocuments.isDemo,
+      agreementArchiveService: sourceDocuments.archiveService,
+      agreementArchiveOriginalUrl: sourceDocuments.archiveOriginalUrl,
+      agreementArchiveSnapshotAt: sourceDocuments.archiveSnapshotAt,
     })
     .from(coalitionPromiseMappings)
     .innerJoin(promises, eq(coalitionPromiseMappings.promiseId, promises.id))
@@ -115,6 +118,16 @@ export async function getCoalitionComparison(
       retrievedAt: first.agreementRetrievedAt,
       sourceType: first.agreementType,
       isDemo: first.agreementIsDemo,
+      archive:
+        first.agreementArchiveService &&
+        first.agreementArchiveOriginalUrl &&
+        first.agreementArchiveSnapshotAt
+          ? {
+              service: first.agreementArchiveService,
+              originalUrl: first.agreementArchiveOriginalUrl,
+              snapshotAt: first.agreementArchiveSnapshotAt,
+            }
+          : null,
     },
     items: rows.map((row) => ({
       promiseSlug: row.promiseSlug,

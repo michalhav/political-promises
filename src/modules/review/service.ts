@@ -92,6 +92,18 @@ export const sourceDocumentInputSchema = z
     /** Počet stran původního dokumentu. Známý jen u toho, co prošlo extrakcí. */
     pageCount: z.coerce.number().int().min(1).max(100_000).optional(),
     isDemo: z.boolean().default(false),
+    /**
+     * Původ u dokumentu z webového archivu. Buď celý, nebo vůbec — vynucuje
+     * to i CHECK v databázi, protože půlka údaje tvrdí „je z archivu", ale
+     * neřekne z jakého a odkdy.
+     */
+    archive: z
+      .object({
+        service: trimmed(120),
+        originalUrl: z.url().max(2000),
+        snapshotAt: z.date(),
+      })
+      .optional(),
   })
   .refine((value) => value.licenseMode === "FULL_TEXT_STORED" || !value.rawText?.trim(), {
     message:
@@ -138,6 +150,9 @@ export async function createSourceDocument(
         sourceType: input.sourceType,
         title: input.title,
         publisher: input.publisher,
+        archiveService: input.archive?.service ?? null,
+        archiveOriginalUrl: input.archive?.originalUrl ?? null,
+        archiveSnapshotAt: input.archive?.snapshotAt ?? null,
         url: input.url ? input.url : null,
         publishedAt: input.publishedAt ? input.publishedAt : null,
         retrievedAt: new Date(),

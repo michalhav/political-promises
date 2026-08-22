@@ -53,6 +53,29 @@ a anotace, které se k němu vážou.
 U chráněného díla (novinový článek) patří `--license QUOTE_ONLY` — plný text se
 pak neukládá a pracuje se jen s citacemi.
 
+## Dokumenty z webového archivu
+
+Programy stran z roku 2022 z webů mizí. Když původní adresa nevede nikam, zbývá
+snímek v archivu — a `corpus:add` ho **pozná sám** podle tvaru adresy:
+
+```bash
+npm run corpus:add -- "http://web.archive.org/web/20221221203740/https://…" --dir corpus/… …
+```
+
+Provenience pak nese blok `archive` (služba, původní adresa vydavatele, datum
+snímku) a u citace se čtenáři zobrazí, že jde o archivní kopii. Archivní původ
+se nevyplňuje ručně: kdyby závisel na přepínači, dřív nebo později by ho někdo
+zapomněl a kopie by se tvářila jako originál.
+
+Stahuje se varianta `id_`, tedy archivované **původní bajty** bez lišty archivu.
+Lišta se časem mění; kdyby byla součástí souboru, týdenní kontrola otisků by
+hlásila změnu dokumentu, ke které nedošlo.
+
+**Pozor na stránky vykreslované až v prohlížeči.** Snímek programu Pirátů má
+2 051 znaků — je v něm navigace a úvodní text kampaně, ale položkový program ne,
+protože se načítal JavaScriptem. Archiv uložil, co server poslal, ne co člověk
+viděl. Extrakce na to neupozorní, když je na stránce aspoň nějaký text.
+
 ## Tabulková data (zakázky, rozpočty, faktury)
 
 Otevřená data měst jsou z velké části tabulky, ne próza. `corpus:table` z výřezu

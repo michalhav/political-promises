@@ -72,6 +72,14 @@ export interface SourceRef {
   retrievedAt: Date;
   sourceType: SourceTypeValue;
   isDemo: boolean;
+  /**
+   * Vyplněné jen u dokumentu z webového archivu.
+   *
+   * Čtenář musí vidět, že za shodu s originálem ručí třetí strana a že snímek
+   * je z konkrétního dne — u programu, který z webu vydavatele zmizel, je to
+   * podstatná část toho, jak silný ten doklad je.
+   */
+  archive: { service: string; originalUrl: string; snapshotAt: Date } | null;
 }
 
 export interface Citation {
@@ -268,6 +276,9 @@ interface SourceRow {
   retrievedAt: Date;
   sourceType: SourceTypeValue;
   isDemo: boolean;
+  archiveService: string | null;
+  archiveOriginalUrl: string | null;
+  archiveSnapshotAt: Date | null;
 }
 
 function toSourceRef(row: SourceRow): SourceRef {
@@ -279,6 +290,15 @@ function toSourceRef(row: SourceRow): SourceRef {
     retrievedAt: row.retrievedAt,
     sourceType: row.sourceType,
     isDemo: row.isDemo,
+    // Databáze drží CHECK, že archivní původ je celý, nebo vůbec.
+    archive:
+      row.archiveService && row.archiveOriginalUrl && row.archiveSnapshotAt
+        ? {
+            service: row.archiveService,
+            originalUrl: row.archiveOriginalUrl,
+            snapshotAt: row.archiveSnapshotAt,
+          }
+        : null,
   };
 }
 
@@ -290,6 +310,9 @@ const sourceColumns = {
   sourceRetrievedAt: sourceDocuments.retrievedAt,
   sourceType: sourceDocuments.sourceType,
   sourceIsDemo: sourceDocuments.isDemo,
+  sourceArchiveService: sourceDocuments.archiveService,
+  sourceArchiveOriginalUrl: sourceDocuments.archiveOriginalUrl,
+  sourceArchiveSnapshotAt: sourceDocuments.archiveSnapshotAt,
 } as const;
 
 interface SourceColumnRow {
@@ -300,6 +323,9 @@ interface SourceColumnRow {
   sourceRetrievedAt: Date;
   sourceType: SourceTypeValue;
   sourceIsDemo: boolean;
+  sourceArchiveService: string | null;
+  sourceArchiveOriginalUrl: string | null;
+  sourceArchiveSnapshotAt: Date | null;
 }
 
 function sourceRefFrom(row: SourceColumnRow): SourceRef {
@@ -311,6 +337,9 @@ function sourceRefFrom(row: SourceColumnRow): SourceRef {
     retrievedAt: row.sourceRetrievedAt,
     sourceType: row.sourceType,
     isDemo: row.sourceIsDemo,
+    archiveService: row.sourceArchiveService,
+    archiveOriginalUrl: row.sourceArchiveOriginalUrl,
+    archiveSnapshotAt: row.sourceArchiveSnapshotAt,
   });
 }
 
@@ -615,6 +644,9 @@ async function loadTimeline(db: AppDatabase, promiseId: string): Promise<Timelin
           sourceRetrievedAt: row.sourceRetrievedAt ?? new Date(0),
           sourceType: row.sourceType ?? "OTHER",
           sourceIsDemo: row.sourceIsDemo ?? false,
+          sourceArchiveService: row.sourceArchiveService,
+          sourceArchiveOriginalUrl: row.sourceArchiveOriginalUrl,
+          sourceArchiveSnapshotAt: row.sourceArchiveSnapshotAt,
         }),
       });
     }
@@ -720,6 +752,9 @@ async function loadCoalitionMapping(
       agreementRetrievedAt: sourceDocuments.retrievedAt,
       agreementType: sourceDocuments.sourceType,
       agreementIsDemo: sourceDocuments.isDemo,
+      agreementArchiveService: sourceDocuments.archiveService,
+      agreementArchiveOriginalUrl: sourceDocuments.archiveOriginalUrl,
+      agreementArchiveSnapshotAt: sourceDocuments.archiveSnapshotAt,
     })
     .from(coalitionPromiseMappings)
     .innerJoin(
@@ -745,6 +780,16 @@ async function loadCoalitionMapping(
     retrievedAt: row.agreementRetrievedAt,
     sourceType: row.agreementType,
     isDemo: row.agreementIsDemo,
+    archive:
+      row.agreementArchiveService &&
+      row.agreementArchiveOriginalUrl &&
+      row.agreementArchiveSnapshotAt
+        ? {
+            service: row.agreementArchiveService,
+            originalUrl: row.agreementArchiveOriginalUrl,
+            snapshotAt: row.agreementArchiveSnapshotAt,
+          }
+        : null,
   };
 
   return {

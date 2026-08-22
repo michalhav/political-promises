@@ -146,8 +146,18 @@ function collapse(text: string): string {
   return text.replace(/\s+/g, " ");
 }
 
+/**
+ * Deklarace typu dokumentu.
+ *
+ * Parser ji vrací jako **textový uzel** v kořeni. U stránky bez `<body>` — což
+ * archivované stránky bývají — by se tak `<!DOCTYPE html>` dostalo do
+ * kanonického textu jako první věta dokumentu.
+ */
+const DOCTYPE = /^\s*<!doctype\b/i;
+
 function collectTokens(node: Node, tokens: Token[], insidePre: boolean): void {
   if (node.nodeType === TEXT_NODE) {
+    if (DOCTYPE.test(node.text)) return;
     // `.text` dekóduje entity, `.rawText` ne — citovat se musí to, co čtenář viděl.
     tokens.push(
       insidePre

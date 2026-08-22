@@ -46,6 +46,19 @@ export const sourceDocuments = pgTable(
     pageCount: integer("page_count"),
     /** Smyšlený dokument z ukázkového datasetu — nikdy nesmí být zaměnitelný se skutečným záznamem. */
     isDemo: boolean("is_demo").notNull().default(false),
+    /**
+     * Původ u dokumentu staženého z webového archivu.
+     *
+     * Archivní kopie není totéž co dokument od vydavatele: za shodu
+     * s originálem ručí třetí strana a snímek je z konkrétního dne. Čtenář to
+     * musí u citace vidět, proto to jsou sloupce, ne položka v metadatech.
+     *
+     * `url` zůstává tím, odkud jsme skutečně stahovali (adresa snímku);
+     * `archiveOriginalUrl` je adresa, na které dokument vydal vydavatel.
+     */
+    archiveService: varchar("archive_service", { length: 120 }),
+    archiveOriginalUrl: text("archive_original_url"),
+    archiveSnapshotAt: timestamp("archive_snapshot_at", { withTimezone: true }),
     processingState: processingStateEnum("processing_state").notNull().default("PENDING"),
     processingError: text("processing_error"),
     metadataJson: jsonb("metadata_json"),
@@ -59,6 +72,13 @@ export const sourceDocuments = pgTable(
     check(
       "source_document_quote_only_has_no_raw_text",
       sql`${t.licenseMode} = 'FULL_TEXT_STORED' OR ${t.rawText} IS NULL`,
+    ),
+    // Archivní původ platí celý, nebo vůbec. Půlka údaje je horší než žádný:
+    // dokument by tvrdil, že je z archivu, ale neřekl by z jakého a odkdy.
+    check(
+      "source_document_archive_origin_complete",
+      sql`(${t.archiveService} IS NULL AND ${t.archiveOriginalUrl} IS NULL AND ${t.archiveSnapshotAt} IS NULL)
+          OR (${t.archiveService} IS NOT NULL AND ${t.archiveOriginalUrl} IS NOT NULL AND ${t.archiveSnapshotAt} IS NOT NULL)`,
     ),
   ],
 );

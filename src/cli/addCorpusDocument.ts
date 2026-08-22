@@ -25,6 +25,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 import { licenseModeEnum, sourceTypeEnum } from "@/db/enums";
+import { parseArchiveUrl } from "@/modules/sources/archive";
 
 /** Nad tuhle mez už to není dokument k citaci, ale problém. */
 const MAX_BYTES = 100 * 1024 * 1024;
@@ -86,7 +87,10 @@ async function main(): Promise<void> {
     return;
   }
 
-  const url = new URL(rawUrl);
+  // Archivní adresa se pozná sama. Stahuje se z ní varianta s původními bajty,
+  // aby otisk nezávisel na tom, jak zrovna vypadá lišta archivu.
+  const archive = parseArchiveUrl(rawUrl);
+  const url = new URL(archive?.rawUrl ?? rawUrl);
   if (url.protocol !== "https:" && url.protocol !== "http:") {
     console.error("Stahuje se jen přes http(s).");
     process.exitCode = 1;
@@ -150,6 +154,15 @@ async function main(): Promise<void> {
     licenseMode,
     isDemo: false,
     fileName,
+    ...(archive
+      ? {
+          archive: {
+            service: archive.service,
+            originalUrl: archive.originalUrl,
+            snapshotAt: archive.snapshotAt.toISOString(),
+          },
+        }
+      : {}),
   };
 
   await writeFile(provenancePath, `${JSON.stringify(provenance, null, 2)}\n`, "utf8");
@@ -164,6 +177,17 @@ async function main(): Promise<void> {
       "Dál:",
       `  npm run corpus:extract -- ${path.join(directory, fileName)}`,
       `  npm run corpus:import  -- ${directory}`,
+      "",
+      ...(archive
+        ? [
+            "",
+            `Rozpoznán snímek z archivu ${archive.service} ze dne ${archive.snapshotAt
+              .toISOString()
+              .slice(0, 10)}.`,
+            `Původní adresa vydavatele: ${archive.originalUrl}`,
+            "U citace z tohohle dokumentu bude uvedeno, že jde o archivní kopii.",
+          ]
+        : []),
       "",
       "Skutečné dokumenty do repozitáře nepatří — .gitignore je drží stranou.",
       "Zkontroluj licenci: u chráněného díla patří --license QUOTE_ONLY.",

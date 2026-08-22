@@ -71,6 +71,13 @@
       "when": 1787388991808,
       "tag": "0009_loose_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787407643889,
+      "tag": "0010_late_metal_master",
+      "breakpoints": true
     }
   ]
 }

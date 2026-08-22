@@ -33,7 +33,24 @@ export function SourceLine({ source }: { source: SourceRef }) {
       {source.publisher}
       {source.publishedAt ? ` · vydáno ${formatDate(source.publishedAt)}` : null}
       {` · staženo ${formatTimestamp(source.retrievedAt)}`}
+      {source.archive ? <ArchiveNote archive={source.archive} /> : null}
     </p>
+  );
+}
+
+/**
+ * Poznámka u dokumentu z webového archivu.
+ *
+ * Není to detail: u snímku ručí za shodu s originálem třetí strana a snímek je
+ * z konkrétního dne. Čtenář, který si chce doklad ověřit sám, musí vědět, že na
+ * původní adrese dnes nemusí být nic — jinak vypadá mrtvý odkaz jako naše chyba.
+ */
+function ArchiveNote({ archive }: { archive: NonNullable<SourceRef["archive"]> }) {
+  return (
+    <span className="mt-1 block">
+      Archivní kopie ({archive.service}), snímek z {formatTimestamp(archive.snapshotAt)}. Původní
+      adresa: <span className="break-all">{archive.originalUrl}</span>
+    </span>
   );
 }
 

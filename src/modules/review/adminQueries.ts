@@ -373,6 +373,8 @@ export interface AdminPromiseDetail {
   deadlineOn: string | null;
   published: boolean;
   publishedAt: Date | null;
+  /** Do jakého slibu je tenhle sloučený. Null = samostatný. */
+  mergedInto: { slug: string; title: string } | null;
   listName: string;
   listShortName: string;
   primarySource: {
@@ -414,6 +416,7 @@ export async function getAdminPromiseDetail(
       deadlineOn: promises.deadlineOn,
       published: promises.published,
       publishedAt: promises.publishedAt,
+      mergedIntoPromiseId: promises.mergedIntoPromiseId,
       listName: electoralLists.name,
       listShortName: electoralLists.shortName,
     })
@@ -423,6 +426,15 @@ export async function getAdminPromiseDetail(
     .limit(1);
 
   if (!promise) return null;
+
+  // Cíl sloučení: redaktor musí vidět, kam slib odešel, ne jen že zmizel.
+  const [mergedInto] = promise.mergedIntoPromiseId
+    ? await db
+        .select({ slug: promises.slug, title: promises.title })
+        .from(promises)
+        .where(eq(promises.id, promise.mergedIntoPromiseId))
+        .limit(1)
+    : [];
 
   const [primary, evidenceRows, assessmentRows, correctionRows, decisions, auditRows] =
     await Promise.all([
@@ -520,6 +532,7 @@ export async function getAdminPromiseDetail(
 
   return {
     ...promise,
+    mergedInto: mergedInto ?? null,
     primarySource: primary[0] ?? null,
     evidence: evidenceRows,
     assessments: assessmentRows,

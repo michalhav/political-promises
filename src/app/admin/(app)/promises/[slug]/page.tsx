@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 
 import {
   addPromiseEventAction,
+  mergePromiseAction,
+  unmergePromiseAction,
   generateSearchProfileAction,
   saveSearchProfileAction,
   attachEvidenceAction,
@@ -34,6 +36,7 @@ import {
   OUTCOME_STATUS_LABELS,
 } from "@/modules/assessments/labels";
 import { loadSearchProfile } from "@/modules/ai/searchProfile";
+import { listMergeTargets } from "@/modules/review/merge";
 import { EVENT_TYPE_LABELS, TOPIC_LABELS } from "@/modules/promises/labels";
 import {
   getAdminPromiseDetail,
@@ -71,6 +74,8 @@ export default async function AdminPromiseDetailPage({
   if (!promise) notFound();
 
   const searchProfile = await loadSearchProfile(db, promise.id);
+  // Duplicity vzniknou hned, jak z jednoho programu vytěžíme dvě stě kandidátů.
+  const mergeTargets = promise.published ? [] : await listMergeTargets(db, promise.id);
   /** Profil se edituje jako text: jeden výraz na řádek. */
   const asLines = (values: string[] | undefined): string => (values ?? []).join("\n");
 
@@ -258,6 +263,55 @@ export default async function AdminPromiseDetailPage({
             ))}
           </ul>
         )}
+
+        {promise.mergedInto ? (
+          <div role="status" className="border-border space-y-2 rounded-lg border p-4 text-sm">
+            <p className="font-semibold">Tenhle slib je sloučený jako duplicita</p>
+            <p className="text-muted">
+              Veřejně se nezobrazuje. Patří pod{" "}
+              <Link
+                href={`/admin/promises/${promise.mergedInto.slug}`}
+                className="underline underline-offset-4"
+              >
+                {promise.mergedInto.title}
+              </Link>
+              . Důkazy a hodnocení zůstaly tady — nic se nepřesouvalo.
+            </p>
+            <AdminForm action={unmergePromiseAction} submitLabel="Zrušit sloučení">
+              <input type="hidden" name="promiseId" value={promise.id} />
+              <input type="hidden" name="slug" value={promise.slug} />
+            </AdminForm>
+          </div>
+        ) : mergeTargets.length > 0 ? (
+          <details className="border-border rounded-lg border p-4">
+            <summary className="cursor-pointer text-sm font-medium">Sloučit jako duplicitu</summary>
+            <div className="mt-4 space-y-3">
+              <p className="text-muted text-sm">
+                Sloučený slib zmizí z veřejných stránek, ale zůstane v datech i s tím, co k němu
+                někdo připojil. Publikovaný slib sloučit nejde — to by bylo tiché stažení už
+                zveřejněného tvrzení.
+              </p>
+              <AdminForm
+                action={mergePromiseAction}
+                submitLabel="Sloučit"
+                confirm="Opravdu sloučit? Slib zmizí z veřejných výpisů."
+              >
+                <input type="hidden" name="promiseId" value={promise.id} />
+                <input type="hidden" name="slug" value={promise.slug} />
+                <Field label="Patří pod slib" required>
+                  <Select
+                    name="targetPromiseId"
+                    required
+                    options={mergeTargets.map((target) => ({
+                      value: target.id,
+                      label: target.published ? `${target.title} (publikovaný)` : target.title,
+                    }))}
+                  />
+                </Field>
+              </AdminForm>
+            </div>
+          </details>
+        ) : null}
 
         <details className="border-border rounded-lg border p-4">
           <summary className="cursor-pointer text-sm font-medium">

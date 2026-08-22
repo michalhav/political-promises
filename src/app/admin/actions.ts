@@ -11,6 +11,7 @@ import { generateSearchProfile, saveSearchProfile } from "@/modules/ai/searchPro
 import { extractPromises } from "@/modules/ai/extraction";
 import { getAIProvider } from "@/modules/ai/factory";
 import { AIProviderError } from "@/modules/ai/provider";
+import { mergePromise, unmergePromise } from "@/modules/review/merge";
 import { createElectoralList, createParty } from "@/modules/review/registry";
 import {
   acceptEvidenceSuggestion,
@@ -253,6 +254,33 @@ export const generateSearchProfileAction: Action = async (formData) =>
 
     revalidatePath(`/admin/promises/${slug}`);
     return { ok: true, message: "Návrh profilu vytvořen. Projdi ho a oprav, co stroj neví." };
+  });
+
+export const mergePromiseAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const slug = text(formData, "slug");
+
+    await mergePromise(db, actor, {
+      promiseId: text(formData, "promiseId"),
+      targetPromiseId: text(formData, "targetPromiseId"),
+    });
+
+    revalidatePath("/admin/promises");
+    revalidatePath(`/admin/promises/${slug}`);
+    return { ok: true, message: "Slib sloučen. Z veřejných výpisů zmizel, v datech zůstal." };
+  });
+
+export const unmergePromiseAction: Action = async (formData) =>
+  run(async () => {
+    const actor = await requireEditorialUser();
+    const slug = text(formData, "slug");
+
+    await unmergePromise(db, actor, text(formData, "promiseId"));
+
+    revalidatePath("/admin/promises");
+    revalidatePath(`/admin/promises/${slug}`);
+    return { ok: true, message: "Sloučení zrušeno." };
   });
 
 export const addPromiseEventAction: Action = async (formData) =>

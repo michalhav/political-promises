@@ -1437,11 +1437,11 @@ Brief korekce odsouvá mimo MVP. To je pravděpodobně chyba: u produktu, kde je
 
 Produkt dělá veřejná tvrzení o jmenovaných politicích a stranách. Brief tuhle vrstvu neřeší vůbec. Kritici zaútočí sem, ne na kód.
 
-**B1 — Právo na odpověď.** Jak se strana nebo politik dozví, že o nich publikujeme hodnocení, a jak se ozvou?
+**B1 — Právo na odpověď.** ~~Jak se strana nebo politik dozví, že o nich publikujeme hodnocení, a jak se ozvou?~~ **Vyřešeno 2026-08-22:** formulář u slibu, bez přihlášení; podnět se zveřejní až po redakční revizi. Zbývá: jak se dotčená strana o hodnocení **dozví** (dnes se to musí dozvědět sama).
 
 **B2 — Autorská práva ke zdrojům.** Brief říká „original text where permitted". Volební program a koaliční smlouva jsou politické dokumenty. Článek z Deníku N není. Potřebuje pravidlo, co se ukládá celé a co jen jako odkaz + krátký citát.
 
-**B3 — Editorial governance.** Kdo je „reviewer"? Platí pravidlo čtyř očí na změnu statusu? Jak se řeší střet zájmů recenzenta? Celý argument důvěryhodnosti stojí na lidské revizi, ale ta revize nemá definovaná pravidla.
+**B3 — Editorial governance.** ~~Kdo je „reviewer"? Platí pravidlo čtyř očí na změnu statusu? Jak se řeší střet zájmů recenzenta?~~ **Vyřešeno 2026-08-22:** čtyři oči drží CHECK constraint, schválení vyžaduje výslovné prohlášení o střetu zájmů uložené u rozhodnutí. Zbývá: co dělat, když prohlášení někdo poruší — dnes to nikdo nekontroluje.
 
 **B4 — Osobní údaje.** Veřejní činitelé mají výjimku, ale zpracování pořád potřebuje právní základ a záznam o zpracování.
 
@@ -1519,3 +1519,14 @@ Fixture provider pokryje ~95 % vývoje. Není to workaround — je to standardn�
 | 2026-08-21 | OCR se nepřidává, dokud reálný dokument nedoloží, že je potřeba. Extrakce hlásí stránky bez textové vrstvy                  | Velká závislost naslepo. Hlášení dá doložený důvod místo domněnky |
 | 2026-08-21 | Zlatý dataset obsahuje i protipříklady (`NOT_PROMISE`) a měří se věrnost citací a podíl citací bez opory                    | Bez protipříkladů vypadá dobře i extraktor, který označí půl dokumentu; upravená citace je horší než chybějící kandidát |
 | 2026-08-21 | Heuristická laťka výčtem sloves, ne koncovkou                                                                              | Pravidlo „končí na -íme" chytá i „myslíme" a „nesouhlasíme", což jsou postoje, ne závazky |
+| 2026-08-22 | Tabulková otevřená data jako zdrojový dokument: jeden řádek tabulky = jeden řádek textu                                     | Většina otevřených dat města jsou tabulky, ne próza. Bez toho by pravidlo „evidence first" neplatilo pro zakázky ani rozpočty. Žádná nová entita — platí otisk i doslovné ověření citace |
+| 2026-08-22 | Nová tabulka `promise_search_profile`: podle čeho se ke slibu hledají doklady                                               | Úřad pojmenovává tutéž stavbu jinak než program („Štvanická lávka" vs. „Lávka Holešovice – Karlín"). Drahé porozumění jazyku patří do artefaktu, který jde opravit a obhájit, ne do chování kódu |
+| 2026-08-22 | Hledání důkazů má dvě vrstvy: lexikální průchod zdarma, model až tam, kde shoda slov nestačí                                | Model čtoucí celý dataset stojí peníze úměrné objemu dat a opakuje se s každým novým souborem. Lexikální průchod je navíc vysvětlitelný — u nálezu je vidět, kvůli kterým slovům prošel |
+| 2026-08-22 | Naměřená hodnota nese postup výpočtu (filtr, sloupec, počet řádků) a povinný zdroj                                          | Pravidlo A2. Bez postupu je to číslo, kterému se dá jen věřit; s postupem se dá přepočítat |
+| 2026-08-22 | Detekce dvojího započtení hledá přesný otisk chyby (řádek rovný součtu ostatních), ne podíl na součtu                       | Rozpočet drží tutéž částku jako výdaj i jako přijatý transfer. Práh „nad 40 %" křičel i nad správným filtrem — planý poplach naučí redakci varování přehlížet |
+| 2026-08-22 | B1 vyřešeno: veřejný formulář u slibu; podnět vzniká jako OPEN a veřejně se zobrazí až po revizi                            | Metodika právo na odpověď slibovala, ale podat ho uměl jen přihlášený redaktor. Zveřejnit nezrevidovaný text u jmenovaného politika by z formuláře udělalo nástroj, jak mu napsat na stránku cokoli |
+| 2026-08-22 | B3 vyřešeno: schválení hodnocení vyžaduje výslovné prohlášení o střetu zájmů, uložené u rozhodnutí                          | Čtyři oči hlídají jen to, že neschvaluje autor. Že recenzent není z téže kandidátky, nehlídalo nic |
+| 2026-08-22 | Databáze se otevírá až prvním dotazem; build i CI běží bez jediné proměnné prostředí                                        | `next build` načítá moduly stránek. Pool na úrovni modulu vyžadoval `DATABASE_URL` a nasazení by spadlo až v CI, kde proměnná ještě není |
+| 2026-08-22 | Citace se ukládají doslovně, zobrazují se se spojeným dělením slov                                                          | Dělení slova na konci řádku není nic, co by politik řekl. Mění se jen zobrazení; metodika ten rozdíl přiznává čtenáři |
+| 2026-08-22 | Událost na časové ose smí citovat jen důkaz, který u téhož slibu visí                                                       | Cizí důkaz by na ose vyrobil zdánlivou souvislost tam, kde žádná není |
+| 2026-08-22 | Lokální model přes Ollamu nativním rozhraním `/api/chat`, uvažování vypnuté                                                 | `format` bere přímo JSON Schema ze Zodu — žádný převod, žádná závislost. S uvažováním trval profil 159 s a vracel prázdno, bez něj 8 s a správná jména |

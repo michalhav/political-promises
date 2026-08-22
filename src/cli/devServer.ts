@@ -60,10 +60,11 @@ async function main(): Promise<void> {
   if (process.argv.includes("--praha")) {
     const result = await seedRealPraha(db, {
       tenderDirectory: argValue(process.argv.slice(2), "--zakazky"),
+      budgetDirectory: argValue(process.argv.slice(2), "--rozpocet"),
     });
     console.log(
       `[dev] Praha Sobě: publikováno ${result.published.length} slibů, ` +
-        `${result.withEvidence} dokladů ze zakázek, ${result.events} událostí na časové ose.` +
+        `${result.withEvidence} dokladů, ${result.events} událostí, ${result.measurements} naměřených hodnot.` +
         (result.skipped.length > 0 ? ` Přeskočeno: ${result.skipped.join(", ")}.` : ""),
     );
   }

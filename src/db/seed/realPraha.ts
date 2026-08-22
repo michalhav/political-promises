@@ -20,6 +20,7 @@ import { eventTypeEnum } from "@/db/enums";
 import { seedId } from "@/db/seed/ids";
 import { promiseEvidence } from "@/modules/evidence/schema";
 import { electoralLists } from "@/modules/parties/schema";
+import { promises } from "@/modules/promises/schema";
 import {
   addPromiseEvent,
   attachEvidence,
@@ -30,6 +31,7 @@ import {
   type Actor,
 } from "@/modules/review/service";
 import { createElectoralList, createParty } from "@/modules/review/registry";
+import { computeMeasurementsFromTable, defineMetric } from "@/modules/review/metrics";
 import { importCorpusDocument } from "@/modules/sources/importCorpus";
 import { sourceDocuments } from "@/modules/sources/schema";
 import type { Topic } from "@/modules/promises/labels";
@@ -210,11 +212,12 @@ export interface RealDataResult {
   skipped: string[];
   withEvidence: number;
   events: number;
+  measurements: number;
 }
 
 export async function seedRealPraha(
   db: AppDatabase,
-  options: { tenderDirectory?: string } = {},
+  options: { tenderDirectory?: string; budgetDirectory?: string } = {},
 ): Promise<RealDataResult> {
   const editor: Actor = { id: seedId("user:redaktor-1"), displayName: "Demo redaktor 1" };
   const reviewer: Actor = { id: seedId("user:redaktor-2"), displayName: "Demo redaktor 2" };
@@ -255,7 +258,13 @@ export async function seedRealPraha(
     tenderText = tenderRow?.rawText ?? "";
   }
 
-  const result: RealDataResult = { published: [], skipped: [], withEvidence: 0, events: 0 };
+  const result: RealDataResult = {
+    published: [],
+    skipped: [],
+    withEvidence: 0,
+    events: 0,
+    measurements: 0,
+  };
 
   for (const spec of PROMISES) {
     const start = programText.indexOf(spec.originalText);
@@ -341,6 +350,45 @@ export async function seedRealPraha(
     await publishAssessment(db, reviewer, assessmentId);
 
     result.published.push(spec.slug);
+  }
+
+  /**
+   * Měřitelný slib.
+   *
+   * „Navýšíme platy učitelům o miliardu" je jediný z třinácti, u kterého číslo
+   * leží v otevřených datech. Filtr je na oblast **i** účelový znak: bez oblasti
+   * se přičte přijatý transfer, který je součtem výdajových položek, a částka
+   * vyjde dvojnásobná.
+   */
+  if (options.budgetDirectory && existsSync(`${options.budgetDirectory}/provenance.json`)) {
+    const budget = await importCorpusDocument(db, editor, options.budgetDirectory);
+    const [platy] = await db
+      .select({ id: promises.id })
+      .from(promises)
+      .where(eq(promises.slug, "praha-sobe-navyseni-platu-ucitelu"));
+
+    if (platy) {
+      const metricId = await defineMetric(db, editor, {
+        promiseId: platy.id,
+        name: "Přímé náklady školství v rozpočtu MHMP",
+        unit: "tis. Kč",
+        direction: "INCREASE",
+        definitionNote:
+          'Součet čerpání u výdajových položek školství s účelovým znakem „přímé náklady". Jde převážně o státní transfer procházející městem — růst sám o sobě nedokládá, že peníze přidalo město.',
+      });
+
+      const computed = await computeMeasurementsFromTable(db, editor, {
+        metricId,
+        sourceDocumentId: budget.sourceDocumentId,
+        valueColumn: "cerpani",
+        groupColumn: "rok",
+        filters: [
+          { column: "nazev_oblast", contains: "Školství" },
+          { column: "nazev_uz", contains: "přímé náklady" },
+        ],
+      });
+      result.measurements = computed.measurements.length;
+    }
   }
 
   // Kontrola, že kandidátka opravdu vznikla jako skutečná, ne demo.

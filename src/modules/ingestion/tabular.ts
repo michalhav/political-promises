@@ -96,6 +96,28 @@ function renderRow(
   return `Řádek ${rowNumber} | ${parts.join(" | ")}`;
 }
 
+/**
+ * Opak `renderRow`: z uloženého řádku zpátky na dvojice sloupec–hodnota.
+ *
+ * Formát si vyrábíme sami a je ustálený, takže zpětné čtení není hádání.
+ * Slouží k tomu, aby se z uložené tabulky dala spočítat metrika — bez toho by
+ * se musela znovu stahovat data ze sítě a publikované číslo by se nedalo
+ * dohledat k otisku, který máme v databázi.
+ */
+export function parseRenderedRow(line: string): Record<string, string> | null {
+  const parts = line.split(" | ");
+  if (parts.length < 2 || !parts[0]?.startsWith("Řádek ")) return null;
+
+  const row: Record<string, string> = {};
+  for (const part of parts.slice(1)) {
+    const separator = part.indexOf(": ");
+    if (separator < 0) continue;
+    row[part.slice(0, separator).trim()] = part.slice(separator + 2).trim();
+  }
+
+  return Object.keys(row).length > 0 ? row : null;
+}
+
 export interface RenderOptions {
   /** Sloupce, které se do textu dostanou. Prázdné = všechny. */
   columns?: string[];

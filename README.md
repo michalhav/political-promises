@@ -19,6 +19,7 @@ VOLEBNÍ SLIB → KOALIČNÍ SMLOUVA → POLITICKÉ ROZHODNUTÍ
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
 | [CLAUDE.md](./CLAUDE.md)                                           | **Jak se pracuje** — role, inženýrské priority, bezpečnost, testování, definition of done.      |
 | [MASTER_IMPLEMENTATION_BRIEF.md](./MASTER_IMPLEMENTATION_BRIEF.md) | **Co stavíme** — produkt, principy integrity, datový model, scope, fáze, otevřené otázky.       |
+| [docs/co-zbyva.md](./docs/co-zbyva.md)                             | **Co zbývá k funkčnímu produktu** — řazeno podle toho, co blokuje spuštění.                     |
 | [docs/architecture.md](./docs/architecture.md)                     | Členění kódu, směr závislostí, kde končí doména a začíná UI.                                    |
 | [docs/data-model.md](./docs/data-model.md)                         | Entity, jejich vztahy a databázové záruky, které aplikace nesmí obejít.                         |
 | [docs/promise-annotation-guidelines.md](./docs/promise-annotation-guidelines.md) | Co se počítá jako slib a co ne. Pravidla pro ruční anotaci.                  |
